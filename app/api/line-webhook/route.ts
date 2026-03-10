@@ -1,11 +1,11 @@
 export const runtime = "nodejs";
 
 export async function GET() {
-  return new Response("LINE webhook alive");
+  return new Response("LINE webhook alive", { status: 200 });
 }
 
 export async function POST(req: Request) {
   const body = await req.json();
   console.log("LINE webhook:", body);
-  return new Response("OK");
+  return new Response("OK", { status: 200 });
 }

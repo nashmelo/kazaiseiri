@@ -39,7 +39,7 @@ export default function Step3Schedule({
     <main
       style={{
         minHeight: "100vh",
-        background: "#8ed0f4",
+        background: "var(--bg-main)",
         padding: "24px 16px 40px",
         boxSizing: "border-box",
       }}
@@ -61,7 +61,7 @@ export default function Step3Schedule({
               margin: 0,
               fontSize: 18,
               fontWeight: 900,
-              color: "#ffffff",
+              color: "var(--text-main)",
             }}
           >
             粗大ゴミ回収 | すっきりん
@@ -72,7 +72,7 @@ export default function Step3Schedule({
 
         <div
           style={{
-            background: "#f7f7f7",
+            background: "#fffafb",
             borderRadius: 28,
             padding: "22px 18px 24px",
             boxSizing: "border-box",
@@ -81,14 +81,15 @@ export default function Step3Schedule({
         >
           <div
             style={{
-              background: "#8ed0f4",
-              color: "#ffffff",
+              background: "var(--pink-soft)",
+              color: "var(--pink-strong)",
               textAlign: "center",
               fontSize: 18,
               fontWeight: 900,
               padding: "18px 12px",
-              borderRadius: 10,
+              borderRadius: 12,
               marginBottom: 24,
+              border: "2px solid var(--pink-main)",
             }}
           >
             Step 3 希望日をご入力ください
@@ -168,12 +169,14 @@ function Field({ label, required, children }: FieldProps) {
           display: "block",
           fontSize: 13,
           fontWeight: 800,
-          color: "#222",
+          color: "var(--text-main)",
           marginBottom: 6,
         }}
       >
         {label}
-        {required && <span style={{ color: "#d00", marginLeft: 4 }}>＊</span>}
+        {required && (
+          <span style={{ color: "var(--pink-strong)", marginLeft: 4 }}>＊</span>
+        )}
       </label>
       {children}
     </div>
@@ -182,13 +185,14 @@ function Field({ label, required, children }: FieldProps) {
 
 const inputStyle: React.CSSProperties = {
   width: "100%",
-  padding: "10px 12px",
-  borderRadius: 8,
-  border: "1px solid #d8d8d8",
+  padding: "12px 12px",
+  borderRadius: 10,
+  border: "1px solid #e6d7de",
   fontSize: 14,
   boxSizing: "border-box",
   background: "#ffffff",
-  color: "#111",
+  color: "var(--text-main)",
+  outline: "none",
 };
 
 const primaryButtonStyle: React.CSSProperties = {

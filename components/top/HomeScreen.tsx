@@ -21,7 +21,7 @@ export default function HomeScreen({
     <main
       style={{
         minHeight: "100vh",
-        background: "var(--bg-main)",
+        background: "#eef5ff",
         padding: "24px 16px 40px",
         boxSizing: "border-box",
       }}
@@ -41,9 +41,9 @@ export default function HomeScreen({
           <h1
             style={{
               margin: 0,
-              fontSize: 18,
-              fontWeight: 800,
-              color: "#ffffff",
+              fontSize: 20,
+              fontWeight: 900,
+              color: "#1c2b4a",
               letterSpacing: "0.04em",
             }}
           >
@@ -84,15 +84,15 @@ export default function HomeScreen({
                 marginBottom: 14,
               }}
             >
-              すっきりん
+              SUKKIRIN
             </div>
             <p
               style={{
                 margin: 0,
-                fontSize: 15,
+                fontSize: 16,
                 lineHeight: 1.7,
-                color: "#222",
-                fontWeight: 600,
+                color: "#333",
+                fontWeight: 500,
               }}
             >
               すっきりんは

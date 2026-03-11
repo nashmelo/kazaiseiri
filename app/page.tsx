@@ -75,6 +75,7 @@ export default function Home() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [debugInfo, setDebugInfo] = useState<string>("");
 
   const [postalStatus, setPostalStatus] = useState<string | null>(null);
   const [movePostalStatus, setMovePostalStatus] = useState<string | null>(null);
@@ -105,15 +106,20 @@ export default function Home() {
     const init = async () => {
       try {
         await liff.init({ liffId: LIFF_ID });
-        console.log("LIFF init ok");
-        console.log("isLoggedIn:", liff.isLoggedIn());
-        console.log("isInClient:", liff.isInClient());
-        console.log(
-          "sendMessages available:",
-          liff.isApiAvailable("sendMessages")
+
+        setDebugInfo(
+          JSON.stringify(
+            {
+              isLoggedIn: liff.isLoggedIn(),
+              isInClient: liff.isInClient(),
+              context: liff.getContext(),
+            },
+            null,
+            2
+          )
         );
       } catch (err) {
-        console.error("LIFF init error:", err);
+        setDebugInfo(`LIFF init error: ${String(err)}`);
       }
     };
 
@@ -298,23 +304,37 @@ export default function Home() {
     try {
       setSubmitting(true);
 
-      console.log("before send");
-      console.log("isInClient:", liff.isInClient());
-      console.log(
-        "sendMessages available:",
-        liff.isApiAvailable("sendMessages")
+      setDebugInfo(
+        JSON.stringify(
+          {
+            phase: "before send",
+            isLoggedIn: liff.isLoggedIn(),
+            isInClient: liff.isInClient(),
+            context: liff.getContext(),
+          },
+          null,
+          2
+        )
       );
 
       if (!liff.isInClient()) {
         throw new Error("LINEアプリ内で開かれていません");
       }
 
-      if (!liff.isApiAvailable("sendMessages")) {
-        throw new Error("sendMessages が使えません");
-      }
-
       await liff.sendMessages([{ type: "text", text: summaryText }]);
-      console.log("send success");
+
+      setDebugInfo(
+        JSON.stringify(
+          {
+            phase: "send success",
+            isLoggedIn: liff.isLoggedIn(),
+            isInClient: liff.isInClient(),
+            context: liff.getContext(),
+          },
+          null,
+          2
+        )
+      );
 
       setSubmitted(true);
       setForm(initialFormData);
@@ -322,10 +342,9 @@ export default function Home() {
       setMovePostalStatus(null);
       scrollToTop();
     } catch (err) {
-      console.error("submit error:", err);
-      setError(
-        err instanceof Error ? err.message : "送信中にエラーが発生しました。"
-      );
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message);
+      setDebugInfo(`submit error: ${message}`);
     } finally {
       setSubmitting(false);
     }
@@ -383,6 +402,23 @@ export default function Home() {
             >
               {error}
             </div>
+          )}
+
+          {debugInfo && (
+            <pre
+              style={{
+                background: "#f5f5f5",
+                color: "#333",
+                padding: 8,
+                borderRadius: 6,
+                fontSize: 11,
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-word",
+                marginBottom: 12,
+              }}
+            >
+              {debugInfo}
+            </pre>
           )}
 
           {submitted && (

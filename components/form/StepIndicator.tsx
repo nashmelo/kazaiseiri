@@ -39,19 +39,32 @@ export default function StepIndicator({ step }: StepIndicatorProps) {
           >
             <div
               style={{
-                width: 42,
-                height: 42,
+                width: 38,
+                height: 38,
                 margin: "0 auto 8px",
                 borderRadius: "50%",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: 900,
-                background: isDone ? "var(--pink-strong)" : isActive ? "#ffffff" : "#f1f1f1",
-                color: isDone ? "#ffffff" : isActive ? "var(--pink-strong)" : "#999999",
-                border: isActive ? "4px solid var(--pink-strong)" : "1px solid #d9d9d9",
+                background: isDone
+                  ? "var(--pink-strong)"
+                  : isActive
+                  ? "#ffffff"
+                  : "var(--pink-soft)",
+                color: isDone
+                  ? "#ffffff"
+                  : isActive
+                  ? "var(--pink-strong)"
+                  : "#b97a93",
+                border: isActive
+                  ? "3px solid var(--pink-strong)"
+                  : isDone
+                  ? "3px solid var(--pink-strong)"
+                  : "2px solid var(--pink-main)",
                 boxSizing: "border-box",
+                boxShadow: isActive ? "0 4px 10px rgba(233,30,99,0.12)" : "none",
               }}
             >
               {isDone ? "✓" : item.id}
@@ -59,10 +72,11 @@ export default function StepIndicator({ step }: StepIndicatorProps) {
 
             <div
               style={{
-                fontSize: 12,
+                fontSize: 11,
                 fontWeight: 800,
-                color: isActive || isDone ? "var(--pink-strong)" : "#999999",
-                lineHeight: 1.4,
+                color: isActive || isDone ? "var(--pink-strong)" : "var(--text-sub)",
+                lineHeight: 1.35,
+                letterSpacing: "0.01em",
               }}
             >
               {item.label}

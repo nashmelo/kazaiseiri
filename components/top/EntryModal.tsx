@@ -53,7 +53,7 @@ export default function EntryModal({
           <div style={rowStyle}>
             <div style={recommendLeftBoxStyle}>
               <div style={recommendBadgeStyle}>おすすめ</div>
-              <div>DUSTALK</div>
+              <div>すっきりん</div>
               <div>から依頼</div>
             </div>
             <div style={rightBoxStyle}>
@@ -85,7 +85,7 @@ export default function EntryModal({
         </div>
 
         <button type="button" onClick={onStart} style={primaryButtonStyle}>
-          DUSTALKから依頼を行う
+          すっきりんから依頼を行う
         </button>
 
         <button type="button" onClick={onClose} style={secondaryButtonStyle}>

@@ -47,7 +47,7 @@ export default function HomeScreen({
               letterSpacing: "0.04em",
             }}
           >
-            ゴミを出すならダストーク
+            片付け・不用品回収ならすっきりん
           </h1>
         </div>
 
@@ -84,7 +84,7 @@ export default function HomeScreen({
                 marginBottom: 14,
               }}
             >
-              DUSTALK
+              すっきりん
             </div>
             <p
               style={{
@@ -95,7 +95,7 @@ export default function HomeScreen({
                 fontWeight: 600,
               }}
             >
-              ダストークは
+              すっきりんは
               <br />
               回収業者の見積もりをカンタン比較
               <br />
@@ -163,7 +163,7 @@ export default function HomeScreen({
             onClick={onOpenReason}
             style={blueButtonStyle}
           >
-            DUSTALK が選ばれる理由
+            すっきりん が選ばれる理由
           </button>
 
           <button

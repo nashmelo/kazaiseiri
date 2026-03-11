@@ -19,7 +19,7 @@ export default function Step5Confirm({
     <main
       style={{
         minHeight: "100vh",
-        background: "#8ed0f4",
+        background: "var(--bg-main)",
         padding: "24px 16px 40px",
         boxSizing: "border-box",
       }}
@@ -41,7 +41,7 @@ export default function Step5Confirm({
               margin: 0,
               fontSize: 18,
               fontWeight: 900,
-              color: "#ffffff",
+              color: "var(--text-main)",
             }}
           >
             粗大ゴミ回収 | すっきりん
@@ -52,7 +52,7 @@ export default function Step5Confirm({
 
         <div
           style={{
-            background: "#f7f7f7",
+            background: "#fffafb",
             borderRadius: 28,
             padding: "22px 18px 24px",
             boxSizing: "border-box",
@@ -61,14 +61,15 @@ export default function Step5Confirm({
         >
           <div
             style={{
-              background: "#8ed0f4",
-              color: "#ffffff",
+              background: "var(--pink-soft)",
+              color: "var(--pink-strong)",
               textAlign: "center",
               fontSize: 18,
               fontWeight: 900,
               padding: "18px 12px",
-              borderRadius: 10,
+              borderRadius: 12,
               marginBottom: 24,
+              border: "2px solid var(--pink-main)",
             }}
           >
             Step 5 内容をご確認ください
@@ -162,7 +163,7 @@ function Section({
           color: "var(--pink-strong)",
           marginBottom: 10,
           paddingBottom: 6,
-          borderBottom: "2px solid #d9ecfb",
+          borderBottom: "2px solid var(--pink-main)",
         }}
       >
         {title}
@@ -195,16 +196,16 @@ function ConfirmRow({
     <div
       style={{
         background: "#ffffff",
-        borderRadius: 10,
+        borderRadius: 12,
         padding: "12px 14px",
-        border: "1px solid #e3e3e3",
+        border: "1px solid #ead8e0",
       }}
     >
       <div
         style={{
           fontSize: 12,
           fontWeight: 800,
-          color: "#666",
+          color: "var(--text-sub)",
           marginBottom: 6,
         }}
       >
@@ -214,7 +215,7 @@ function ConfirmRow({
         style={{
           fontSize: 14,
           fontWeight: 700,
-          color: "#111",
+          color: "var(--text-main)",
           lineHeight: multiline ? 1.7 : 1.5,
           whiteSpace: multiline ? "pre-wrap" : "normal",
           wordBreak: "break-word",

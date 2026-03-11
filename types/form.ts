@@ -13,7 +13,7 @@ export type FormData = {
   elevator: "あり" | "なし" | "";
   disposalMethod: "自分で排出" | "排出を希望する" | "";
 
-  service: "不用品の回収" | "部屋を丸ごと片付け" | "";
+  service: "不用品回収" | "部屋を丸ごと片付け" | "";
   items: string;
   notes: string;
   images: File[];

@@ -98,7 +98,7 @@ export default function Home() {
     const h = d.getHours();
     const min = d.getMinutes().toString().padStart(2, "0");
 
-    return `${y}年${m}月${day}日${h}時${min}分`;
+    return `${y}年${m}月${day}日}${h}時${min}分`;
   };
 
   useEffect(() => {
@@ -291,6 +291,24 @@ export default function Home() {
 
     try {
       setSubmitting(true);
+
+      const kintoneRes = await fetch("/api/kintone", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      const kintoneData = await kintoneRes.json();
+
+      if (!kintoneRes.ok) {
+        throw new Error(
+          kintoneData?.detail?.message ||
+            kintoneData?.error ||
+            "kintone登録に失敗しました"
+        );
+      }
 
       if (!liff.isInClient()) {
         throw new Error("LINEアプリ内で開かれていません");

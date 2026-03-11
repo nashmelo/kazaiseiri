@@ -110,75 +110,77 @@ export default function Page() {
     ].join("\n");
   };
 
-  const handleSubmit = async () => {
-    setError(null);
-    setSubmitting(true);
+const handleSubmit = async () => {
+  setError(null);
+  setSubmitting(true);
 
-    try {
-      const payload = {
-        name: form.name,
-        phone: form.phone,
-        contactMethod: "LINE",
-        service: form.service,
-
-        postalCode: form.postalCode,
-        prefecture: form.prefecture,
-        city: form.city,
-        address1: form.address,
-
-        buildingType: form.buildingType,
-        parking: form.parking,
-        elevator: form.elevator,
-
-        items: `${form.items}${form.notes ? `\n\n【備考】\n${form.notes}` : ""}`,
-        airconRemoval: "ない",
-
-        pickupDate1: form.pickupDate1,
-        pickupDate2: form.pickupDate2,
-        pickupDate3: form.pickupDate3,
-      };
-
-      const kintoneRes = await fetch("/api/kintone", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const kintoneData = await kintoneRes.json();
-
-      if (!kintoneRes.ok) {
-        throw new Error(
-          kintoneData?.detail?.message ||
-            kintoneData?.error ||
-            "kintone登録に失敗しました"
-        );
-      }
-
-      if (!liff.isInClient()) {
-        throw new Error("LINEアプリ内で開かれていません");
-      }
-
-      const summaryText = buildSummaryText();
-
-      await liff.sendMessages([{ type: "text", text: summaryText }]);
-
-      alert("送信が完了しました。");
-
-      setForm(initialFormData);
-      setScreen("home");
-      setStep(1);
-    } catch (err) {
-      console.error("submit error:", err);
-      setError(
-        err instanceof Error ? err.message : "送信中にエラーが発生しました。"
-      );
-    } finally {
-      setSubmitting(false);
-    }
+  const toKintoneDateTime = (value: string) => {
+    if (!value) return "";
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return "";
+    return d.toISOString();
   };
 
+  try {
+    const payload = {
+      name: form.name,
+      phone: form.phone,
+      contactMethod: "LINE",
+      service: form.service,
+
+      postalCode: form.postalCode,
+      prefecture: form.prefecture,
+      city: form.city,
+      address1: form.address,
+
+      buildingType: form.buildingType,
+      parking: form.parking,
+      elevator: form.elevator,
+
+      items: `${form.items}${form.notes ? `\n\n【備考】\n${form.notes}` : ""}`,
+      airconRemoval: "ない",
+
+      pickupDate1: toKintoneDateTime(form.pickupDate1),
+      pickupDate2: toKintoneDateTime(form.pickupDate2),
+      pickupDate3: toKintoneDateTime(form.pickupDate3),
+    };
+
+    const kintoneRes = await fetch("/api/kintone", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const kintoneData = await kintoneRes.json();
+
+    if (!kintoneRes.ok) {
+      throw new Error(JSON.stringify(kintoneData));
+    }
+
+    if (!liff.isInClient()) {
+      throw new Error("LINEアプリ内で開かれていません");
+    }
+
+    const summaryText = buildSummaryText();
+
+    await liff.sendMessages([{ type: "text", text: summaryText }]);
+
+    alert("送信が完了しました。");
+
+    setForm(initialFormData);
+    setScreen("home");
+    setStep(1);
+  } catch (err) {
+    console.error("submit error:", err);
+    setError(
+      err instanceof Error ? err.message : "送信中にエラーが発生しました。"
+    );
+  } finally {
+    setSubmitting(false);
+  }
+};
   return (
     <>
       {screen === "home" && (

@@ -21,7 +21,7 @@ export default function HomeScreen({
     <main
       style={{
         minHeight: "100vh",
-        background: "#8ed0f4",
+        background: "var(--bg-main)",
         padding: "24px 16px 40px",
         boxSizing: "border-box",
       }}

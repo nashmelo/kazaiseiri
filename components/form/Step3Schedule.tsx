@@ -2,16 +2,39 @@
 
 import React from "react";
 import StepIndicator from "@/components/form/StepIndicator";
+import type { FormData } from "@/types/form";
 
 type Step3ScheduleProps = {
+  form: FormData;
+  setForm: React.Dispatch<React.SetStateAction<FormData>>;
   onNext: () => void;
   onPrev: () => void;
 };
 
 export default function Step3Schedule({
+  form,
+  setForm,
   onNext,
   onPrev,
 }: Step3ScheduleProps) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleNext = () => {
+    if (!form.pickupDate1) {
+      alert("第一希望回収日を入力してください。");
+      return;
+    }
+
+    onNext();
+  };
+
   return (
     <main
       style={{
@@ -71,30 +94,47 @@ export default function Step3Schedule({
             Step 3 希望日をご入力ください
           </div>
 
-          <div
-            style={{
-              color: "#222",
-              fontSize: 16,
-              fontWeight: 700,
-              lineHeight: 1.8,
-              marginBottom: 24,
-            }}
-          >
-            ここに希望日の入力項目を入れていきます。
-            <br />
-            まずは画面遷移の確認用ダミーです。
-          </div>
+          <Field label="第一希望回収日" required>
+            <input
+              type="datetime-local"
+              name="pickupDate1"
+              value={form.pickupDate1}
+              onChange={handleChange}
+              style={inputStyle}
+            />
+          </Field>
+
+          <Field label="第二希望回収日">
+            <input
+              type="datetime-local"
+              name="pickupDate2"
+              value={form.pickupDate2}
+              onChange={handleChange}
+              style={inputStyle}
+            />
+          </Field>
+
+          <Field label="第三希望回収日">
+            <input
+              type="datetime-local"
+              name="pickupDate3"
+              value={form.pickupDate3}
+              onChange={handleChange}
+              style={inputStyle}
+            />
+          </Field>
 
           <div
             style={{
               display: "flex",
               gap: 12,
               flexDirection: "column",
+              marginTop: 20,
             }}
           >
             <button
               type="button"
-              onClick={onNext}
+              onClick={handleNext}
               style={primaryButtonStyle}
             >
               申込者情報に進む
@@ -113,6 +153,43 @@ export default function Step3Schedule({
     </main>
   );
 }
+
+type FieldProps = {
+  label: string;
+  required?: boolean;
+  children: React.ReactNode;
+};
+
+function Field({ label, required, children }: FieldProps) {
+  return (
+    <div style={{ marginBottom: 14 }}>
+      <label
+        style={{
+          display: "block",
+          fontSize: 13,
+          fontWeight: 800,
+          color: "#222",
+          marginBottom: 6,
+        }}
+      >
+        {label}
+        {required && <span style={{ color: "#d00", marginLeft: 4 }}>＊</span>}
+      </label>
+      {children}
+    </div>
+  );
+}
+
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  padding: "10px 12px",
+  borderRadius: 8,
+  border: "1px solid #d8d8d8",
+  fontSize: 14,
+  boxSizing: "border-box",
+  background: "#ffffff",
+  color: "#111",
+};
 
 const primaryButtonStyle: React.CSSProperties = {
   width: "100%",

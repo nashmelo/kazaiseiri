@@ -2,13 +2,16 @@
 
 import React from "react";
 import StepIndicator from "@/components/form/StepIndicator";
+import type { FormData } from "@/types/form";
 
 type Step5ConfirmProps = {
+  form: FormData;
   onSubmit: () => void;
   onPrev: () => void;
 };
 
 export default function Step5Confirm({
+  form,
   onSubmit,
   onPrev,
 }: Step5ConfirmProps) {
@@ -71,25 +74,54 @@ export default function Step5Confirm({
             Step 5 内容をご確認ください
           </div>
 
-          <div
-            style={{
-              color: "#222",
-              fontSize: 16,
-              fontWeight: 700,
-              lineHeight: 1.8,
-              marginBottom: 24,
-            }}
-          >
-            ここに入力内容の確認表示を入れていきます。
-            <br />
-            まずは画面遷移の確認用ダミーです。
-          </div>
+          <Section title="回収場所">
+            <ConfirmRow label="郵便番号" value={form.postalCode} />
+            <ConfirmRow label="都道府県" value={form.prefecture} />
+            <ConfirmRow label="市町村" value={form.city} />
+            <ConfirmRow label="住所" value={form.address} />
+            <ConfirmRow label="建物の種類" value={form.buildingType} />
+            <ConfirmRow label="駐車場の有無" value={form.parking} />
+            <ConfirmRow label="エレベーターの有無" value={form.elevator} />
+            <ConfirmRow label="ゴミの排出方法" value={form.disposalMethod} />
+          </Section>
+
+          <Section title="依頼内容">
+            <ConfirmRow label="依頼内容" value={form.service} />
+            <ConfirmRow label="回収ゴミの品目・個数" value={form.items} multiline />
+            <ConfirmRow label="備考" value={form.notes} multiline />
+            <ConfirmRow
+              label="添付画像"
+              value={form.images.length > 0 ? `${form.images.length}件` : ""}
+            />
+          </Section>
+
+          <Section title="希望日">
+            <ConfirmRow
+              label="第一希望回収日"
+              value={formatDateTimeJP(form.pickupDate1)}
+            />
+            <ConfirmRow
+              label="第二希望回収日"
+              value={formatDateTimeJP(form.pickupDate2)}
+            />
+            <ConfirmRow
+              label="第三希望回収日"
+              value={formatDateTimeJP(form.pickupDate3)}
+            />
+          </Section>
+
+          <Section title="申込者情報">
+            <ConfirmRow label="お名前" value={form.name} />
+            <ConfirmRow label="ふりがな" value={form.furigana} />
+            <ConfirmRow label="電話番号" value={form.phone} />
+          </Section>
 
           <div
             style={{
               display: "flex",
               gap: 12,
               flexDirection: "column",
+              marginTop: 20,
             }}
           >
             <button
@@ -112,6 +144,101 @@ export default function Step5Confirm({
       </div>
     </main>
   );
+}
+
+function Section({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div style={{ marginBottom: 22 }}>
+      <div
+        style={{
+          fontSize: 16,
+          fontWeight: 900,
+          color: "#095db6",
+          marginBottom: 10,
+          paddingBottom: 6,
+          borderBottom: "2px solid #d9ecfb",
+        }}
+      >
+        {title}
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 10,
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function ConfirmRow({
+  label,
+  value,
+  multiline = false,
+}: {
+  label: string;
+  value: string;
+  multiline?: boolean;
+}) {
+  const displayValue = value && value.trim() ? value : "未入力";
+
+  return (
+    <div
+      style={{
+        background: "#ffffff",
+        borderRadius: 10,
+        padding: "12px 14px",
+        border: "1px solid #e3e3e3",
+      }}
+    >
+      <div
+        style={{
+          fontSize: 12,
+          fontWeight: 800,
+          color: "#666",
+          marginBottom: 6,
+        }}
+      >
+        {label}
+      </div>
+      <div
+        style={{
+          fontSize: 14,
+          fontWeight: 700,
+          color: "#111",
+          lineHeight: multiline ? 1.7 : 1.5,
+          whiteSpace: multiline ? "pre-wrap" : "normal",
+          wordBreak: "break-word",
+        }}
+      >
+        {displayValue}
+      </div>
+    </div>
+  );
+}
+
+function formatDateTimeJP(value: string) {
+  if (!value) return "未入力";
+
+  const d = new Date(value);
+  if (isNaN(d.getTime())) return value;
+
+  const y = d.getFullYear();
+  const m = d.getMonth() + 1;
+  const day = d.getDate();
+  const h = d.getHours();
+  const min = d.getMinutes().toString().padStart(2, "0");
+
+  return `${y}年${m}月${day}日 ${h}時${min}分`;
 }
 
 const primaryButtonStyle: React.CSSProperties = {

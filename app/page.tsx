@@ -61,9 +61,11 @@ export default function Page() {
           onBackToTop={handleBackHome}
         />
       )}
-      
+
       {screen === "form" && step === 2 && (
         <Step2Request
+          form={form}
+          setForm={setForm}
           onNext={() => setStep(3)}
           onPrev={() => setStep(1)}
         />
@@ -71,6 +73,8 @@ export default function Page() {
 
       {screen === "form" && step === 3 && (
         <Step3Schedule
+          form={form}
+          setForm={setForm}
           onNext={() => setStep(4)}
           onPrev={() => setStep(2)}
         />
@@ -78,6 +82,8 @@ export default function Page() {
 
       {screen === "form" && step === 4 && (
         <Step4Applicant
+          form={form}
+          setForm={setForm}
           onNext={() => setStep(5)}
           onPrev={() => setStep(3)}
         />
@@ -85,6 +91,7 @@ export default function Page() {
 
       {screen === "form" && step === 5 && (
         <Step5Confirm
+          form={form}
           onSubmit={() => {
             alert("ここに送信処理（kintone登録 + LINE送信）を入れます");
           }}

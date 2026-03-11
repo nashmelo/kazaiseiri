@@ -39,15 +39,8 @@ export default function HomeScreen({
             marginBottom: 18,
           }}
         >
-          <h1
-            style={{
-              margin: 0,
-              fontSize: 20,
-              fontWeight: 900,
-              color: "#1c2b4a",
-            }}
-          >
-            片付け・不用品回収ならすっきりん
+          <h1 style={mainTextStyle}>
+            片付け・不要品回収ならすっきりん
           </h1>
         </div>
 
@@ -77,44 +70,23 @@ export default function HomeScreen({
               }}
             />
 
-            <div
-              style={{
-                fontSize: 40,
-                fontWeight: 900,
-                color: "#1c2b4a",
-                letterSpacing: "0.06em",
-                marginBottom: 12,
-              }}
-            >
+            <div style={logoStyle}>
               SUKKIRIN
             </div>
 
-            <div
-              style={{
-                fontSize: 18,
-                fontWeight: 800,
-                marginBottom: 8,
-              }}
-            >
+            <div style={mainTextStyle}>
               最短30秒
             </div>
 
-            <p
-              style={{
-                margin: 0,
-                fontSize: 16,
-                lineHeight: 1.7,
-                color: "#333",
-              }}
-            >
-              粗大ゴミ回収を
+            <p style={mainTextStyle}>
+              片付け・不要品回収を
               <br />
               LINEでカンタン見積り
             </p>
           </div>
 
-          {/* 見出し（ボタンではない） */}
-          <div style={estimateTitleStyle}>
+          {/* 見出し */}
+          <div style={mainTextStyle}>
             無料見積りする
           </div>
 
@@ -187,13 +159,23 @@ export default function HomeScreen({
   );
 }
 
-const estimateTitleStyle: React.CSSProperties = {
+const logoStyle: React.CSSProperties = {
+  fontSize: 44,
+  fontWeight: 900,
+  color: "#1c2b4a",
+  letterSpacing: "0.08em",
+  marginBottom: 12,
+  fontFamily:
+    '"Rounded Mplus 1c","Hiragino Maru Gothic ProN","Arial Rounded MT Bold",sans-serif',
+};
+
+const mainTextStyle: React.CSSProperties = {
   width: "100%",
   textAlign: "center",
-  fontSize: 20,
+  fontSize: 18,
   fontWeight: 900,
-  color: "var(--pink-strong)",
-  marginBottom: 14,
+  color: "#1c2b4a",
+  marginBottom: 12,
 };
 
 const cardButtonStyle: React.CSSProperties = {

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import liff from "@line/liff";
 import styles from "./page.module.css";
 
-const LIFF_ID = "2009412339-HeHJetX4";
+const LIFF_ID = "2009412342-JGZ5KiR6";
 
 type FormData = {
   name: string;
@@ -80,29 +80,44 @@ export default function Home() {
   const [movePostalStatus, setMovePostalStatus] = useState<string | null>(null);
 
   const scrollToTop = () => {
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
-};
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
-const formatDateTimeJP = (value: string) => {
-  if (!value) return "なし";
+  const formatDateTimeJP = (value: string) => {
+    if (!value) return "なし";
 
-  const d = new Date(value);
-  if (isNaN(d.getTime())) return value; // 念のため保険
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return value;
 
-  const y = d.getFullYear();
-  const m = d.getMonth() + 1;
-  const day = d.getDate();
-  const h = d.getHours();
-  const min = d.getMinutes().toString().padStart(2, "0");
+    const y = d.getFullYear();
+    const m = d.getMonth() + 1;
+    const day = d.getDate();
+    const h = d.getHours();
+    const min = d.getMinutes().toString().padStart(2, "0");
 
-  return `${y}年${m}月${day}日${h}時${min}分`;
-};
+    return `${y}年${m}月${day}日${h}時${min}分`;
+  };
 
   useEffect(() => {
-    liff.init({ liffId: LIFF_ID }).catch(console.error);
+    const init = async () => {
+      try {
+        await liff.init({ liffId: LIFF_ID });
+        console.log("LIFF init ok");
+        console.log("isLoggedIn:", liff.isLoggedIn());
+        console.log("isInClient:", liff.isInClient());
+        console.log(
+          "sendMessages available:",
+          liff.isApiAvailable("sendMessages")
+        );
+      } catch (err) {
+        console.error("LIFF init error:", err);
+      }
+    };
+
+    init();
   }, []);
 
   const lookupAddressFromPostalCode = async (zipcode: string) => {
@@ -198,7 +213,6 @@ const formatDateTimeJP = (value: string) => {
       return;
     }
 
-    // 回収現場住所：必須
     if (
       !form.postalCode ||
       !/^\d{7}$/.test(form.postalCode) ||
@@ -211,7 +225,6 @@ const formatDateTimeJP = (value: string) => {
       return;
     }
 
-    // 引越し先住所：引越し時は必須
     if (
       form.service === "引越し" &&
       (!form.movePostalCode ||
@@ -225,7 +238,6 @@ const formatDateTimeJP = (value: string) => {
       return;
     }
 
-    // 物：必須
     if (!form.items.trim()) {
       setError("回収・引越しする物の種類・個数は必須です。");
       scrollToTop();
@@ -286,19 +298,34 @@ const formatDateTimeJP = (value: string) => {
     try {
       setSubmitting(true);
 
-      if (liff.isInClient()) {
-        await liff.sendMessages([{ type: "text", text: summaryText }]);
+      console.log("before send");
+      console.log("isInClient:", liff.isInClient());
+      console.log(
+        "sendMessages available:",
+        liff.isApiAvailable("sendMessages")
+      );
+
+      if (!liff.isInClient()) {
+        throw new Error("LINEアプリ内で開かれていません");
       }
+
+      if (!liff.isApiAvailable("sendMessages")) {
+        throw new Error("sendMessages が使えません");
+      }
+
+      await liff.sendMessages([{ type: "text", text: summaryText }]);
+      console.log("send success");
 
       setSubmitted(true);
       setForm(initialFormData);
       setPostalStatus(null);
       setMovePostalStatus(null);
       scrollToTop();
-      
     } catch (err) {
-      console.error(err);
-      setError("送信中にエラーが発生しました。");
+      console.error("submit error:", err);
+      setError(
+        err instanceof Error ? err.message : "送信中にエラーが発生しました。"
+      );
     } finally {
       setSubmitting(false);
     }
@@ -312,7 +339,7 @@ const formatDateTimeJP = (value: string) => {
         background: "#f5f5f5",
         padding: 16,
         boxSizing: "border-box",
-        color: "#111", // ← page.module.css 側で文字色が白でも、ここで上書き
+        color: "#111",
       }}
     >
       <div
@@ -371,8 +398,8 @@ const formatDateTimeJP = (value: string) => {
             >
               送信ありがとうございました。トーク画面をご確認ください。
               <br />
-              <span style = {{ fontSize: 11, color: "#555"}}>
-              ※画像をトーク画面にお貼りいただくと、より正確なお見積もりが可能です。
+              <span style={{ fontSize: 11, color: "#555" }}>
+                ※画像をトーク画面にお貼りいただくと、より正確なお見積もりが可能です。
               </span>
             </div>
           )}
@@ -404,7 +431,6 @@ const formatDateTimeJP = (value: string) => {
 
             <SectionTitle label="回収現場住所" />
 
-            {/* 回収現場住所：任意表記を全削除＋必須＊ */}
             <Field label="郵便番号（7桁）" required>
               <input
                 name="postalCode"
@@ -452,7 +478,6 @@ const formatDateTimeJP = (value: string) => {
               />
             </Field>
 
-            {/* ここは任意のまま（削除していません） */}
             <Field label="建物種類（任意）">
               <select
                 name="buildingType"
@@ -563,7 +588,6 @@ const formatDateTimeJP = (value: string) => {
               </>
             )}
 
-            {/* 物：必須に変更 */}
             <Field
               label={
                 <>
@@ -574,7 +598,6 @@ const formatDateTimeJP = (value: string) => {
               }
               required
             >
-
               <textarea
                 name="items"
                 value={form.items}
@@ -584,17 +607,18 @@ const formatDateTimeJP = (value: string) => {
                 style={{ ...inputStyle, resize: "vertical" }}
               />
             </Field>
+
             <Field label="エアコンの取り外し作業（任意）">
-                <select
-                  name="airconRemoval"
-                  value={form.airconRemoval}
-                  onChange={handleChange}
-                  style={inputStyle}
-                >
-                  <option value="ない">ない</option>
-                  <option value="ある">ある</option>
-                </select>
-              </Field>
+              <select
+                name="airconRemoval"
+                value={form.airconRemoval}
+                onChange={handleChange}
+                style={inputStyle}
+              >
+                <option value="ない">ない</option>
+                <option value="ある">ある</option>
+              </select>
+            </Field>
 
             <SectionTitle label="お引き取り希望日時" />
 
@@ -656,10 +680,6 @@ const formatDateTimeJP = (value: string) => {
   );
 }
 
-/* =========================
-   小コンポーネント
-========================= */
-
 type FieldProps = {
   label: React.ReactNode;
   required?: boolean;
@@ -674,7 +694,7 @@ const Field: React.FC<FieldProps> = ({ label, required, children }) => (
         fontSize: 12,
         fontWeight: 600,
         marginBottom: 4,
-        color: "#111", // ← ラベルが白化して見えない事故を潰す
+        color: "#111",
       }}
     >
       {label}

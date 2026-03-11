@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import liff from "@line/liff";
 import styles from "./page.module.css";
 
-const LIFF_ID = "2008636045-8572KPnd";
+const LIFF_ID = "2009412339-HeHJetX4";
 
 type FormData = {
   name: string;

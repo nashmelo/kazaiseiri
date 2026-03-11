@@ -136,7 +136,7 @@ export default function Step2Request({
               style={inputStyle}
             >
               <option value="">選択してください</option>
-              <option value="不用品の回収">不用品の回収</option>
+              <option value="不用品の回収">不用品回収</option>
               <option value="部屋を丸ごと片付け">部屋を丸ごと片付け</option>
             </select>
           </Field>

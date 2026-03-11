@@ -142,7 +142,7 @@ const rowStyle: React.CSSProperties = {
 };
 
 const leftBoxStyle: React.CSSProperties = {
-  background: " --pink-strong",
+  background: "var(--pink-strong)",
   color: "#fff",
   fontSize: 18,
   fontWeight: 900,
@@ -154,7 +154,7 @@ const leftBoxStyle: React.CSSProperties = {
 };
 
 const recommendLeftBoxStyle: React.CSSProperties = {
-  background: " --pink-strong",
+  background: "var(--pink-strong)",
   color: "#fff",
   fontSize: 18,
   fontWeight: 900,
@@ -172,7 +172,7 @@ const recommendBadgeStyle: React.CSSProperties = {
   position: "absolute",
   top: 14,
   background: "#fff",
-  color: " --pink-strong",
+  color: "var(--pink-strong)",
   fontSize: 13,
   fontWeight: 900,
   borderRadius: 999,

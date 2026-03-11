@@ -4,7 +4,16 @@ import { useState } from "react";
 import HomeScreen from "@/components/top/HomeScreen";
 import EntryModal from "@/components/top/EntryModal";
 import Step1Location from "@/components/form/Step1Location";
-import { initialFormData, type FormData, type Screen, type Step } from "@/types/form";
+import Step2Request from "@/components/form/Step2Request";
+import Step3Schedule from "@/components/form/Step3Schedule";
+import Step4Applicant from "@/components/form/Step4Applicant";
+import Step5Confirm from "@/components/form/Step5Confirm";
+import {
+  initialFormData,
+  type FormData,
+  type Screen,
+  type Step,
+} from "@/types/form";
 
 export default function Page() {
   const [screen, setScreen] = useState<Screen>("home");
@@ -21,6 +30,7 @@ export default function Page() {
   const handleBackHome = () => {
     setScreen("home");
     setStep(1);
+    setForm(initialFormData);
   };
 
   return (
@@ -45,8 +55,38 @@ export default function Page() {
 
       {screen === "form" && step === 1 && (
         <Step1Location
-          onNext={() => alert("次は Step2Request をつなぎます")}
+          onNext={() => setStep(2)}
           onBackToTop={handleBackHome}
+        />
+      )}
+
+      {screen === "form" && step === 2 && (
+        <Step2Request
+          onNext={() => setStep(3)}
+          onPrev={() => setStep(1)}
+        />
+      )}
+
+      {screen === "form" && step === 3 && (
+        <Step3Schedule
+          onNext={() => setStep(4)}
+          onPrev={() => setStep(2)}
+        />
+      )}
+
+      {screen === "form" && step === 4 && (
+        <Step4Applicant
+          onNext={() => setStep(5)}
+          onPrev={() => setStep(3)}
+        />
+      )}
+
+      {screen === "form" && step === 5 && (
+        <Step5Confirm
+          onSubmit={() => {
+            alert("ここに送信処理（kintone登録 + LINE送信）を入れます");
+          }}
+          onPrev={() => setStep(4)}
         />
       )}
     </>

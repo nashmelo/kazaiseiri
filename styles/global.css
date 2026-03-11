@@ -1,5 +1,8 @@
 :root{
-  --bg-main:#FFF0F5;
-  --pink-main:#F8BBD0;
-  --pink-strong:#E91E63;
+  --bg-main: #fdf4f7;
+  --pink-main: #f7d6e2;
+  --pink-strong: #e91e63;
+  --pink-soft: #fde7ef;
+  --text-main: #1c2b4a;
+  --text-sub: #6b7280;
 }

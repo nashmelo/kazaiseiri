@@ -30,19 +30,19 @@ export default function EntryModal({
             <div style={rightBoxStyle}>
               <div style={tagRowStyle}>
                 <span style={labelStyle}>安全性</span>
-                <span style={markCircleStyle}>○</span>
+                <span style={markGoodStyle}>○</span>
               </div>
               <div style={descStyle}>行政の委託業者のため安全</div>
 
               <div style={tagRowStyle}>
                 <span style={labelStyle}>料金</span>
-                <span style={markTriangleStyle}>△</span>
+                <span style={markNeutralStyle}>△</span>
               </div>
               <div style={descStyle}>自治体よりは高い</div>
 
               <div style={tagRowStyle}>
                 <span style={labelStyle}>手間</span>
-                <span style={markCircleStyle}>○</span>
+                <span style={markGoodStyle}>○</span>
               </div>
               <div style={descStyle}>
                 電話や手続きが必要な場合がある
@@ -59,19 +59,19 @@ export default function EntryModal({
             <div style={rightBoxStyle}>
               <div style={tagRowStyle}>
                 <span style={labelStyle}>安全性</span>
-                <span style={markCircleStyle}>○</span>
+                <span style={markGoodStyle}>○</span>
               </div>
               <div style={descStyle}>行政発行の許可業者のみで安全</div>
 
               <div style={tagRowStyle}>
                 <span style={labelStyle}>料金</span>
-                <span style={markCrossStyle}>×</span>
+                <span style={markNeutralStyle}>△</span>
               </div>
               <div style={descStyle}>相見積もりで比較しやすい</div>
 
               <div style={tagRowStyle}>
                 <span style={labelStyle}>手間</span>
-                <span style={markCircleStyle}>○</span>
+                <span style={markGoodStyle}>○</span>
               </div>
               <div style={descStyle}>
                 LINEで簡単。
@@ -99,7 +99,7 @@ export default function EntryModal({
 const overlayStyle: React.CSSProperties = {
   position: "fixed",
   inset: 0,
-  background: "rgba(0, 0, 0, 0.35)",
+  background: "rgba(28, 43, 74, 0.28)",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -113,8 +113,8 @@ const modalStyle: React.CSSProperties = {
   maxWidth: 520,
   maxHeight: "90vh",
   overflowY: "auto",
-  background: "#f4f4f4",
-  borderRadius: 18,
+  background: "#fffafb",
+  borderRadius: 20,
   padding: "26px 18px 24px",
   boxSizing: "border-box",
   boxShadow: "0 12px 32px rgba(0,0,0,0.18)",
@@ -142,14 +142,14 @@ const rowStyle: React.CSSProperties = {
 };
 
 const leftBoxStyle: React.CSSProperties = {
-  background: "var(--pink-strong)",
+  background: "#f06292",
   color: "#fff",
   fontSize: 18,
   fontWeight: 900,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  borderRadius: 6,
+  borderRadius: 10,
   minHeight: 170,
 };
 
@@ -162,7 +162,7 @@ const recommendLeftBoxStyle: React.CSSProperties = {
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  borderRadius: 6,
+  borderRadius: 10,
   minHeight: 240,
   position: "relative",
   gap: 4,
@@ -177,12 +177,13 @@ const recommendBadgeStyle: React.CSSProperties = {
   fontWeight: 900,
   borderRadius: 999,
   padding: "6px 14px",
+  border: "2px solid #f7c6d8",
 };
 
 const rightBoxStyle: React.CSSProperties = {
-  background: "#f4f4f4",
-  color: "#222",
-  padding: "6px 2px",
+  background: "#fffafb",
+  color: "#1c2b4a",
+  padding: "4px 2px",
   boxSizing: "border-box",
 };
 
@@ -199,30 +200,23 @@ const labelStyle: React.CSSProperties = {
   justifyContent: "center",
   minWidth: 90,
   padding: "8px 12px",
-  background: "#cfeeff",
+  background: "#fde7ef",
   color: "var(--pink-strong)",
   fontSize: 16,
   fontWeight: 900,
-  borderRadius: 6,
+  borderRadius: 8,
 };
 
-const markCircleStyle: React.CSSProperties = {
-  color: "#e53935",
+const markGoodStyle: React.CSSProperties = {
+  color: "var(--pink-strong)",
   fontSize: 30,
   fontWeight: 900,
   lineHeight: 1,
 };
 
-const markTriangleStyle: React.CSSProperties = {
-  color: "#888",
+const markNeutralStyle: React.CSSProperties = {
+  color: "#7b8794",
   fontSize: 28,
-  fontWeight: 900,
-  lineHeight: 1,
-};
-
-const markCrossStyle: React.CSSProperties = {
-  color: "#888",
-  fontSize: 30,
   fontWeight: 900,
   lineHeight: 1,
 };
@@ -231,7 +225,7 @@ const descStyle: React.CSSProperties = {
   fontSize: 15,
   lineHeight: 1.55,
   fontWeight: 700,
-  color: "#222",
+  color: "#1c2b4a",
   marginBottom: 14,
 };
 

@@ -73,7 +73,7 @@ export default function HomeScreen({
             </div>
 
             <div style={leadMiniStyle}>
-              最短30秒
+              許可業者限定だから安心
             </div>
 
             <p style={leadTextStyle}>

@@ -55,11 +55,13 @@ export default function Page() {
 
       {screen === "form" && step === 1 && (
         <Step1Location
+          form={form}
+          setForm={setForm}
           onNext={() => setStep(2)}
           onBackToTop={handleBackHome}
         />
       )}
-
+      
       {screen === "form" && step === 2 && (
         <Step2Request
           onNext={() => setStep(3)}

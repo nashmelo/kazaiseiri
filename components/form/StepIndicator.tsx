@@ -48,9 +48,9 @@ export default function StepIndicator({ step }: StepIndicatorProps) {
                 justifyContent: "center",
                 fontSize: 18,
                 fontWeight: 900,
-                background: isDone ? "#095db6" : isActive ? "#ffffff" : "#f1f1f1",
-                color: isDone ? "#ffffff" : isActive ? "#095db6" : "#999999",
-                border: isActive ? "4px solid #095db6" : "1px solid #d9d9d9",
+                background: isDone ? "var(--pink-strong)" : isActive ? "#ffffff" : "#f1f1f1",
+                color: isDone ? "#ffffff" : isActive ? "var(--pink-strong)" : "#999999",
+                border: isActive ? "4px solid var(--pink-strong)" : "1px solid #d9d9d9",
                 boxSizing: "border-box",
               }}
             >
@@ -61,7 +61,7 @@ export default function StepIndicator({ step }: StepIndicatorProps) {
               style={{
                 fontSize: 12,
                 fontWeight: 800,
-                color: isActive || isDone ? "#095db6" : "#999999",
+                color: isActive || isDone ? "var(--pink-strong)" : "#999999",
                 lineHeight: 1.4,
               }}
             >

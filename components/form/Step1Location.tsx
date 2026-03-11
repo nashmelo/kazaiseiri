@@ -122,7 +122,7 @@ export default function Step1Location({
     <main
       style={{
         minHeight: "100vh",
-        background: "#8ed0f4",
+        background: "var(--bg-main)",
         padding: "24px 16px 40px",
         boxSizing: "border-box",
       }}
@@ -164,7 +164,7 @@ export default function Step1Location({
         >
           <div
             style={{
-              background: "#8ed0f4",
+              background: "var(--pink-main)",
               color: "#ffffff",
               textAlign: "center",
               fontSize: 18,
@@ -375,7 +375,7 @@ const inputStyle: React.CSSProperties = {
 const smallButtonStyle: React.CSSProperties = {
   border: "none",
   borderRadius: 8,
-  background: "#095db6",
+  background: "var(--pink-strong)",
   color: "#ffffff",
   fontSize: 14,
   fontWeight: 800,
@@ -388,7 +388,7 @@ const primaryButtonStyle: React.CSSProperties = {
   width: "100%",
   border: "none",
   borderRadius: 999,
-  background: "#095db6",
+  background: "var(--pink-strong)",
   color: "#ffffff",
   fontSize: 18,
   fontWeight: 900,
@@ -400,10 +400,10 @@ const secondaryButtonStyle: React.CSSProperties = {
   width: "100%",
   borderRadius: 999,
   background: "#ffffff",
-  color: "#095db6",
+  color: "var(--pink-strong)",
   fontSize: 18,
   fontWeight: 900,
   padding: "18px 16px",
   cursor: "pointer",
-  border: "3px solid #095db6",
+  border: "3px solid var(--pink-strong)",
 };

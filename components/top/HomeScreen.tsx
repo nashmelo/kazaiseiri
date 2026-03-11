@@ -22,7 +22,7 @@ export default function HomeScreen({
       style={{
         minHeight: "100vh",
         background: "var(--bg-main)",
-        padding: "24px 16px 40px",
+        padding: "18px 16px 28px",
         boxSizing: "border-box",
       }}
     >
@@ -35,7 +35,7 @@ export default function HomeScreen({
         <div
           style={{
             textAlign: "center",
-            marginBottom: 18,
+            marginBottom: 12,
           }}
         >
           <h1 style={topCatchStyle}>
@@ -45,25 +45,25 @@ export default function HomeScreen({
 
         <div
           style={{
-            background: "#ffffff",
-            borderRadius: 32,
-            padding: "32px 22px 26px",
+            background: "#f8f8f8",
+            borderRadius: 30,
+            padding: "22px 18px 20px",
             boxSizing: "border-box",
-            boxShadow: "0 12px 28px rgba(0,0,0,0.08)",
+            boxShadow: "0 8px 20px rgba(0,0,0,0.06)",
           }}
         >
           <div
             style={{
               textAlign: "center",
-              marginBottom: 24,
+              marginBottom: 16,
             }}
           >
             <div
               style={{
-                width: 124,
-                height: 124,
-                margin: "0 auto 20px",
-                borderRadius: 26,
+                width: 104,
+                height: 104,
+                margin: "0 auto 14px",
+                borderRadius: 22,
                 background: "linear-gradient(135deg,#ff6fa9,#ff2d75)",
               }}
             />
@@ -83,7 +83,6 @@ export default function HomeScreen({
             </p>
           </div>
 
-          {/* 見積り導線グループ */}
           <section style={estimateGroupStyle}>
             <div style={estimateTitleStyle}>
               無料見積りする
@@ -97,7 +96,7 @@ export default function HomeScreen({
               style={{
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",
-                gap: 14,
+                gap: 12,
               }}
             >
               <button
@@ -170,108 +169,108 @@ export default function HomeScreen({
 const topCatchStyle: React.CSSProperties = {
   margin: 0,
   textAlign: "center",
-  fontSize: 20,
-  lineHeight: 1.45,
+  fontSize: 17,
+  lineHeight: 1.4,
   fontWeight: 900,
   color: "#1c2b4a",
   letterSpacing: "0.01em",
 };
 
 const logoStyle: React.CSSProperties = {
-  fontSize: 58,
+  fontSize: 42,
   lineHeight: 1,
   fontWeight: 900,
   color: "#1c2b4a",
-  letterSpacing: "0.04em",
-  marginBottom: 18,
+  letterSpacing: "0.06em",
+  marginBottom: 10,
   fontFamily:
     '"Arial Rounded MT Bold","Rounded Mplus 1c","Hiragino Maru Gothic ProN","Yu Gothic",sans-serif',
 };
 
 const leadMiniStyle: React.CSSProperties = {
   textAlign: "center",
-  fontSize: 22,
+  fontSize: 16,
   lineHeight: 1.3,
   fontWeight: 900,
   color: "#1c2b4a",
-  marginBottom: 10,
+  marginBottom: 6,
 };
 
 const leadTextStyle: React.CSSProperties = {
   margin: 0,
   textAlign: "center",
-  fontSize: 24,
-  lineHeight: 1.55,
+  fontSize: 17,
+  lineHeight: 1.5,
   fontWeight: 900,
   color: "#1c2b4a",
   letterSpacing: "0.01em",
 };
 
 const estimateGroupStyle: React.CSSProperties = {
-  background: "#fff6fa",
-  border: "3px solid #f4bdd2",
-  borderRadius: 28,
-  padding: "18px 14px 14px",
-  marginBottom: 18,
+  background: "#fff7fb",
+  border: "2px solid #efbfd2",
+  borderRadius: 24,
+  padding: "14px 12px 12px",
+  marginBottom: 14,
 };
 
 const estimateTitleStyle: React.CSSProperties = {
   textAlign: "center",
-  fontSize: 28,
+  fontSize: 18,
   lineHeight: 1.2,
   fontWeight: 900,
   color: "var(--pink-strong)",
-  marginBottom: 8,
+  marginBottom: 4,
 };
 
 const estimateSubTextStyle: React.CSSProperties = {
   textAlign: "center",
-  fontSize: 14,
-  lineHeight: 1.5,
-  fontWeight: 800,
-  color: "#7a4660",
-  marginBottom: 14,
+  fontSize: 12,
+  lineHeight: 1.4,
+  fontWeight: 700,
+  color: "#8a6070",
+  marginBottom: 10,
 };
 
 const cardButtonStyle: React.CSSProperties = {
   border: "none",
   padding: 0,
-  borderRadius: 22,
+  borderRadius: 20,
   overflow: "hidden",
   background: "#ffffff",
   cursor: "pointer",
-  boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
+  boxShadow: "0 4px 10px rgba(0,0,0,0.06)",
 };
 
 const cardTopStyle: React.CSSProperties = {
   background: "#f7cf00",
-  height: 94,
+  height: 78,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
 };
 
 const iconBoxStyle: React.CSSProperties = {
-  fontSize: 40,
+  fontSize: 34,
   lineHeight: 1,
 };
 
 const cardMiddleStyle: React.CSSProperties = {
   background: "#ede5b9",
-  padding: "14px 10px 10px",
-  fontSize: 22,
+  padding: "10px 8px 8px",
+  fontSize: 18,
   lineHeight: 1.2,
   fontWeight: 900,
   textAlign: "center",
-  color: "#1565d8",
+  color: "#1c2b4a",
 };
 
 const cardBottomStyle: React.CSSProperties = {
   background: "#fffdf4",
-  padding: "10px 10px 14px",
-  fontSize: 12,
-  lineHeight: 1.45,
-  fontWeight: 800,
+  padding: "8px 8px 10px",
+  fontSize: 11,
+  lineHeight: 1.35,
+  fontWeight: 700,
   textAlign: "center",
   color: "#4b5563",
 };
@@ -282,12 +281,11 @@ const yellowButtonStyle: React.CSSProperties = {
   borderRadius: 999,
   background: "#f7cf00",
   color: "#10284d",
-  fontSize: 18,
+  fontSize: 17,
   fontWeight: 900,
-  padding: "18px 16px",
+  padding: "16px 14px",
   cursor: "pointer",
-  marginBottom: 14,
-  boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
+  marginBottom: 12,
 };
 
 const pinkButtonStyle: React.CSSProperties = {
@@ -296,12 +294,11 @@ const pinkButtonStyle: React.CSSProperties = {
   borderRadius: 999,
   background: "var(--pink-strong)",
   color: "#fff",
-  fontSize: 18,
+  fontSize: 17,
   fontWeight: 900,
-  padding: "18px 16px",
+  padding: "16px 14px",
   cursor: "pointer",
-  marginBottom: 14,
-  boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
+  marginBottom: 12,
 };
 
 const whiteButtonStyle: React.CSSProperties = {
@@ -309,9 +306,9 @@ const whiteButtonStyle: React.CSSProperties = {
   borderRadius: 999,
   background: "#fff",
   color: "var(--pink-strong)",
-  fontSize: 18,
+  fontSize: 17,
   fontWeight: 900,
-  padding: "18px 16px",
+  padding: "16px 14px",
   cursor: "pointer",
-  border: "3px solid var(--pink-strong)",
+  border: "2px solid var(--pink-strong)",
 };

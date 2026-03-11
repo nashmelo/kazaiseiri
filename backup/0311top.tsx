@@ -21,7 +21,7 @@ export default function HomeScreen({
     <main
       style={{
         minHeight: "100vh",
-        background: "var(--bg-main)",
+        background: "#eef5ff",
         padding: "24px 16px 40px",
         boxSizing: "border-box",
       }}
@@ -32,11 +32,10 @@ export default function HomeScreen({
           margin: "0 auto",
         }}
       >
-        {/* キャッチコピー */}
         <div
           style={{
             textAlign: "center",
-            marginBottom: 18,
+            marginBottom: 20,
           }}
         >
           <h1
@@ -45,6 +44,7 @@ export default function HomeScreen({
               fontSize: 20,
               fontWeight: 900,
               color: "#1c2b4a",
+              letterSpacing: "0.04em",
             }}
           >
             片付け・不用品回収ならすっきりん
@@ -53,14 +53,13 @@ export default function HomeScreen({
 
         <div
           style={{
-            background: "#ffffff",
+            background: "#f7f7f7",
             borderRadius: 28,
-            padding: "30px 22px 26px",
+            padding: "28px 20px 24px",
             boxSizing: "border-box",
-            boxShadow: "0 10px 24px rgba(0,0,0,0.08)",
+            boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
           }}
         >
-          {/* ロゴ */}
           <div
             style={{
               textAlign: "center",
@@ -71,58 +70,39 @@ export default function HomeScreen({
               style={{
                 width: 120,
                 height: 120,
-                margin: "0 auto 18px",
-                borderRadius: 22,
-                background: "linear-gradient(135deg,#ff6fa9,#ff2d75)",
+                margin: "0 auto 16px",
+                borderRadius: 20,
+                background: "linear-gradient(135deg, #7fcaf2, #0f58a8)",
               }}
             />
-
             <div
               style={{
-                fontSize: 40,
+                fontSize: 38,
                 fontWeight: 900,
-                color: "#1c2b4a",
-                letterSpacing: "0.06em",
-                marginBottom: 12,
+                color: "#0d2e6e",
+                lineHeight: 1,
+                marginBottom: 14,
               }}
             >
               SUKKIRIN
             </div>
-
-            <div
-              style={{
-                fontSize: 18,
-                fontWeight: 800,
-                marginBottom: 10,
-              }}
-            >
-              最短30秒
-            </div>
-
             <p
               style={{
                 margin: 0,
                 fontSize: 16,
                 lineHeight: 1.7,
                 color: "#333",
+                fontWeight: 500,
               }}
             >
-              粗大ゴミ回収を
+              すっきりんは
               <br />
-              LINEでカンタン見積り
+              回収業者の見積もりをカンタン比較
+              <br />
+              行政許認可業者だから安心
             </p>
           </div>
 
-          {/* 無料見積りボタン */}
-          <button
-            type="button"
-            onClick={onOpenGarbageEntry}
-            style={ctaButtonStyle}
-          >
-            無料見積りする
-          </button>
-
-          {/* カテゴリ */}
           <div
             style={{
               display: "grid",
@@ -139,9 +119,14 @@ export default function HomeScreen({
               <div style={cardTopStyle}>
                 <div style={iconBoxStyle}>🏠</div>
               </div>
-
               <div style={cardMiddleStyle}>
-                家庭のゴミ
+                <div style={cardTitleStyle}>粗大ゴミ回収</div>
+                <div style={cardSubTitleStyle}>（市民向け）</div>
+              </div>
+              <div style={cardBottomStyle}>
+                家庭から出てくる不要となった
+                <br />
+                ゴミの回収の見積り
               </div>
             </button>
 
@@ -153,29 +138,32 @@ export default function HomeScreen({
               <div style={cardTopStyle}>
                 <div style={iconBoxStyle}>🏢</div>
               </div>
-
               <div style={cardMiddleStyle}>
-                事業ゴミ
+                <div style={cardTitleStyle}>事業ゴミ回収</div>
+                <div style={cardSubTitleStyle}>（事業者向け）</div>
+              </div>
+              <div style={cardBottomStyle}>
+                事業所などから出るスポット
+                <br />
+                定期回収の依頼
               </div>
             </button>
           </div>
 
-          {/* 家電リユース */}
           <button
             type="button"
             onClick={onOpenReuse}
             style={yellowButtonStyle}
           >
-            家電リユース（無償引取）
+            家電リユース（無償引取）はこちら
           </button>
 
-          {/* その他 */}
           <button
             type="button"
             onClick={onOpenReason}
-            style={pinkButtonStyle}
+            style={blueButtonStyle}
           >
-            すっきりんが選ばれる理由
+            すっきりん が選ばれる理由
           </button>
 
           <button
@@ -191,19 +179,6 @@ export default function HomeScreen({
   );
 }
 
-const ctaButtonStyle: React.CSSProperties = {
-  width: "100%",
-  border: "none",
-  borderRadius: 999,
-  background: "var(--pink-strong)",
-  color: "#fff",
-  fontSize: 20,
-  fontWeight: 900,
-  padding: "18px",
-  cursor: "pointer",
-  marginBottom: 18,
-};
-
 const cardButtonStyle: React.CSSProperties = {
   border: "none",
   padding: 0,
@@ -211,26 +186,50 @@ const cardButtonStyle: React.CSSProperties = {
   overflow: "hidden",
   background: "#f7cf00",
   cursor: "pointer",
+  boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
 };
 
 const cardTopStyle: React.CSSProperties = {
   background: "#f7cf00",
-  height: 90,
+  height: 88,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
 };
 
 const iconBoxStyle: React.CSSProperties = {
-  fontSize: 38,
+  fontSize: 36,
+  lineHeight: 1,
 };
 
 const cardMiddleStyle: React.CSSProperties = {
   background: "#ede5b9",
-  padding: "14px",
-  fontSize: 18,
-  fontWeight: 900,
+  padding: "14px 10px 12px",
   textAlign: "center",
+};
+
+const cardTitleStyle: React.CSSProperties = {
+  fontSize: 22,
+  fontWeight: 900,
+  color: "#202020",
+  lineHeight: 1.2,
+};
+
+const cardSubTitleStyle: React.CSSProperties = {
+  fontSize: 14,
+  fontWeight: 800,
+  color: "#202020",
+  marginTop: 2,
+};
+
+const cardBottomStyle: React.CSSProperties = {
+  background: "#f7cf00",
+  padding: "14px 10px 18px",
+  fontSize: 12,
+  lineHeight: 1.45,
+  fontWeight: 700,
+  textAlign: "center",
+  color: "#202020",
 };
 
 const yellowButtonStyle: React.CSSProperties = {
@@ -241,20 +240,20 @@ const yellowButtonStyle: React.CSSProperties = {
   color: "#10284d",
   fontSize: 18,
   fontWeight: 900,
-  padding: "18px",
+  padding: "18px 16px",
   cursor: "pointer",
   marginBottom: 14,
 };
 
-const pinkButtonStyle: React.CSSProperties = {
+const blueButtonStyle: React.CSSProperties = {
   width: "100%",
   border: "none",
   borderRadius: 999,
   background: "var(--pink-strong)",
-  color: "#fff",
+  color: "#ffffff",
   fontSize: 18,
   fontWeight: 900,
-  padding: "18px",
+  padding: "18px 16px",
   cursor: "pointer",
   marginBottom: 14,
 };
@@ -262,11 +261,11 @@ const pinkButtonStyle: React.CSSProperties = {
 const whiteButtonStyle: React.CSSProperties = {
   width: "100%",
   borderRadius: 999,
-  background: "#fff",
+  background: "#ffffff",
   color: "var(--pink-strong)",
   fontSize: 18,
   fontWeight: 900,
-  padding: "18px",
+  padding: "18px 16px",
   cursor: "pointer",
   border: "3px solid var(--pink-strong)",
 };

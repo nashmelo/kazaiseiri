@@ -64,7 +64,7 @@ export default function HomeScreen({
           <div
             style={{
               textAlign: "center",
-              marginBottom: 20,
+              marginBottom: 22,
             }}
           >
             <div
@@ -93,7 +93,7 @@ export default function HomeScreen({
               style={{
                 fontSize: 18,
                 fontWeight: 800,
-                marginBottom: 10,
+                marginBottom: 8,
               }}
             >
               最短30秒
@@ -113,22 +113,18 @@ export default function HomeScreen({
             </p>
           </div>
 
-          {/* 無料見積りボタン */}
-          <button
-            type="button"
-            onClick={onOpenGarbageEntry}
-            style={ctaButtonStyle}
-          >
+          {/* 見出し（ボタンではない） */}
+          <div style={estimateTitleStyle}>
             無料見積りする
-          </button>
+          </div>
 
-          {/* カテゴリ */}
+          {/* カテゴリ選択 */}
           <div
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
               gap: 14,
-              marginBottom: 16,
+              marginBottom: 18,
             }}
           >
             <button
@@ -191,17 +187,13 @@ export default function HomeScreen({
   );
 }
 
-const ctaButtonStyle: React.CSSProperties = {
+const estimateTitleStyle: React.CSSProperties = {
   width: "100%",
-  border: "none",
-  borderRadius: 999,
-  background: "var(--pink-strong)",
-  color: "#fff",
+  textAlign: "center",
   fontSize: 20,
   fontWeight: 900,
-  padding: "18px",
-  cursor: "pointer",
-  marginBottom: 18,
+  color: "var(--pink-strong)",
+  marginBottom: 14,
 };
 
 const cardButtonStyle: React.CSSProperties = {

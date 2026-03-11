@@ -113,7 +113,7 @@ export default function HomeScreen({
                 </div>
 
                 <div style={cardBottomStyle}>
-                  家の片付け・粗大ゴミなど
+                  家の片付け・粗大ゴミ等
                 </div>
               </button>
 
@@ -237,9 +237,13 @@ const cardButtonStyle: React.CSSProperties = {
   padding: 0,
   borderRadius: 20,
   overflow: "hidden",
-  background: "#ffffff",
+  background: "#f7cf00",
   cursor: "pointer",
   boxShadow: "0 4px 10px rgba(0,0,0,0.06)",
+  display: "block",
+  width: "100%",
+  appearance: "none",
+  WebkitAppearance: "none",
 };
 
 const cardTopStyle: React.CSSProperties = {

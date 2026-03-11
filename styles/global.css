@@ -1,9 +1,5 @@
-body{
-  font-family:
-  -apple-system,
-  BlinkMacSystemFont,
-  "Hiragino Kaku Gothic ProN",
-  "Noto Sans JP",
-  "Segoe UI",
-  sans-serif;
+:root{
+  --bg-main:#FFF0F5;
+  --pink-main:#F8BBD0;
+  --pink-strong:#E91E63;
 }

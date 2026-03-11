@@ -144,7 +144,7 @@ export default function Step1Location({
               margin: 0,
               fontSize: 18,
               fontWeight: 900,
-              color: "#ffffff",
+              color: "var(--text-main)",
             }}
           >
             粗大ゴミ回収 | すっきりん
@@ -155,7 +155,7 @@ export default function Step1Location({
 
         <div
           style={{
-            background: "#f7f7f7",
+            background: "#fffafb",
             borderRadius: 28,
             padding: "22px 18px 24px",
             boxSizing: "border-box",
@@ -164,14 +164,15 @@ export default function Step1Location({
         >
           <div
             style={{
-              background: "var(--pink-main)",
-              color: "#ffffff",
+              background: "var(--pink-soft)",
+              color: "var(--pink-strong)",
               textAlign: "center",
               fontSize: 18,
               fontWeight: 900,
               padding: "18px 12px",
-              borderRadius: 10,
+              borderRadius: 12,
               marginBottom: 24,
+              border: "2px solid var(--pink-main)",
             }}
           >
             Step 1 回収場所をご指定ください
@@ -180,13 +181,14 @@ export default function Step1Location({
           {error && (
             <div
               style={{
-                background: "#ffe5e5",
-                color: "#b00020",
+                background: "#fff1f4",
+                color: "var(--pink-strong)",
                 padding: "10px 12px",
-                borderRadius: 8,
+                borderRadius: 10,
                 fontSize: 13,
                 fontWeight: 700,
                 marginBottom: 16,
+                border: "1px solid #f5bfd0",
               }}
             >
               {error}
@@ -213,7 +215,14 @@ export default function Step1Location({
               </button>
             </div>
             {postalStatus && (
-              <div style={{ marginTop: 6, fontSize: 12, color: "#666" }}>
+              <div
+                style={{
+                  marginTop: 6,
+                  fontSize: 12,
+                  color: "var(--text-sub)",
+                  fontWeight: 700,
+                }}
+              >
                 {postalStatus}
               </div>
             )}
@@ -349,12 +358,14 @@ function Field({ label, required, children }: FieldProps) {
           display: "block",
           fontSize: 13,
           fontWeight: 800,
-          color: "#222",
+          color: "var(--text-main)",
           marginBottom: 6,
         }}
       >
         {label}
-        {required && <span style={{ color: "#d00", marginLeft: 4 }}>＊</span>}
+        {required && (
+          <span style={{ color: "var(--pink-strong)", marginLeft: 4 }}>＊</span>
+        )}
       </label>
       {children}
     </div>
@@ -363,18 +374,19 @@ function Field({ label, required, children }: FieldProps) {
 
 const inputStyle: React.CSSProperties = {
   width: "100%",
-  padding: "10px 12px",
-  borderRadius: 8,
-  border: "1px solid #d8d8d8",
+  padding: "12px 12px",
+  borderRadius: 10,
+  border: "1px solid #e6d7de",
   fontSize: 14,
   boxSizing: "border-box",
   background: "#ffffff",
-  color: "#111",
+  color: "var(--text-main)",
+  outline: "none",
 };
 
 const smallButtonStyle: React.CSSProperties = {
   border: "none",
-  borderRadius: 8,
+  borderRadius: 10,
   background: "var(--pink-strong)",
   color: "#ffffff",
   fontSize: 14,

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import StepIndicator from "@/components/form/StepIndicator";
 import type { FormData } from "@/types/form";
 import { lookupAddressByPostalCode } from "@/lib/postal";
@@ -21,16 +21,6 @@ export default function Step1Location({
   const [postalStatus, setPostalStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    setForm((prev) => ({
-      ...prev,
-      buildingType: prev.buildingType || "戸建て",
-      parking: prev.parking || "あり",
-      elevator: prev.elevator || "あり",
-      disposalMethod: prev.disposalMethod || "自分で排出",
-    }));
-  }, [setForm]);
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -45,13 +35,6 @@ export default function Step1Location({
       return;
     }
 
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleRadioChange = (name: keyof FormData, value: string) => {
     setForm((prev) => ({
       ...prev,
       [name]: value,
@@ -277,84 +260,58 @@ export default function Step1Location({
           </Field>
 
           <Field label="建物の種類" required>
-            <RadioCardGroup
+            <select
               name="buildingType"
               value={form.buildingType}
-              onChange={handleRadioChange}
-              options={[
-                { value: "戸建て", label: "戸建て" },
-                { value: "マンション・アパート", label: "マンション・アパート" },
-                { value: "倉庫", label: "倉庫" },
-                { value: "オフィス", label: "オフィス" },
-                { value: "その他", label: "その他" },
-              ]}
-              columns={2}
-            />
+              onChange={handleChange}
+              style={inputStyle}
+            >
+              <option value="">選択してください</option>
+              <option value="戸建て">戸建て</option>
+              <option value="マンション・アパート">マンション・アパート</option>
+              <option value="倉庫">倉庫</option>
+              <option value="オフィス">オフィス</option>
+              <option value="その他">その他</option>
+            </select>
           </Field>
 
-          {form.buildingType === "マンション・アパート" && (
-            <div
-              style={{
-                marginTop: -6,
-                marginBottom: 14,
-                color: "var(--pink-strong)",
-                fontSize: 12,
-                fontWeight: 800,
-              }}
-            >
-              マンション・アパートを選択した方は、住所欄に建物名・部屋番号をご記入ください
-            </div>
-          )}
-
           <Field label="駐車場の有無" required>
-            <RadioCardGroup
+            <select
               name="parking"
               value={form.parking}
-              onChange={handleRadioChange}
-              options={[
-                { value: "あり", label: "あり" },
-                { value: "なし", label: "なし" },
-              ]}
-              columns={2}
-            />
+              onChange={handleChange}
+              style={inputStyle}
+            >
+              <option value="">選択してください</option>
+              <option value="あり">あり</option>
+              <option value="なし">なし</option>
+            </select>
           </Field>
 
           <Field label="エレベーターの有無" required>
-            <RadioCardGroup
+            <select
               name="elevator"
               value={form.elevator}
-              onChange={handleRadioChange}
-              options={[
-                { value: "あり", label: "あり" },
-                { value: "なし", label: "なし" },
-              ]}
-              columns={2}
-            />
+              onChange={handleChange}
+              style={inputStyle}
+            >
+              <option value="">選択してください</option>
+              <option value="あり">あり</option>
+              <option value="なし">なし</option>
+            </select>
           </Field>
 
           <Field label="ゴミの排出方法" required>
-            <div
-              style={{
-                marginBottom: 8,
-                fontSize: 12,
-                color: "var(--text-sub)",
-                fontWeight: 700,
-                lineHeight: 1.5,
-              }}
-            >
-              ご自身で家の外に出す場合は「自分で排出」を、排出から依頼する場合は「排出を希望する」を選択してください
-            </div>
-
-            <RadioCardGroup
+            <select
               name="disposalMethod"
               value={form.disposalMethod}
-              onChange={handleRadioChange}
-              options={[
-                { value: "自分で排出", label: "自分で排出" },
-                { value: "排出を希望する", label: "排出を希望する" },
-              ]}
-              columns={2}
-            />
+              onChange={handleChange}
+              style={inputStyle}
+            >
+              <option value="">選択してください</option>
+              <option value="自分で排出">自分で排出</option>
+              <option value="排出を希望する">排出を希望する</option>
+            </select>
           </Field>
 
           <div
@@ -395,14 +352,14 @@ type FieldProps = {
 
 function Field({ label, required, children }: FieldProps) {
   return (
-    <div style={{ marginBottom: 18 }}>
+    <div style={{ marginBottom: 14 }}>
       <label
         style={{
           display: "block",
           fontSize: 13,
           fontWeight: 800,
           color: "var(--text-main)",
-          marginBottom: 8,
+          marginBottom: 6,
         }}
       >
         {label}
@@ -414,108 +371,6 @@ function Field({ label, required, children }: FieldProps) {
     </div>
   );
 }
-
-type RadioOption = {
-  value: string;
-  label: string;
-};
-
-type RadioCardGroupProps = {
-  name: keyof FormData;
-  value: string;
-  onChange: (name: keyof FormData, value: string) => void;
-  options: RadioOption[];
-  columns?: 1 | 2;
-};
-
-function RadioCardGroup({
-  name,
-  value,
-  onChange,
-  options,
-  columns = 2,
-}: RadioCardGroupProps) {
-  return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: columns === 2 ? "1fr 1fr" : "1fr",
-        gap: 10,
-      }}
-    >
-      {options.map((option) => {
-        const checked = value === option.value;
-
-        return (
-          <label
-            key={option.value}
-            style={{
-              position: "relative",
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              minHeight: 58,
-              padding: "14px 16px",
-              borderRadius: 16,
-              border: checked
-                ? "2px solid var(--pink-strong)"
-                : "2px solid #efd7df",
-              background: checked ? "#fff1f6" : "#ffffff",
-              color: checked ? "var(--pink-strong)" : "var(--text-main)",
-              fontWeight: 900,
-              fontSize: 16,
-              cursor: "pointer",
-              boxSizing: "border-box",
-              transition: "all 0.2s ease",
-            }}
-          >
-            <input
-              type="radio"
-              name={String(name)}
-              value={option.value}
-              checked={checked}
-              onChange={() => onChange(name, option.value)}
-              style={radioInputHiddenStyle}
-            />
-
-            <span
-              style={{
-                width: 22,
-                height: 22,
-                borderRadius: "50%",
-                border: checked
-                  ? "2px solid var(--pink-strong)"
-                  : "2px solid #c9b7be",
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-                background: "#fff",
-              }}
-            >
-              <span
-                style={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: "50%",
-                  background: checked ? "var(--pink-strong)" : "transparent",
-                }}
-              />
-            </span>
-
-            <span style={{ lineHeight: 1.3 }}>{option.label}</span>
-          </label>
-        );
-      })}
-    </div>
-  );
-}
-
-const radioInputHiddenStyle: React.CSSProperties = {
-  position: "absolute",
-  opacity: 0,
-  pointerEvents: "none",
-};
 
 const inputStyle: React.CSSProperties = {
   width: "100%",

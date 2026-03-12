@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 type BusinessWasteModalProps = {
   open: boolean;
@@ -13,6 +13,21 @@ export default function BusinessWasteModal({
   onClose,
   onProceed,
 }: BusinessWasteModalProps) {
+  useEffect(() => {
+    if (!open) return;
+
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalBodyTouchAction = document.body.style.touchAction;
+
+    document.body.style.overflow = "hidden";
+    document.body.style.touchAction = "none";
+
+    return () => {
+      document.body.style.overflow = originalBodyOverflow;
+      document.body.style.touchAction = originalBodyTouchAction;
+    };
+  }, [open]);
+
   if (!open) return null;
 
   return (
@@ -25,8 +40,9 @@ export default function BusinessWasteModal({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: 16,
+        padding: 12,
         zIndex: 9999,
+        overscrollBehavior: "contain",
       }}
     >
       <div
@@ -34,23 +50,28 @@ export default function BusinessWasteModal({
         style={{
           width: "100%",
           maxWidth: 560,
+          maxHeight: "88vh",
           background: "#ffffff",
-          borderRadius: 12,
+          borderRadius: 16,
           overflow: "hidden",
           boxShadow: "0 12px 30px rgba(0,0,0,0.18)",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         <div
           style={{
-            padding: "28px 24px 24px",
+            flexShrink: 0,
+            padding: "22px 20px 18px",
             borderBottom: "1px solid #e5e7eb",
             textAlign: "center",
+            background: "#ffffff",
           }}
         >
           <div
             style={{
-              fontSize: 18,
-              lineHeight: 1.6,
+              fontSize: 17,
+              lineHeight: 1.5,
               fontWeight: 900,
               color: "#0f5ca8",
             }}
@@ -63,70 +84,124 @@ export default function BusinessWasteModal({
 
         <div
           style={{
-            padding: "28px 28px 20px",
+            flex: 1,
+            overflowY: "auto",
+            WebkitOverflowScrolling: "touch",
+            overscrollBehavior: "contain",
+            padding: "20px 20px 16px",
             color: "#222222",
-            fontSize: 15,
-            lineHeight: 1.9,
-            fontWeight: 700,
+            background: "#ffffff",
           }}
         >
-          <p style={{ margin: "0 0 24px" }}>
-            事業者は、事業活動に伴って生じた廃棄物を
-            <span style={{ color: "#ff2d55", fontWeight: 900 }}>
-              自らの責任において適正に処理
-            </span>
-            する必要があります。
-            また、事業活動に伴って生じた廃棄物の再生利用（リサイクル）等を行うことに努める必要があります。
-          </p>
+          <section style={{ marginBottom: 20 }}>
+            <div
+              style={{
+                fontSize: 13,
+                fontWeight: 900,
+                color: "#0f5ca8",
+                marginBottom: 8,
+              }}
+            >
+              排出事業者責任について
+            </div>
 
-          <p
+            <p
+              style={{
+                margin: 0,
+                fontSize: 14,
+                lineHeight: 1.9,
+                fontWeight: 700,
+                color: "#222222",
+              }}
+            >
+              事業者は、事業活動に伴って生じた廃棄物を
+              <span style={{ color: "#ff2d55", fontWeight: 900 }}>
+                自らの責任において適正に処理
+              </span>
+              する必要があります。また、事業活動に伴って生じた廃棄物の再生利用（リサイクル）等を行うことに努める必要があります。
+            </p>
+
+            <p
+              style={{
+                margin: "10px 0 0",
+                fontSize: 12,
+                lineHeight: 1.7,
+                color: "#666666",
+                fontWeight: 700,
+              }}
+            >
+              廃棄物の処理及び清掃に関する法律　第一章第三条 より抜粋
+            </p>
+          </section>
+
+          <section style={{ marginBottom: 20 }}>
+            <div
+              style={{
+                fontSize: 13,
+                fontWeight: 900,
+                color: "#0f5ca8",
+                marginBottom: 8,
+              }}
+            >
+              違反時のリスク
+            </div>
+
+            <p
+              style={{
+                margin: 0,
+                fontSize: 14,
+                lineHeight: 1.9,
+                fontWeight: 700,
+                color: "#222222",
+              }}
+            >
+              万が一上記法令等に違反した場合は、5年以下の懲役もしくは1,000万円以下の罰金などにあたる可能性があります。
+            </p>
+
+            <p
+              style={{
+                margin: "10px 0 0",
+                fontSize: 12,
+                lineHeight: 1.7,
+                color: "#666666",
+                fontWeight: 700,
+              }}
+            >
+              廃棄物の処理及び清掃に関する法律　第四章第三十二条 より抜粋
+            </p>
+          </section>
+
+          <section
             style={{
-              margin: "0 0 24px",
-              fontSize: 13,
-              lineHeight: 1.7,
-              color: "#444444",
-              fontWeight: 700,
+              background: "#f8fafc",
+              border: "1px solid #e5e7eb",
+              borderRadius: 12,
+              padding: "12px 14px",
             }}
           >
-            廃棄物の処理及び清掃に関する法律　第一章第三条 より抜粋
-          </p>
-
-          <p style={{ margin: "0 0 24px" }}>
-            万が一上記法令等に違反した場合は、5年以下の懲役もしくは1,000万円以下の罰金などにあたる可能性があります。
-          </p>
-
-          <p
-            style={{
-              margin: "0 0 16px",
-              fontSize: 13,
-              lineHeight: 1.7,
-              color: "#444444",
-              fontWeight: 700,
-            }}
-          >
-            廃棄物の処理及び清掃に関する法律　第四章第三十二条 より抜粋
-          </p>
-
-          <p
-            style={{
-              margin: 0,
-              fontSize: 13,
-              lineHeight: 1.7,
-              color: "#444444",
-              fontWeight: 700,
-            }}
-          >
-            ※違反内容により扱いは異なります。
-          </p>
+            <p
+              style={{
+                margin: 0,
+                fontSize: 12,
+                lineHeight: 1.7,
+                color: "#444444",
+                fontWeight: 700,
+              }}
+            >
+              ※違反内容により扱いは異なります。
+            </p>
+          </section>
         </div>
 
         <div
           style={{
-            padding: "20px 24px 28px",
+            flexShrink: 0,
+            padding: "16px 20px 20px",
             borderTop: "1px solid #e5e7eb",
             display: "flex",
             flexDirection: "column",
-            gap: 14,
+            gap: 12,
+            background: "#ffffff",
           }}
         >
           <button
@@ -138,9 +213,9 @@ export default function BusinessWasteModal({
               borderRadius: 999,
               background: "#0f5ca8",
               color: "#ffffff",
-              fontSize: 18,
+              fontSize: 17,
               fontWeight: 900,
-              padding: "18px 16px",
+              padding: "16px 16px",
               cursor: "pointer",
             }}
           >
@@ -155,9 +230,9 @@ export default function BusinessWasteModal({
               borderRadius: 999,
               background: "#ffffff",
               color: "#0f5ca8",
-              fontSize: 18,
+              fontSize: 17,
               fontWeight: 900,
-              padding: "18px 16px",
+              padding: "16px 16px",
               cursor: "pointer",
               border: "3px solid #0f5ca8",
             }}

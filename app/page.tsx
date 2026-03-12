@@ -7,6 +7,7 @@ import EntryModal from "@/components/top/EntryModal";
 import ServiceAreaModal from "@/components/top/ServiceAreaModal";
 import ReasonModal from "@/components/top/ReasonModal";
 import FaqModal from "@/components/top/FaqModal";
+import BusinessWasteModal from "@/components/top/BusinessWasteModal";
 import Step1Location from "@/components/form/Step1Location";
 import Step2Request from "@/components/form/Step2Request";
 import Step3Schedule from "@/components/form/Step3Schedule";
@@ -29,6 +30,7 @@ export default function Page() {
   const [isServiceAreaOpen, setIsServiceAreaOpen] = useState(false);
   const [isReasonOpen, setIsReasonOpen] = useState(false);
   const [isFaqOpen, setIsFaqOpen] = useState(false);
+  const [isBusinessWasteOpen, setIsBusinessWasteOpen] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -194,7 +196,7 @@ export default function Page() {
         <>
           <HomeScreen
             onOpenGarbageEntry={() => setIsEntryModalOpen(true)}
-            onOpenBusinessWaste={() => alert("事業ゴミ回収は未実装です")}
+            onOpenBusinessWaste={() => setIsBusinessWasteOpen(true)}
             onOpenFaq={() => setIsFaqOpen(true)}
             onOpenReason={() => setIsReasonOpen(true)}
             onOpenRegion={() => setIsServiceAreaOpen(true)}
@@ -204,6 +206,15 @@ export default function Page() {
             open={isEntryModalOpen}
             onStart={handleStartGarbageFlow}
             onClose={() => setIsEntryModalOpen(false)}
+          />
+
+          <BusinessWasteModal
+            open={isBusinessWasteOpen}
+            onClose={() => setIsBusinessWasteOpen(false)}
+            onProceed={() => {
+              setIsBusinessWasteOpen(false);
+              alert("事業ゴミ回収フォームは準備中です");
+            }}
           />
 
           <ServiceAreaModal

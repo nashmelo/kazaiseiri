@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import StepIndicator from "@/components/form/StepIndicator";
+import StepIndicator from "@/components/form/common/StepIndicator";
 import type { FormData } from "@/types/form";
 
 type Step5ConfirmProps = {

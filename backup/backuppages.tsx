@@ -13,11 +13,6 @@ import Step2Request from "@/components/form/household/Step2Request";
 import Step3Schedule from "@/components/form/household/Step3Schedule";
 import Step4Applicant from "@/components/form/household/Step4Applicant";
 import Step5Confirm from "@/components/form/household/Step5Confirm";
-import BusinessStep1Location from "@/components/form/business/BusinessStep1Location";
-import BusinessStep2Request from "@/components/form/business/BusinessStep2Request";
-import BusinessStep3Schedule from "@/components/form/business/BusinessStep3Schedule";
-import BusinessStep4Applicant from "@/components/form/business/BusinessStep4Applicant";
-import BusinessStep5Confirm from "@/components/form/business/BusinessStep5Confirm";
 import {
   initialFormData,
   type FormData,
@@ -27,12 +22,9 @@ import {
 
 const LIFF_ID = "2009412342-JGZ5KiR6";
 
-type RequestFlow = "household" | "business";
-
 export default function Page() {
   const [screen, setScreen] = useState<Screen>("home");
   const [step, setStep] = useState<Step>(1);
-  const [requestFlow, setRequestFlow] = useState<RequestFlow>("household");
   const [form, setForm] = useState<FormData>(initialFormData);
   const [isEntryModalOpen, setIsEntryModalOpen] = useState(false);
   const [isServiceAreaOpen, setIsServiceAreaOpen] = useState(false);
@@ -59,15 +51,6 @@ export default function Page() {
   const handleStartGarbageFlow = () => {
     setError(null);
     setIsEntryModalOpen(false);
-    setRequestFlow("household");
-    setScreen("form");
-    setStep(1);
-  };
-
-  const handleStartBusinessFlow = () => {
-    setError(null);
-    setIsBusinessWasteOpen(false);
-    setRequestFlow("business");
     setScreen("form");
     setStep(1);
   };
@@ -76,7 +59,6 @@ export default function Page() {
     setError(null);
     setScreen("home");
     setStep(1);
-    setRequestFlow("household");
     setForm(initialFormData);
   };
 
@@ -96,15 +78,8 @@ export default function Page() {
   };
 
   const buildSummaryText = () => {
-    const serviceLabel =
-      requestFlow === "business"
-        ? form.service || "事業ゴミ回収"
-        : form.service || "未入力";
-
     return [
-      `📩 ${
-        requestFlow === "business" ? "事業ゴミ回収" : "粗大ゴミ回収"
-      }のお問い合わせを受け付けました`,
+      "📩 粗大ゴミ回収のお問い合わせを受け付けました",
       "",
       "以下の内容で承りました。",
       "内容を確認のうえ、担当者よりご連絡いたします。",
@@ -122,7 +97,7 @@ export default function Page() {
       `【ゴミの排出方法】${form.disposalMethod || "未入力"}`,
       "",
       "■ 依頼内容",
-      `【依頼内容】${serviceLabel}`,
+      `【依頼内容】${form.service || "未入力"}`,
       `【回収ゴミの品目・個数】${form.items || "未入力"}`,
       `【備考】${form.notes || "未入力"}`,
       `【添付画像】${form.images.length > 0 ? `${form.images.length}件` : "なし"}`,
@@ -159,10 +134,7 @@ export default function Page() {
         name: form.name,
         phone: form.phone,
         contactMethod: "LINE",
-        service:
-          requestFlow === "business"
-            ? form.service || "事業ゴミ回収"
-            : form.service,
+        service: form.service,
 
         postalCode: form.postalCode,
         prefecture: form.prefecture,
@@ -208,7 +180,6 @@ export default function Page() {
       setForm(initialFormData);
       setScreen("home");
       setStep(1);
-      setRequestFlow("household");
     } catch (err) {
       console.error("submit error:", err);
       setError(
@@ -240,7 +211,10 @@ export default function Page() {
           <BusinessWasteModal
             open={isBusinessWasteOpen}
             onClose={() => setIsBusinessWasteOpen(false)}
-            onProceed={handleStartBusinessFlow}
+            onProceed={() => {
+              setIsBusinessWasteOpen(false);
+              alert("事業ゴミ回収フォームは準備中です");
+            }}
           />
 
           <ServiceAreaModal
@@ -260,7 +234,7 @@ export default function Page() {
         </>
       )}
 
-      {screen === "form" && step === 1 && requestFlow === "household" && (
+      {screen === "form" && step === 1 && (
         <Step1Location
           form={form}
           setForm={setForm}
@@ -269,16 +243,7 @@ export default function Page() {
         />
       )}
 
-      {screen === "form" && step === 1 && requestFlow === "business" && (
-        <BusinessStep1Location
-          form={form}
-          setForm={setForm}
-          onNext={() => setStep(2)}
-          onBackToTop={handleBackHome}
-        />
-      )}
-
-      {screen === "form" && step === 2 && requestFlow === "household" && (
+      {screen === "form" && step === 2 && (
         <Step2Request
           form={form}
           setForm={setForm}
@@ -287,16 +252,7 @@ export default function Page() {
         />
       )}
 
-      {screen === "form" && step === 2 && requestFlow === "business" && (
-        <BusinessStep2Request
-          form={form}
-          setForm={setForm}
-          onNext={() => setStep(3)}
-          onPrev={() => setStep(1)}
-        />
-      )}
-
-      {screen === "form" && step === 3 && requestFlow === "household" && (
+      {screen === "form" && step === 3 && (
         <Step3Schedule
           form={form}
           setForm={setForm}
@@ -305,16 +261,7 @@ export default function Page() {
         />
       )}
 
-      {screen === "form" && step === 3 && requestFlow === "business" && (
-        <BusinessStep3Schedule
-          form={form}
-          setForm={setForm}
-          onNext={() => setStep(4)}
-          onPrev={() => setStep(2)}
-        />
-      )}
-
-      {screen === "form" && step === 4 && requestFlow === "household" && (
+      {screen === "form" && step === 4 && (
         <Step4Applicant
           form={form}
           setForm={setForm}
@@ -323,16 +270,7 @@ export default function Page() {
         />
       )}
 
-      {screen === "form" && step === 4 && requestFlow === "business" && (
-        <BusinessStep4Applicant
-          form={form}
-          setForm={setForm}
-          onNext={() => setStep(5)}
-          onPrev={() => setStep(3)}
-        />
-      )}
-
-      {screen === "form" && step === 5 && requestFlow === "household" && (
+      {screen === "form" && step === 5 && (
         <>
           {error && (
             <div
@@ -353,61 +291,6 @@ export default function Page() {
           )}
 
           <Step5Confirm
-            form={form}
-            onSubmit={handleSubmit}
-            onPrev={() => setStep(4)}
-          />
-
-          {submitting && (
-            <div
-              style={{
-                position: "fixed",
-                inset: 0,
-                background: "rgba(0,0,0,0.35)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                zIndex: 2000,
-              }}
-            >
-              <div
-                style={{
-                  background: "#fff",
-                  borderRadius: 16,
-                  padding: "18px 22px",
-                  fontSize: 15,
-                  fontWeight: 800,
-                  color: "#095db6",
-                }}
-              >
-                送信中です...
-              </div>
-            </div>
-          )}
-        </>
-      )}
-
-      {screen === "form" && step === 5 && requestFlow === "business" && (
-        <>
-          {error && (
-            <div
-              style={{
-                position: "sticky",
-                top: 0,
-                zIndex: 1000,
-                background: "#ffe5e5",
-                color: "#b00020",
-                padding: "12px 16px",
-                fontSize: 13,
-                fontWeight: 700,
-                textAlign: "center",
-              }}
-            >
-              {error}
-            </div>
-          )}
-
-          <BusinessStep5Confirm
             form={form}
             onSubmit={handleSubmit}
             onPrev={() => setStep(4)}

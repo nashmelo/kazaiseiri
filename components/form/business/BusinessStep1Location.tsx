@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import StepIndicator from "@/components/form/StepIndicator";
+import StepIndicator from "@/components/form/common/StepIndicator";
 import type { FormData } from "@/types/form";
 import { lookupAddressByPostalCode } from "@/lib/postal";
 

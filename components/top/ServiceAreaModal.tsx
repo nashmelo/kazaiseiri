@@ -47,7 +47,7 @@ export default function ServiceAreaModal({
             textAlign: "center",
             fontSize: 18,
             fontWeight: 900,
-            color: "#0f5ca8",
+            color: "var(--pink-strong)",
             marginBottom: 20,
           }}
         >

@@ -1,22 +1,22 @@
 "use client";
 
 import React from "react";
-import StepIndicator from "@/components/form/StepIndicator";
+import StepIndicator from "@/components/form/common/StepIndicator";
 import type { FormData } from "@/types/form";
 
-type Step4ApplicantProps = {
+type Step3ScheduleProps = {
   form: FormData;
   setForm: React.Dispatch<React.SetStateAction<FormData>>;
   onNext: () => void;
   onPrev: () => void;
 };
 
-export default function Step4Applicant({
+export default function Step3Schedule({
   form,
   setForm,
   onNext,
   onPrev,
-}: Step4ApplicantProps) {
+}: Step3ScheduleProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -27,18 +27,8 @@ export default function Step4Applicant({
   };
 
   const handleNext = () => {
-    if (!form.name.trim()) {
-      alert("お名前を入力してください。");
-      return;
-    }
-
-    if (!form.furigana.trim()) {
-      alert("ふりがなを入力してください。");
-      return;
-    }
-
-    if (!form.phone.trim()) {
-      alert("電話番号を入力してください。");
+    if (!form.pickupDate1) {
+      alert("第一希望回収日を入力してください。");
       return;
     }
 
@@ -78,7 +68,7 @@ export default function Step4Applicant({
           </h1>
         </div>
 
-        <StepIndicator step={4} />
+        <StepIndicator step={3} />
 
         <div
           style={{
@@ -102,39 +92,35 @@ export default function Step4Applicant({
               border: "2px solid var(--pink-main)",
             }}
           >
-            Step 4 申込者情報をご入力ください
+            Step 3 希望日をご入力ください
           </div>
 
-          <Field label="お名前" required>
+          <Field label="第一希望回収日" required>
             <input
-              type="text"
-              name="name"
-              value={form.name}
+              type="datetime-local"
+              name="pickupDate1"
+              value={form.pickupDate1}
               onChange={handleChange}
-              placeholder="例：山田 太郎"
               style={inputStyle}
             />
           </Field>
 
-          <Field label="ふりがな" required>
+          <Field label="第二希望回収日">
             <input
-              type="text"
-              name="furigana"
-              value={form.furigana}
+              type="datetime-local"
+              name="pickupDate2"
+              value={form.pickupDate2}
               onChange={handleChange}
-              placeholder="例：やまだ たろう"
               style={inputStyle}
             />
           </Field>
 
-          <Field label="電話番号" required>
+          <Field label="第三希望回収日">
             <input
-              type="tel"
-              name="phone"
-              value={form.phone}
+              type="datetime-local"
+              name="pickupDate3"
+              value={form.pickupDate3}
               onChange={handleChange}
-              placeholder="例：09012345678"
-              inputMode="numeric"
               style={inputStyle}
             />
           </Field>
@@ -152,7 +138,7 @@ export default function Step4Applicant({
               onClick={handleNext}
               style={primaryButtonStyle}
             >
-              内容確認に進む
+              申込者情報に進む
             </button>
 
             <button

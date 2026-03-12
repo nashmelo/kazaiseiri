@@ -1,0 +1,394 @@
+"use client";
+
+import React, { useMemo } from "react";
+import StepIndicator from "@/components/form/common/StepIndicator";
+import type { FormData } from "@/types/form";
+
+type Step2RequestProps = {
+  form: FormData;
+  setForm: React.Dispatch<React.SetStateAction<FormData>>;
+  onNext: () => void;
+  onPrev: () => void;
+};
+
+export default function Step2Request({
+  form,
+  setForm,
+  onNext,
+  onPrev,
+}: Step2RequestProps) {
+  const error = useMemo(() => {
+    return "";
+  }, []);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleRadioChange = (name: keyof FormData, value: string) => {
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({
+      ...prev,
+      images: Array.from(e.target.files || []),
+    }));
+  };
+
+  const handleNext = () => {
+    if (!form.service) {
+      alert("依頼内容を選択してください。");
+      return;
+    }
+
+    if (!form.items.trim()) {
+      alert("回収ゴミの品目・個数を入力してください。");
+      return;
+    }
+
+    onNext();
+  };
+
+  return (
+    <main
+      style={{
+        minHeight: "100vh",
+        background: "var(--bg-main)",
+        padding: "24px 16px 40px",
+        boxSizing: "border-box",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 480,
+          margin: "0 auto",
+        }}
+      >
+        <div
+          style={{
+            textAlign: "center",
+            marginBottom: 16,
+          }}
+        >
+          <h1
+            style={{
+              margin: 0,
+              fontSize: 18,
+              fontWeight: 900,
+              color: "var(--text-main)",
+            }}
+          >
+            粗大ゴミ回収 | すっきりん
+          </h1>
+        </div>
+
+        <StepIndicator step={2} />
+
+        <div
+          style={{
+            background: "#fffafb",
+            borderRadius: 28,
+            padding: "22px 18px 24px",
+            boxSizing: "border-box",
+            boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
+          }}
+        >
+          <div
+            style={{
+              background: "var(--pink-soft)",
+              color: "var(--pink-strong)",
+              textAlign: "center",
+              fontSize: 18,
+              fontWeight: 900,
+              padding: "18px 12px",
+              borderRadius: 12,
+              marginBottom: 24,
+              border: "2px solid var(--pink-main)",
+            }}
+          >
+            Step 2 依頼内容をご入力ください
+          </div>
+
+          {error && (
+            <div
+              style={{
+                background: "#fff1f4",
+                color: "var(--pink-strong)",
+                padding: "10px 12px",
+                borderRadius: 10,
+                fontSize: 13,
+                fontWeight: 700,
+                marginBottom: 16,
+                border: "1px solid #f5bfd0",
+              }}
+            >
+              {error}
+            </div>
+          )}
+
+          <Field label="依頼内容" required>
+            <RadioCardGroup
+              name="service"
+              value={form.service}
+              onChange={handleRadioChange}
+              options={[
+                { value: "不用品回収", label: "不用品回収" },
+                { value: "部屋を丸ごと片付け", label: "部屋を丸ごと片付け" },
+              ]}
+            />
+          </Field>
+
+          <Field label="回収ゴミの品目・個数" required>
+            <textarea
+              name="items"
+              value={form.items}
+              onChange={handleChange}
+              rows={5}
+              placeholder="例：冷蔵庫1台、洗濯機1台、タンス2棹"
+              style={{ ...inputStyle, resize: "vertical" }}
+            />
+          </Field>
+
+          <Field label="備考">
+            <textarea
+              name="notes"
+              value={form.notes}
+              onChange={handleChange}
+              rows={4}
+              placeholder="補足事項があればご入力ください"
+              style={{ ...inputStyle, resize: "vertical" }}
+            />
+          </Field>
+
+          <Field label="添付画像">
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handleFileChange}
+              style={fileInputStyle}
+            />
+            {form.images.length > 0 && (
+              <div
+                style={{
+                  marginTop: 8,
+                  fontSize: 12,
+                  color: "var(--text-sub)",
+                  fontWeight: 700,
+                }}
+              >
+                {form.images.length}件の画像を選択中
+              </div>
+            )}
+          </Field>
+
+          <div
+            style={{
+              display: "flex",
+              gap: 12,
+              flexDirection: "column",
+              marginTop: 20,
+            }}
+          >
+            <button
+              type="button"
+              onClick={handleNext}
+              style={primaryButtonStyle}
+            >
+              希望日に進む
+            </button>
+
+            <button
+              type="button"
+              onClick={onPrev}
+              style={secondaryButtonStyle}
+            >
+              前に戻る
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
+
+type FieldProps = {
+  label: string;
+  required?: boolean;
+  children: React.ReactNode;
+};
+
+function Field({ label, required, children }: FieldProps) {
+  return (
+    <div style={{ marginBottom: 18 }}>
+      <label
+        style={{
+          display: "block",
+          fontSize: 13,
+          fontWeight: 800,
+          color: "var(--text-main)",
+          marginBottom: 8,
+        }}
+      >
+        {label}
+        {required && (
+          <span style={{ color: "var(--pink-strong)", marginLeft: 4 }}>＊</span>
+        )}
+      </label>
+      {children}
+    </div>
+  );
+}
+
+type RadioOption = {
+  value: string;
+  label: string;
+};
+
+type RadioCardGroupProps = {
+  name: keyof FormData;
+  value: string;
+  onChange: (name: keyof FormData, value: string) => void;
+  options: RadioOption[];
+};
+
+function RadioCardGroup({
+  name,
+  value,
+  onChange,
+  options,
+}: RadioCardGroupProps) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 10,
+      }}
+    >
+      {options.map((option) => {
+        const checked = value === option.value;
+
+        return (
+          <label
+            key={option.value}
+            style={{
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              minHeight: 58,
+              padding: "14px 16px",
+              borderRadius: 16,
+              border: checked
+                ? "2px solid var(--pink-strong)"
+                : "2px solid #efd7df",
+              background: checked ? "#fff1f6" : "#ffffff",
+              color: checked ? "var(--pink-strong)" : "var(--text-main)",
+              fontWeight: 900,
+              fontSize: 16,
+              cursor: "pointer",
+              boxSizing: "border-box",
+              transition: "all 0.2s ease",
+            }}
+          >
+            <input
+              type="radio"
+              name={String(name)}
+              value={option.value}
+              checked={checked}
+              onChange={() => onChange(name, option.value)}
+              style={radioInputHiddenStyle}
+            />
+
+            <span
+              style={{
+                width: 22,
+                height: 22,
+                borderRadius: "50%",
+                border: checked
+                  ? "2px solid var(--pink-strong)"
+                  : "2px solid #c9b7be",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+                background: "#fff",
+              }}
+            >
+              <span
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: "50%",
+                  background: checked ? "var(--pink-strong)" : "transparent",
+                }}
+              />
+            </span>
+
+            <span style={{ lineHeight: 1.3 }}>{option.label}</span>
+          </label>
+        );
+      })}
+    </div>
+  );
+}
+
+const radioInputHiddenStyle: React.CSSProperties = {
+  position: "absolute",
+  opacity: 0,
+  pointerEvents: "none",
+};
+
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  padding: "12px 12px",
+  borderRadius: 10,
+  border: "1px solid #e6d7de",
+  fontSize: 14,
+  boxSizing: "border-box",
+  background: "#ffffff",
+  color: "var(--text-main)",
+  outline: "none",
+};
+
+const fileInputStyle: React.CSSProperties = {
+  width: "100%",
+  fontSize: 14,
+  color: "var(--text-main)",
+};
+
+const primaryButtonStyle: React.CSSProperties = {
+  width: "100%",
+  border: "none",
+  borderRadius: 999,
+  background: "var(--pink-strong)",
+  color: "#ffffff",
+  fontSize: 18,
+  fontWeight: 900,
+  padding: "18px 16px",
+  cursor: "pointer",
+};
+
+const secondaryButtonStyle: React.CSSProperties = {
+  width: "100%",
+  borderRadius: 999,
+  background: "#ffffff",
+  color: "var(--pink-strong)",
+  fontSize: 18,
+  fontWeight: 900,
+  padding: "18px 16px",
+  cursor: "pointer",
+  border: "3px solid var(--pink-strong)",
+};

@@ -6,6 +6,7 @@ import HomeScreen from "@/components/top/HomeScreen";
 import EntryModal from "@/components/top/EntryModal";
 import ServiceAreaModal from "@/components/top/ServiceAreaModal";
 import ReasonModal from "@/components/top/ReasonModal";
+import FaqModal from "@/components/top/FaqModal";
 import Step1Location from "@/components/form/Step1Location";
 import Step2Request from "@/components/form/Step2Request";
 import Step3Schedule from "@/components/form/Step3Schedule";
@@ -27,6 +28,7 @@ export default function Page() {
   const [isEntryModalOpen, setIsEntryModalOpen] = useState(false);
   const [isServiceAreaOpen, setIsServiceAreaOpen] = useState(false);
   const [isReasonOpen, setIsReasonOpen] = useState(false);
+  const [isFaqOpen, setIsFaqOpen] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -193,7 +195,7 @@ export default function Page() {
           <HomeScreen
             onOpenGarbageEntry={() => setIsEntryModalOpen(true)}
             onOpenBusinessWaste={() => alert("事業ゴミ回収は未実装です")}
-            onOpenReuse={() => alert("家電リユースは未実装です")}
+            onOpenFaq={() => setIsFaqOpen(true)}
             onOpenReason={() => setIsReasonOpen(true)}
             onOpenRegion={() => setIsServiceAreaOpen(true)}
           />
@@ -212,6 +214,11 @@ export default function Page() {
           <ReasonModal
             open={isReasonOpen}
             onClose={() => setIsReasonOpen(false)}
+          />
+
+          <FaqModal
+            open={isFaqOpen}
+            onClose={() => setIsFaqOpen(false)}
           />
         </>
       )}

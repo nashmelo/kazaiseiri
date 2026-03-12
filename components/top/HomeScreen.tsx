@@ -5,7 +5,7 @@ import React from "react";
 type HomeScreenProps = {
   onOpenGarbageEntry: () => void;
   onOpenBusinessWaste: () => void;
-  onOpenReuse: () => void;
+  onOpenFaq: () => void;
   onOpenReason: () => void;
   onOpenRegion: () => void;
 };
@@ -13,7 +13,7 @@ type HomeScreenProps = {
 export default function HomeScreen({
   onOpenGarbageEntry,
   onOpenBusinessWaste,
-  onOpenReuse,
+  onOpenFaq,
   onOpenReason,
   onOpenRegion,
 }: HomeScreenProps) {
@@ -139,10 +139,10 @@ export default function HomeScreen({
 
           <button
             type="button"
-            onClick={onOpenReuse}
+            onClick={onOpenFaq}
             style={yellowButtonStyle}
           >
-            家電リユース（無償引取）
+            よくある質問
           </button>
 
           <button

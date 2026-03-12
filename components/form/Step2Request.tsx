@@ -22,10 +22,17 @@ export default function Step2Request({
   }, []);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
 
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleRadioChange = (name: keyof FormData, value: string) => {
     setForm((prev) => ({
       ...prev,
       [name]: value,
@@ -131,16 +138,15 @@ export default function Step2Request({
           )}
 
           <Field label="依頼内容" required>
-            <select
+            <RadioCardGroup
               name="service"
               value={form.service}
-              onChange={handleChange}
-              style={inputStyle}
-            >
-              <option value="">選択してください</option>
-              <option value="不用品回収">不用品回収</option>
-              <option value="部屋を丸ごと片付け">部屋を丸ごと片付け</option>
-            </select>
+              onChange={handleRadioChange}
+              options={[
+                { value: "不用品回収", label: "不用品回収" },
+                { value: "部屋を丸ごと片付け", label: "部屋を丸ごと片付け" },
+              ]}
+            />
           </Field>
 
           <Field label="回収ゴミの品目・個数" required>
@@ -225,14 +231,14 @@ type FieldProps = {
 
 function Field({ label, required, children }: FieldProps) {
   return (
-    <div style={{ marginBottom: 14 }}>
+    <div style={{ marginBottom: 18 }}>
       <label
         style={{
           display: "block",
           fontSize: 13,
           fontWeight: 800,
           color: "var(--text-main)",
-          marginBottom: 6,
+          marginBottom: 8,
         }}
       >
         {label}
@@ -244,6 +250,106 @@ function Field({ label, required, children }: FieldProps) {
     </div>
   );
 }
+
+type RadioOption = {
+  value: string;
+  label: string;
+};
+
+type RadioCardGroupProps = {
+  name: keyof FormData;
+  value: string;
+  onChange: (name: keyof FormData, value: string) => void;
+  options: RadioOption[];
+};
+
+function RadioCardGroup({
+  name,
+  value,
+  onChange,
+  options,
+}: RadioCardGroupProps) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 10,
+      }}
+    >
+      {options.map((option) => {
+        const checked = value === option.value;
+
+        return (
+          <label
+            key={option.value}
+            style={{
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              minHeight: 58,
+              padding: "14px 16px",
+              borderRadius: 16,
+              border: checked
+                ? "2px solid var(--pink-strong)"
+                : "2px solid #efd7df",
+              background: checked ? "#fff1f6" : "#ffffff",
+              color: checked ? "var(--pink-strong)" : "var(--text-main)",
+              fontWeight: 900,
+              fontSize: 16,
+              cursor: "pointer",
+              boxSizing: "border-box",
+              transition: "all 0.2s ease",
+            }}
+          >
+            <input
+              type="radio"
+              name={String(name)}
+              value={option.value}
+              checked={checked}
+              onChange={() => onChange(name, option.value)}
+              style={radioInputHiddenStyle}
+            />
+
+            <span
+              style={{
+                width: 22,
+                height: 22,
+                borderRadius: "50%",
+                border: checked
+                  ? "2px solid var(--pink-strong)"
+                  : "2px solid #c9b7be",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+                background: "#fff",
+              }}
+            >
+              <span
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: "50%",
+                  background: checked ? "var(--pink-strong)" : "transparent",
+                }}
+              />
+            </span>
+
+            <span style={{ lineHeight: 1.3 }}>{option.label}</span>
+          </label>
+        );
+      })}
+    </div>
+  );
+}
+
+const radioInputHiddenStyle: React.CSSProperties = {
+  position: "absolute",
+  opacity: 0,
+  pointerEvents: "none",
+};
 
 const inputStyle: React.CSSProperties = {
   width: "100%",

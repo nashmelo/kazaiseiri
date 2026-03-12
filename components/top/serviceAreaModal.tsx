@@ -102,12 +102,12 @@ export default function ServiceAreaModal({
             width: "100%",
             borderRadius: 999,
             background: "#ffffff",
-            color: "#0f5ca8",
+            color: "var(--pink-strong)",
             fontSize: 18,
             fontWeight: 900,
             padding: "18px 16px",
             cursor: "pointer",
-            border: "3px solid #0f5ca8",
+            border: "3px solid var(--pink-strong)",
             marginTop: 8,
           }}
         >

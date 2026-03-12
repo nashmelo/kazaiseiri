@@ -73,7 +73,7 @@ export default function BusinessWasteModal({
               fontSize: 17,
               lineHeight: 1.5,
               fontWeight: 900,
-              color: "#0f5ca8",
+              color: "var(--pink-strong)",
             }}
           >
             排出事業者責任をご存じですか？
@@ -98,7 +98,7 @@ export default function BusinessWasteModal({
               style={{
                 fontSize: 13,
                 fontWeight: 900,
-                color: "#0f5ca8",
+                color: "var(--pink-strong)",
                 marginBottom: 8,
               }}
             >
@@ -139,7 +139,7 @@ export default function BusinessWasteModal({
               style={{
                 fontSize: 13,
                 fontWeight: 900,
-                color: "#0f5ca8",
+                color: "var(--pink-strong)",
                 marginBottom: 8,
               }}
             >
@@ -211,7 +211,7 @@ export default function BusinessWasteModal({
               width: "100%",
               border: "none",
               borderRadius: 999,
-              background: "#0f5ca8",
+              background: "var(--pink-strong)",
               color: "#ffffff",
               fontSize: 17,
               fontWeight: 900,
@@ -229,12 +229,12 @@ export default function BusinessWasteModal({
               width: "100%",
               borderRadius: 999,
               background: "#ffffff",
-              color: "#0f5ca8",
+              color: "var(--pink-strong)",
               fontSize: 17,
               fontWeight: 900,
               padding: "16px 16px",
               cursor: "pointer",
-              border: "3px solid #0f5ca8",
+              border: "3px solid var(--pink-strong)",
             }}
           >
             戻る

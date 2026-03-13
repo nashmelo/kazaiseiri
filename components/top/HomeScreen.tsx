@@ -30,15 +30,10 @@ export default function HomeScreen({
 
             <div style={introStyle}>
               <p style={introTitleStyle}>許可業者限定だから安心</p>
-              <p style={introTextStyle}>
-                ご希望の内容を選んで、まずはお気軽にご相談ください
-              </p>
             </div>
           </section>
 
           <section style={menuSectionStyle}>
-            <div style={menuLeadStyle}>ご希望の内容をお選びください</div>
-
             <div style={primaryListStyle}>
               <button
                 type="button"
@@ -116,7 +111,7 @@ const wrapStyle: React.CSSProperties = {
 };
 
 const panelStyle: React.CSSProperties = {
-  background: "linear-gradient(180deg, #fbeff3 0%, #f9edf2 100%)",
+  background: "linear-gradient(180deg, #fbf1f4 0%, #f9edf2 100%)",
   borderRadius: 32,
   padding: "18px 16px 20px",
   boxSizing: "border-box",
@@ -124,7 +119,7 @@ const panelStyle: React.CSSProperties = {
 };
 
 const heroSectionStyle: React.CSSProperties = {
-  marginBottom: 20,
+  marginBottom: 18,
 };
 
 const heroLogoStyle: React.CSSProperties = {
@@ -140,32 +135,16 @@ const introStyle: React.CSSProperties = {
 };
 
 const introTitleStyle: React.CSSProperties = {
-  margin: "0 0 6px",
+  margin: 0,
   fontSize: 18,
   lineHeight: 1.4,
   fontWeight: 900,
   color: "var(--text-main)",
-};
-
-const introTextStyle: React.CSSProperties = {
-  margin: 0,
-  fontSize: 14,
-  lineHeight: 1.7,
-  fontWeight: 500,
-  color: "var(--text-sub)",
+  fontFamily,
 };
 
 const menuSectionStyle: React.CSSProperties = {
-  marginTop: 16,
-};
-
-const menuLeadStyle: React.CSSProperties = {
-  textAlign: "center",
-  fontSize: 15,
-  lineHeight: 1.5,
-  fontWeight: 800,
-  color: "var(--pink-strong)",
-  marginBottom: 14,
+  marginTop: 10,
 };
 
 const primaryListStyle: React.CSSProperties = {
@@ -176,18 +155,17 @@ const primaryListStyle: React.CSSProperties = {
 
 const primaryButtonStyle: React.CSSProperties = {
   width: "100%",
-  border: "none",
+  border: "2px solid var(--pink-strong)",
   borderRadius: 24,
-  background:
-    "linear-gradient(180deg, #f02f78 0%, var(--pink-strong) 62%, #cf1656 100%)",
-  color: "#fff",
+  background: "linear-gradient(180deg, #fffafb 0%, var(--pink-soft) 100%)",
+  color: "var(--text-main)",
   padding: "18px 18px",
   cursor: "pointer",
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
   textAlign: "left",
-  boxShadow: "0 12px 24px rgba(233,30,99,0.22)",
+  boxShadow: "0 10px 22px rgba(233,30,99,0.10)",
   appearance: "none",
   WebkitAppearance: "none",
 };
@@ -203,27 +181,30 @@ const primaryButtonKickerStyle: React.CSSProperties = {
   lineHeight: 1.2,
   fontWeight: 700,
   letterSpacing: "0.14em",
-  color: "rgba(255,255,255,0.78)",
+  color: "var(--pink-strong)",
   marginBottom: 8,
+  fontFamily,
 };
 
 const primaryButtonTitleStyle: React.CSSProperties = {
   fontSize: 32,
   lineHeight: 1.08,
   fontWeight: 900,
-  color: "#fff",
+  color: "var(--text-main)",
   marginBottom: 8,
   letterSpacing: 0,
   wordBreak: "keep-all",
   overflowWrap: "normal",
+  fontFamily,
 };
 
 const primaryButtonDescStyle: React.CSSProperties = {
   fontSize: 14,
   lineHeight: 1.6,
   fontWeight: 500,
-  color: "rgba(255,255,255,0.94)",
+  color: "var(--text-sub)",
   wordBreak: "keep-all",
+  fontFamily,
 };
 
 const primaryArrowStyle: React.CSSProperties = {
@@ -231,7 +212,7 @@ const primaryArrowStyle: React.CSSProperties = {
   width: 34,
   height: 34,
   borderRadius: "50%",
-  background: "rgba(255,255,255,0.16)",
+  background: "var(--pink-strong)",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -239,6 +220,7 @@ const primaryArrowStyle: React.CSSProperties = {
   lineHeight: 1,
   fontWeight: 400,
   color: "#fff",
+  boxShadow: "0 6px 14px rgba(233,30,99,0.18)",
 };
 
 const subGridStyle: React.CSSProperties = {
@@ -259,6 +241,7 @@ const subButtonStyle: React.CSSProperties = {
   cursor: "pointer",
   appearance: "none",
   WebkitAppearance: "none",
+  fontFamily,
 };
 
 const subButtonWideStyle: React.CSSProperties = {
@@ -274,4 +257,5 @@ const subButtonWideStyle: React.CSSProperties = {
   cursor: "pointer",
   appearance: "none",
   WebkitAppearance: "none",
+  fontFamily,
 };

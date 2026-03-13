@@ -102,7 +102,7 @@ const fontFamily =
 const mainStyle: React.CSSProperties = {
   minHeight: "100vh",
   background: "var(--bg-main)",
-  padding: "12px 16px 18px",
+  padding: "10px 16px 10px",
   boxSizing: "border-box",
   fontFamily,
 };
@@ -115,20 +115,20 @@ const wrapStyle: React.CSSProperties = {
 const panelStyle: React.CSSProperties = {
   background: "#fbf1f4",
   borderRadius: 32,
-  padding: "14px 16px 16px",
+  padding: "12px 16px 14px",
   boxSizing: "border-box",
   border: "2px solid rgba(251,155,204,0.22)",
 };
 
 const heroSectionStyle: React.CSSProperties = {
-  marginBottom: 14,
+  marginBottom: 12,
 };
 
 const heroLogoStyle: React.CSSProperties = {
   width: "100%",
   height: "auto",
   display: "block",
-  marginBottom: 14,
+  marginBottom: 10,
 };
 
 const introStyle: React.CSSProperties = {
@@ -147,13 +147,13 @@ const introTitleStyle: React.CSSProperties = {
 };
 
 const menuSectionStyle: React.CSSProperties = {
-  marginTop: 6,
+  marginTop: 4,
 };
 
 const primaryListStyle: React.CSSProperties = {
   display: "grid",
-  gap: 12,
-  marginBottom: 14,
+  gap: 10,
+  marginBottom: 12,
 };
 
 const primaryButtonStyle: React.CSSProperties = {
@@ -162,7 +162,7 @@ const primaryButtonStyle: React.CSSProperties = {
   borderRadius: 26,
   background: "#fff9fb",
   color: "var(--text-main)",
-  padding: "16px 18px",
+  padding: "14px 18px",
   cursor: "pointer",
   display: "flex",
   alignItems: "center",
@@ -203,7 +203,7 @@ const primaryButtonTitleStyle: React.CSSProperties = {
 
 const primaryButtonDescStyle: React.CSSProperties = {
   fontSize: 13,
-  lineHeight: 1.5,
+  lineHeight: 1.45,
   fontWeight: 500,
   color: "var(--text-sub)",
   wordBreak: "keep-all",
@@ -223,13 +223,12 @@ const primaryArrowStyle: React.CSSProperties = {
   lineHeight: 1,
   fontWeight: 400,
   color: "#fff",
-  border: "2px solid var(--pink-strong)",
 };
 
 const subGridStyle: React.CSSProperties = {
   display: "grid",
   gridTemplateColumns: "1fr 1fr",
-  gap: 12,
+  gap: 10,
 };
 
 const subButtonStyle: React.CSSProperties = {
@@ -238,14 +237,14 @@ const subButtonStyle: React.CSSProperties = {
   background: "#fdf4f7",
   color: "var(--text-main)",
   fontSize: 14,
-  lineHeight: 1.4,
+  lineHeight: 1.35,
   fontWeight: 700,
-  padding: "14px 12px",
+  padding: "13px 12px",
   cursor: "pointer",
   appearance: "none",
   WebkitAppearance: "none",
   fontFamily,
-  minHeight: 72,
+  minHeight: 66,
   textAlign: "center",
 };
 
@@ -256,9 +255,9 @@ const subButtonWideStyle: React.CSSProperties = {
   background: "#fdf4f7",
   color: "var(--text-main)",
   fontSize: 14,
-  lineHeight: 1.4,
+  lineHeight: 1.35,
   fontWeight: 700,
-  padding: "15px 12px",
+  padding: "14px 12px",
   cursor: "pointer",
   appearance: "none",
   WebkitAppearance: "none",

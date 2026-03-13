@@ -22,52 +22,52 @@ export default function HomeScreen({
       <div style={wrapStyle}>
         <div style={panelStyle}>
           <section style={heroSectionStyle}>
-            <div style={heroLogoWrapStyle}>
-              <img
-                src="/sukkirinlogo.svg"
-                alt="すっきりん"
-                style={heroLogoStyle}
-              />
-            </div>
+            <img
+              src="/sukkirinlogo.svg"
+              alt="すっきりん"
+              style={heroLogoStyle}
+            />
 
-            <div style={trustBoxStyle}>
-              <p style={trustTitleStyle}>許可業者限定だから安心</p>
-              <p style={trustTextStyle}>まずは内容を選んでご相談ください</p>
+            <div style={introStyle}>
+              <p style={introTitleStyle}>許可業者限定だから安心</p>
+              <p style={introTextStyle}>
+                ご希望の内容を選んで、まずはお気軽にご相談ください
+              </p>
             </div>
           </section>
 
-          <section>
-            <div style={menuLeadWrapStyle}>
-              <span style={menuLeadStyle}>ご希望の内容をお選びください</span>
-            </div>
+          <section style={menuSectionStyle}>
+            <div style={menuLeadStyle}>ご希望の内容をお選びください</div>
 
-            <div style={primaryGridStyle}>
+            <div style={primaryListStyle}>
               <button
                 type="button"
                 onClick={onOpenGarbageEntry}
-                style={primaryCardStyle}
+                style={primaryButtonStyle}
               >
-                <div style={primaryCardInnerStyle}>
-                  <div style={cardKickerStyle}>HOUSEHOLD</div>
-                  <div style={primaryCardTitleStyle}>家庭ゴミ</div>
-                  <div style={primaryCardTextStyle}>
+                <div style={primaryButtonTextWrapStyle}>
+                  <div style={primaryButtonKickerStyle}>HOUSEHOLD</div>
+                  <div style={primaryButtonTitleStyle}>家庭ゴミ</div>
+                  <div style={primaryButtonDescStyle}>
                     お家の片付け・粗大ゴミなど
                   </div>
                 </div>
+                <div style={primaryArrowStyle}>›</div>
               </button>
 
               <button
                 type="button"
                 onClick={onOpenBusinessWaste}
-                style={primaryCardStyle}
+                style={primaryButtonStyle}
               >
-                <div style={primaryCardInnerStyle}>
-                  <div style={cardKickerStyle}>BUSINESS</div>
-                  <div style={primaryCardTitleStyle}>事業ゴミ</div>
-                  <div style={primaryCardTextStyle}>
+                <div style={primaryButtonTextWrapStyle}>
+                  <div style={primaryButtonKickerStyle}>BUSINESS</div>
+                  <div style={primaryButtonTitleStyle}>事業ゴミ</div>
+                  <div style={primaryButtonDescStyle}>
                     店舗・事務所・法人回収
                   </div>
                 </div>
+                <div style={primaryArrowStyle}>›</div>
               </button>
             </div>
 
@@ -87,7 +87,7 @@ export default function HomeScreen({
               <button
                 type="button"
                 onClick={onOpenRegion}
-                style={wideSubButtonStyle}
+                style={subButtonWideStyle}
               >
                 サービス展開地域
               </button>
@@ -99,16 +99,15 @@ export default function HomeScreen({
   );
 }
 
-const commonFontFamily =
+const fontFamily =
   '"Noto Sans JP","Hiragino Sans","Yu Gothic","Meiryo",sans-serif';
 
 const mainStyle: React.CSSProperties = {
   minHeight: "100vh",
-  background:
-    "linear-gradient(180deg, var(--bg-main) 0%, #f8e8ee 46%, #f7ebf0 100%)",
+  background: "var(--bg-main)",
   padding: "18px 16px 32px",
   boxSizing: "border-box",
-  fontFamily: commonFontFamily,
+  fontFamily,
 };
 
 const wrapStyle: React.CSSProperties = {
@@ -117,141 +116,129 @@ const wrapStyle: React.CSSProperties = {
 };
 
 const panelStyle: React.CSSProperties = {
-  background: "linear-gradient(180deg, #fbeef3 0%, #f9edf2 100%)",
-  borderRadius: 34,
-  padding: "18px 14px 20px",
+  background: "linear-gradient(180deg, #fbeff3 0%, #f9edf2 100%)",
+  borderRadius: 32,
+  padding: "18px 16px 20px",
   boxSizing: "border-box",
   border: "1px solid rgba(233,30,99,0.08)",
-  boxShadow: "0 20px 44px rgba(140, 86, 110, 0.10)",
 };
 
 const heroSectionStyle: React.CSSProperties = {
   marginBottom: 20,
 };
 
-const heroLogoWrapStyle: React.CSSProperties = {
-  background:
-    "linear-gradient(135deg, #f4bdd0 0%, var(--pink-main) 42%, var(--pink-soft) 100%)",
-  borderRadius: 30,
-  padding: "14px",
-  marginBottom: 18,
-  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.45)",
-};
-
 const heroLogoStyle: React.CSSProperties = {
   width: "100%",
   height: "auto",
   display: "block",
-  borderRadius: 22,
+  marginBottom: 18,
 };
 
-const trustBoxStyle: React.CSSProperties = {
-  background: "rgba(255,255,255,0.72)",
-  border: "2px solid rgba(233,30,99,0.10)",
-  borderRadius: 26,
-  padding: "18px 18px 16px",
+const introStyle: React.CSSProperties = {
   textAlign: "center",
-  boxShadow: "0 10px 24px rgba(165, 108, 132, 0.07)",
+  padding: "0 8px",
 };
 
-const trustTitleStyle: React.CSSProperties = {
+const introTitleStyle: React.CSSProperties = {
   margin: "0 0 6px",
   fontSize: 18,
-  lineHeight: 1.35,
-  fontWeight: 800,
+  lineHeight: 1.4,
+  fontWeight: 900,
   color: "var(--text-main)",
-  letterSpacing: "0.01em",
-  fontFamily: commonFontFamily,
 };
 
-const trustTextStyle: React.CSSProperties = {
+const introTextStyle: React.CSSProperties = {
   margin: 0,
   fontSize: 14,
-  lineHeight: 1.6,
+  lineHeight: 1.7,
   fontWeight: 500,
   color: "var(--text-sub)",
-  fontFamily: commonFontFamily,
 };
 
-const menuLeadWrapStyle: React.CSSProperties = {
-  textAlign: "center",
-  marginBottom: 16,
+const menuSectionStyle: React.CSSProperties = {
+  marginTop: 16,
 };
 
 const menuLeadStyle: React.CSSProperties = {
-  display: "inline-block",
-  padding: "8px 18px",
-  borderRadius: 999,
-  background: "rgba(255,255,255,0.82)",
-  border: "1px solid rgba(233,30,99,0.10)",
-  color: "var(--pink-strong)",
+  textAlign: "center",
   fontSize: 15,
-  lineHeight: 1.4,
-  fontWeight: 700,
-  letterSpacing: "0.01em",
-  boxShadow: "0 6px 16px rgba(190, 121, 148, 0.06)",
-  fontFamily: commonFontFamily,
+  lineHeight: 1.5,
+  fontWeight: 800,
+  color: "var(--pink-strong)",
+  marginBottom: 14,
 };
 
-const primaryGridStyle: React.CSSProperties = {
+const primaryListStyle: React.CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "1fr 1fr",
-  gap: 14,
+  gap: 12,
   marginBottom: 16,
 };
 
-const primaryCardStyle: React.CSSProperties = {
+const primaryButtonStyle: React.CSSProperties = {
+  width: "100%",
   border: "none",
-  padding: 0,
-  borderRadius: 28,
-  cursor: "pointer",
+  borderRadius: 24,
   background:
-    "linear-gradient(180deg, var(--pink-strong) 0%, #d81b60 58%, #c51658 100%)",
-  boxShadow:
-    "0 18px 28px rgba(201, 46, 104, 0.24), inset 0 1px 0 rgba(255,255,255,0.22)",
+    "linear-gradient(180deg, #f02f78 0%, var(--pink-strong) 62%, #cf1656 100%)",
+  color: "#fff",
+  padding: "18px 18px",
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  textAlign: "left",
+  boxShadow: "0 12px 24px rgba(233,30,99,0.22)",
   appearance: "none",
   WebkitAppearance: "none",
-  textAlign: "left",
-  overflow: "hidden",
-  minHeight: 176,
 };
 
-const primaryCardInnerStyle: React.CSSProperties = {
-  height: "100%",
-  padding: "18px 18px 20px",
-  background:
-    "linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.00) 100%)",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
+const primaryButtonTextWrapStyle: React.CSSProperties = {
+  minWidth: 0,
+  flex: 1,
+  paddingRight: 12,
 };
 
-const cardKickerStyle: React.CSSProperties = {
+const primaryButtonKickerStyle: React.CSSProperties = {
   fontSize: 11,
   lineHeight: 1.2,
   fontWeight: 700,
-  letterSpacing: "0.16em",
-  color: "rgba(255,255,255,0.76)",
-  marginBottom: 14,
-  fontFamily: commonFontFamily,
+  letterSpacing: "0.14em",
+  color: "rgba(255,255,255,0.78)",
+  marginBottom: 8,
 };
 
-const primaryCardTitleStyle: React.CSSProperties = {
-  fontSize: 29,
-  lineHeight: 1.04,
+const primaryButtonTitleStyle: React.CSSProperties = {
+  fontSize: 32,
+  lineHeight: 1.08,
   fontWeight: 900,
-  color: "#ffffff",
-  marginBottom: 12,
-  letterSpacing: "0.01em",
-  fontFamily: commonFontFamily,
+  color: "#fff",
+  marginBottom: 8,
+  letterSpacing: 0,
+  wordBreak: "keep-all",
+  overflowWrap: "normal",
 };
 
-const primaryCardTextStyle: React.CSSProperties = {
+const primaryButtonDescStyle: React.CSSProperties = {
   fontSize: 14,
-  lineHeight: 1.65,
+  lineHeight: 1.6,
   fontWeight: 500,
-  color: "rgba(255,255,255,0.92)",
-  fontFamily: commonFontFamily,
+  color: "rgba(255,255,255,0.94)",
+  wordBreak: "keep-all",
+};
+
+const primaryArrowStyle: React.CSSProperties = {
+  flexShrink: 0,
+  width: 34,
+  height: 34,
+  borderRadius: "50%",
+  background: "rgba(255,255,255,0.16)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontSize: 28,
+  lineHeight: 1,
+  fontWeight: 400,
+  color: "#fff",
 };
 
 const subGridStyle: React.CSSProperties = {
@@ -261,36 +248,30 @@ const subGridStyle: React.CSSProperties = {
 };
 
 const subButtonStyle: React.CSSProperties = {
-  border: "1px solid rgba(233,30,99,0.10)",
+  border: "1px solid rgba(233,30,99,0.12)",
   borderRadius: 999,
-  background:
-    "linear-gradient(180deg, #f9dfe8 0%, #f6d6e1 100%)",
+  background: "var(--pink-soft)",
   color: "var(--text-main)",
   fontSize: 15,
-  lineHeight: 1.35,
+  lineHeight: 1.4,
   fontWeight: 700,
-  padding: "17px 14px",
+  padding: "16px 12px",
   cursor: "pointer",
-  boxShadow: "0 8px 18px rgba(180, 111, 138, 0.08)",
   appearance: "none",
   WebkitAppearance: "none",
-  fontFamily: commonFontFamily,
 };
 
-const wideSubButtonStyle: React.CSSProperties = {
+const subButtonWideStyle: React.CSSProperties = {
   gridColumn: "1 / -1",
-  border: "1px solid rgba(233,30,99,0.10)",
+  border: "1px solid rgba(233,30,99,0.12)",
   borderRadius: 999,
-  background:
-    "linear-gradient(180deg, #f9dfe8 0%, #f6d6e1 100%)",
+  background: "var(--pink-soft)",
   color: "var(--text-main)",
   fontSize: 15,
-  lineHeight: 1.35,
+  lineHeight: 1.4,
   fontWeight: 700,
-  padding: "18px 14px",
+  padding: "16px 12px",
   cursor: "pointer",
-  boxShadow: "0 8px 18px rgba(180, 111, 138, 0.08)",
   appearance: "none",
   WebkitAppearance: "none",
-  fontFamily: commonFontFamily,
 };

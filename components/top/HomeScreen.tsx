@@ -34,11 +34,11 @@ export default function HomeScreen({
 
             <div style={trustBoxStyle}>
               <p style={trustTitleStyle}>許可業者限定だから安心</p>
-              <p style={trustTextStyle}>片付け・不要品回収ならすっきりん</p>
+              <p style={trustTextStyle}>片付け・不要品回収を安心してご相談いただけます</p>
             </div>
           </section>
 
-          <section style={menuSectionStyle}>
+          <section>
             <div style={menuLeadWrapStyle}>
               <span style={menuLeadStyle}>ご希望の内容をお選びください</span>
             </div>
@@ -47,64 +47,47 @@ export default function HomeScreen({
               <button
                 type="button"
                 onClick={onOpenGarbageEntry}
-                style={{
-                  ...primaryCardStyle,
-                  ...homeCardStyle,
-                }}
+                style={primaryCardStyle}
               >
-                <div style={primaryCardIconStyle}>🏠</div>
-                <div style={primaryCardBodyStyle}>
-                  <div style={primaryCardTitleStyle}>家庭ゴミ</div>
-                  <div style={primaryCardTextStyle}>
-                    お家の片付けや粗大ゴミ
-                  </div>
+                <div style={cardLabelStyle}>HOUSEHOLD</div>
+                <div style={primaryCardTitleStyle}>家庭ゴミ</div>
+                <div style={primaryCardTextStyle}>
+                  お家の片付け・粗大ゴミなど
                 </div>
               </button>
 
               <button
                 type="button"
                 onClick={onOpenBusinessWaste}
-                style={{
-                  ...primaryCardStyle,
-                  ...businessCardStyle,
-                }}
+                style={primaryCardStyle}
               >
-                <div style={primaryCardIconStyle}>🏢</div>
-                <div style={primaryCardBodyStyle}>
-                  <div style={businessCardTitleStyle}>事業ゴミ</div>
-                  <div style={businessCardTextStyle}>
-                    店舗・オフィスの不用品回収
-                  </div>
+                <div style={cardLabelStyle}>BUSINESS</div>
+                <div style={primaryCardTitleStyle}>事業ゴミ</div>
+                <div style={primaryCardTextStyle}>
+                  店舗・事務所・法人回収
                 </div>
               </button>
             </div>
 
             <div style={subGridStyle}>
-              <button
-                type="button"
-                onClick={onOpenFaq}
-                style={faqButtonStyle}
-              >
-                <span style={subButtonIconStyle}>？</span>
-                <span>よくある質問</span>
+              <button type="button" onClick={onOpenFaq} style={subButtonStyle}>
+                よくある質問
               </button>
 
               <button
                 type="button"
                 onClick={onOpenReason}
-                style={reasonButtonStyle}
+                style={subButtonStyle}
               >
-                <span style={subButtonIconStyle}>☺</span>
-                <span>すっきりんが選ばれる理由</span>
+                すっきりんが選ばれる理由
               </button>
 
               <button
                 type="button"
                 onClick={onOpenRegion}
-                style={regionButtonStyle}
+                style={wideButtonStyle}
               >
-                <span style={subButtonIconStyle}>📍</span>
-                <span>サービス展開地域</span>
+                サービス展開地域
               </button>
             </div>
           </section>
@@ -116,8 +99,7 @@ export default function HomeScreen({
 
 const mainStyle: React.CSSProperties = {
   minHeight: "100vh",
-  background:
-    "radial-gradient(circle at top left, #f9dce8 0%, #f7edf3 38%, #f6f1f6 100%)",
+  background: "#f7f4f5",
   padding: "18px 16px 32px",
   boxSizing: "border-box",
 };
@@ -128,12 +110,12 @@ const wrapStyle: React.CSSProperties = {
 };
 
 const panelStyle: React.CSSProperties = {
-  background: "linear-gradient(180deg, #f9e8f1 0%, #f8edf3 100%)",
-  borderRadius: 32,
+  background: "#fcfafb",
+  borderRadius: 30,
   padding: "18px 14px 20px",
   boxSizing: "border-box",
-  boxShadow: "0 14px 34px rgba(191, 124, 150, 0.14)",
-  overflow: "hidden",
+  boxShadow: "0 10px 30px rgba(0,0,0,0.05)",
+  border: "1px solid #f0e5ea",
 };
 
 const heroSectionStyle: React.CSSProperties = {
@@ -141,10 +123,9 @@ const heroSectionStyle: React.CSSProperties = {
 };
 
 const heroLogoWrapStyle: React.CSSProperties = {
-  background: "linear-gradient(135deg, #f9b7d2 0%, #f692c3 48%, #f8c6da 100%)",
-  borderRadius: 28,
-  padding: "14px 14px 10px",
-  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.35)",
+  background: "#f8d9e6",
+  borderRadius: 26,
+  padding: "12px",
   marginBottom: 16,
 };
 
@@ -152,7 +133,7 @@ const heroLogoStyle: React.CSSProperties = {
   width: "100%",
   height: "auto",
   display: "block",
-  borderRadius: 22,
+  borderRadius: 18,
 };
 
 const topCatchStyle: React.CSSProperties = {
@@ -161,17 +142,16 @@ const topCatchStyle: React.CSSProperties = {
   fontSize: 17,
   lineHeight: 1.45,
   fontWeight: 900,
-  color: "#202a61",
+  color: "#1f2d4f",
   letterSpacing: "0.01em",
 };
 
 const trustBoxStyle: React.CSSProperties = {
-  background: "rgba(255,255,255,0.62)",
-  border: "2px solid #f1c8d8",
-  borderRadius: 26,
-  padding: "18px 16px 16px",
+  background: "#ffffff",
+  border: "1.5px solid #eed6df",
+  borderRadius: 24,
+  padding: "18px 16px",
   textAlign: "center",
-  boxShadow: "0 6px 18px rgba(208, 154, 177, 0.10)",
 };
 
 const trustTitleStyle: React.CSSProperties = {
@@ -179,19 +159,15 @@ const trustTitleStyle: React.CSSProperties = {
   fontSize: 17,
   lineHeight: 1.35,
   fontWeight: 900,
-  color: "#202a61",
+  color: "#1f2d4f",
 };
 
 const trustTextStyle: React.CSSProperties = {
   margin: 0,
-  fontSize: 16,
-  lineHeight: 1.45,
-  fontWeight: 800,
-  color: "#202a61",
-};
-
-const menuSectionStyle: React.CSSProperties = {
-  marginTop: 8,
+  fontSize: 14,
+  lineHeight: 1.6,
+  fontWeight: 700,
+  color: "#44506b",
 };
 
 const menuLeadWrapStyle: React.CSSProperties = {
@@ -201,14 +177,14 @@ const menuLeadWrapStyle: React.CSSProperties = {
 
 const menuLeadStyle: React.CSSProperties = {
   display: "inline-block",
-  background: "rgba(255,248,251,0.95)",
-  color: "#ef4c92",
+  background: "#fff",
+  color: "#dd5d93",
   fontWeight: 900,
   fontSize: 15,
   lineHeight: 1.4,
   padding: "8px 16px",
   borderRadius: 999,
-  boxShadow: "0 4px 10px rgba(232, 179, 200, 0.16)",
+  border: "1px solid #f1d8e2",
 };
 
 const primaryGridStyle: React.CSSProperties = {
@@ -219,68 +195,43 @@ const primaryGridStyle: React.CSSProperties = {
 };
 
 const primaryCardStyle: React.CSSProperties = {
-  border: "none",
+  border: "1px solid #dfe4ee",
   borderRadius: 22,
-  padding: "16px 14px 14px",
+  padding: "18px 14px",
   cursor: "pointer",
   textAlign: "left",
-  minHeight: 124,
-  boxShadow: "0 8px 16px rgba(0,0,0,0.08)",
+  minHeight: 150,
+  background: "#ffffff",
+  boxShadow: "0 6px 16px rgba(0,0,0,0.04)",
   display: "flex",
   flexDirection: "column",
-  justifyContent: "space-between",
+  justifyContent: "center",
   appearance: "none",
   WebkitAppearance: "none",
 };
 
-const homeCardStyle: React.CSSProperties = {
-  background: "linear-gradient(180deg, #eef5ff 0%, #dceafc 100%)",
-  border: "1px solid #cddff8",
-};
-
-const businessCardStyle: React.CSSProperties = {
-  background: "linear-gradient(180deg, #73cf5e 0%, #41b54a 100%)",
-  border: "1px solid #3ea54a",
-};
-
-const primaryCardIconStyle: React.CSSProperties = {
-  fontSize: 30,
-  lineHeight: 1,
+const cardLabelStyle: React.CSSProperties = {
+  fontSize: 10,
+  lineHeight: 1.2,
+  fontWeight: 800,
+  letterSpacing: "0.12em",
+  color: "#d46f98",
   marginBottom: 10,
 };
 
-const primaryCardBodyStyle: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  gap: 6,
-};
-
 const primaryCardTitleStyle: React.CSSProperties = {
-  fontSize: 18,
-  lineHeight: 1.2,
+  fontSize: 28,
+  lineHeight: 1.1,
   fontWeight: 900,
-  color: "#2351b8",
-};
-
-const businessCardTitleStyle: React.CSSProperties = {
-  fontSize: 18,
-  lineHeight: 1.2,
-  fontWeight: 900,
-  color: "#ffffff",
+  color: "#1f2d4f",
+  marginBottom: 10,
 };
 
 const primaryCardTextStyle: React.CSSProperties = {
-  fontSize: 12,
-  lineHeight: 1.45,
-  fontWeight: 800,
-  color: "#1d376e",
-};
-
-const businessCardTextStyle: React.CSSProperties = {
-  fontSize: 12,
-  lineHeight: 1.45,
-  fontWeight: 800,
-  color: "#f7fff7",
+  fontSize: 13,
+  lineHeight: 1.6,
+  fontWeight: 700,
+  color: "#5c667d",
 };
 
 const subGridStyle: React.CSSProperties = {
@@ -289,64 +240,27 @@ const subGridStyle: React.CSSProperties = {
   gap: 12,
 };
 
-const faqButtonStyle: React.CSSProperties = {
-  border: "none",
+const subButtonStyle: React.CSSProperties = {
+  border: "1px solid #dfe4ee",
   borderRadius: 999,
-  background: "linear-gradient(180deg, #ffd836 0%, #f3c400 100%)",
-  color: "#2b2b2b",
+  background: "#ffffff",
+  color: "#1f2d4f",
   fontSize: 16,
   fontWeight: 900,
-  padding: "15px 14px",
+  padding: "16px 14px",
   cursor: "pointer",
-  boxShadow: "0 6px 14px rgba(199, 158, 17, 0.16)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: 8,
+  boxShadow: "0 6px 16px rgba(0,0,0,0.04)",
 };
 
-const reasonButtonStyle: React.CSSProperties = {
-  border: "none",
-  borderRadius: 999,
-  background: "linear-gradient(180deg, #ff6ea9 0%, #f1468a 100%)",
-  color: "#fff",
-  fontSize: 14,
-  fontWeight: 900,
-  padding: "15px 12px",
-  cursor: "pointer",
-  boxShadow: "0 6px 14px rgba(219, 78, 137, 0.18)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: 8,
-};
-
-const regionButtonStyle: React.CSSProperties = {
+const wideButtonStyle: React.CSSProperties = {
   gridColumn: "1 / -1",
+  border: "1px solid #dfe4ee",
   borderRadius: 999,
-  background: "linear-gradient(180deg, #f5f8ff 0%, #e7eefb 100%)",
-  color: "#405a94",
+  background: "#ffffff",
+  color: "#1f2d4f",
   fontSize: 16,
   fontWeight: 900,
-  padding: "15px 14px",
+  padding: "16px 14px",
   cursor: "pointer",
-  border: "1px solid #d4def5",
-  boxShadow: "0 6px 14px rgba(170, 184, 220, 0.16)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: 8,
-};
-
-const subButtonIconStyle: React.CSSProperties = {
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  width: 24,
-  height: 24,
-  borderRadius: "50%",
-  background: "rgba(255,255,255,0.72)",
-  fontSize: 14,
-  lineHeight: 1,
-  fontWeight: 900,
+  boxShadow: "0 6px 16px rgba(0,0,0,0.04)",
 };

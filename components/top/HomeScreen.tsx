@@ -22,6 +22,10 @@ export default function HomeScreen({
       <div style={wrapStyle}>
         <div style={panelStyle}>
           <section style={heroSectionStyle}>
+            <div style={heroCatchStyle}>
+              LINEで簡単　無料でお見積もり
+            </div>
+
             <img
               src="/sukkirinlogo.svg"
               alt="すっきりん"
@@ -102,26 +106,40 @@ const fontFamily =
 const mainStyle: React.CSSProperties = {
   minHeight: "100vh",
   background: "var(--bg-main)",
-  padding: "10px 16px 10px",
+  padding: "10px 16px",
   boxSizing: "border-box",
   fontFamily,
+  display: "flex",
+  alignItems: "center",
 };
 
 const wrapStyle: React.CSSProperties = {
   maxWidth: 480,
+  width: "100%",
   margin: "0 auto",
 };
 
 const panelStyle: React.CSSProperties = {
   background: "#fbf1f4",
   borderRadius: 32,
-  padding: "12px 16px 14px",
+  padding: "14px 16px 14px",
   boxSizing: "border-box",
   border: "2px solid rgba(251,155,204,0.22)",
 };
 
 const heroSectionStyle: React.CSSProperties = {
   marginBottom: 12,
+};
+
+const heroCatchStyle: React.CSSProperties = {
+  textAlign: "center",
+  fontSize: 13,
+  lineHeight: 1.4,
+  fontWeight: 700,
+  color: "var(--pink-strong)",
+  marginBottom: 10,
+  letterSpacing: "0.02em",
+  fontFamily,
 };
 
 const heroLogoStyle: React.CSSProperties = {

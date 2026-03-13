@@ -60,7 +60,7 @@ export default function Page() {
     setError(null);
     setIsEntryModalOpen(false);
     setRequestFlow("household");
-    setScreen("form");
+    setScreen("household");
     setStep(1);
   };
 
@@ -68,7 +68,7 @@ export default function Page() {
     setError(null);
     setIsBusinessWasteOpen(false);
     setRequestFlow("business");
-    setScreen("form");
+    setScreen("business");
     setStep(1);
   };
 
@@ -101,7 +101,7 @@ export default function Page() {
         ? form.service || "事業ゴミ回収"
         : form.service || "未入力";
 
-    return [
+    const baseLines = [
       `📩 ${
         requestFlow === "business" ? "事業ゴミ回収" : "粗大ゴミ回収"
       }のお問い合わせを受け付けました`,
@@ -132,6 +132,51 @@ export default function Page() {
       `【第二希望回収日】${formatDateTimeJP(form.pickupDate2)}`,
       `【第三希望回収日】${formatDateTimeJP(form.pickupDate3)}`,
       "",
+    ];
+
+    if (requestFlow === "business") {
+      const contactName =
+        `${form.contactLastName || ""} ${form.contactFirstName || ""}`.trim() ||
+        "未入力";
+      const contactKana =
+        `${form.contactLastNameKana || ""} ${form.contactFirstNameKana || ""}`.trim() ||
+        "未入力";
+      const representativeName =
+        `${form.representativeLastName || ""} ${form.representativeFirstName || ""}`.trim() ||
+        "未入力";
+      const representativeKana =
+        `${form.representativeLastNameKana || ""} ${form.representativeFirstNameKana || ""}`.trim() ||
+        "未入力";
+
+      return [
+        ...baseLines,
+        "■ 申込者情報",
+        `【事業形態】${form.businessFormType || "未入力"}`,
+        `【屋号 / 法人名】${form.businessName || "未入力"}`,
+        `【担当者名】${contactName}`,
+        `【担当者名（かな）】${contactKana}`,
+        `【担当者電話番号】${form.contactPhone || "未入力"}`,
+        `【担当者メールアドレス】${form.contactEmail || "未入力"}`,
+        ...(form.receiptDifferent
+          ? [
+              "",
+              "■ 領収書情報",
+              `【領収書の宛名】${form.receiptName || "未入力"}`,
+              `【代表者名】${representativeName}`,
+              `【代表者名（かな）】${representativeKana}`,
+              `【代表者電話番号】${form.representativePhone || "未入力"}`,
+              `【代表者メールアドレス】${form.representativeEmail || "未入力"}`,
+            ]
+          : []),
+        "",
+        "———",
+        "",
+        "※ このトークでそのままやり取りできます。",
+      ].join("\n");
+    }
+
+    return [
+      ...baseLines,
       "■ 申込者情報",
       `【お名前】${form.name || "未入力"}`,
       `【ふりがな】${form.furigana || "未入力"}`,
@@ -156,9 +201,13 @@ export default function Page() {
 
     try {
       const payload = {
-        name: form.name,
-        phone: form.phone,
+        name:
+          requestFlow === "business"
+            ? `${form.contactLastName} ${form.contactFirstName}`.trim()
+            : form.name,
+        phone: requestFlow === "business" ? form.contactPhone : form.phone,
         contactMethod: "LINE",
+        inquiryType: requestFlow === "business" ? "事業ゴミ" : "家庭ゴミ",
         service:
           requestFlow === "business"
             ? form.service || "事業ゴミ回収"
@@ -172,13 +221,32 @@ export default function Page() {
         buildingType: form.buildingType,
         parking: form.parking,
         elevator: form.elevator,
+        disposalMethod: form.disposalMethod,
 
         items: `${form.items}${form.notes ? `\n\n【備考】\n${form.notes}` : ""}`,
+        notes: form.notes,
         airconRemoval: "ない",
 
         pickupDate1: toKintoneDateTime(form.pickupDate1),
         pickupDate2: toKintoneDateTime(form.pickupDate2),
         pickupDate3: toKintoneDateTime(form.pickupDate3),
+
+        businessType: form.businessFormType,
+        businessName: form.businessName,
+        contactLastName: form.contactLastName,
+        contactFirstName: form.contactFirstName,
+        contactLastNameKana: form.contactLastNameKana,
+        contactFirstNameKana: form.contactFirstNameKana,
+        contactPhone: form.contactPhone,
+        contactEmail: form.contactEmail,
+        receiptDifferent: form.receiptDifferent ? "あり" : "",
+        receiptName: form.receiptName,
+        representativeLastName: form.representativeLastName,
+        representativeFirstName: form.representativeFirstName,
+        representativeLastNameKana: form.representativeLastNameKana,
+        representativeFirstNameKana: form.representativeFirstNameKana,
+        representativePhone: form.representativePhone,
+        representativeEmail: form.representativeEmail,
       };
 
       const kintoneRes = await fetch("/api/kintone", {
@@ -200,7 +268,6 @@ export default function Page() {
       }
 
       const summaryText = buildSummaryText();
-
       await liff.sendMessages([{ type: "text", text: summaryText }]);
 
       alert("送信が完了しました。");
@@ -253,14 +320,11 @@ export default function Page() {
             onClose={() => setIsReasonOpen(false)}
           />
 
-          <FaqModal
-            open={isFaqOpen}
-            onClose={() => setIsFaqOpen(false)}
-          />
+          <FaqModal open={isFaqOpen} onClose={() => setIsFaqOpen(false)} />
         </>
       )}
 
-      {screen === "form" && step === 1 && requestFlow === "household" && (
+      {screen === "household" && step === 1 && (
         <Step1Location
           form={form}
           setForm={setForm}
@@ -269,7 +333,7 @@ export default function Page() {
         />
       )}
 
-      {screen === "form" && step === 1 && requestFlow === "business" && (
+      {screen === "business" && step === 1 && (
         <BusinessStep1Location
           form={form}
           setForm={setForm}
@@ -278,7 +342,7 @@ export default function Page() {
         />
       )}
 
-      {screen === "form" && step === 2 && requestFlow === "household" && (
+      {screen === "household" && step === 2 && (
         <Step2Request
           form={form}
           setForm={setForm}
@@ -287,7 +351,7 @@ export default function Page() {
         />
       )}
 
-      {screen === "form" && step === 2 && requestFlow === "business" && (
+      {screen === "business" && step === 2 && (
         <BusinessStep2Request
           form={form}
           setForm={setForm}
@@ -296,7 +360,7 @@ export default function Page() {
         />
       )}
 
-      {screen === "form" && step === 3 && requestFlow === "household" && (
+      {screen === "household" && step === 3 && (
         <Step3Schedule
           form={form}
           setForm={setForm}
@@ -305,7 +369,7 @@ export default function Page() {
         />
       )}
 
-      {screen === "form" && step === 3 && requestFlow === "business" && (
+      {screen === "business" && step === 3 && (
         <BusinessStep3Schedule
           form={form}
           setForm={setForm}
@@ -314,7 +378,7 @@ export default function Page() {
         />
       )}
 
-      {screen === "form" && step === 4 && requestFlow === "household" && (
+      {screen === "household" && step === 4 && (
         <Step4Applicant
           form={form}
           setForm={setForm}
@@ -323,7 +387,7 @@ export default function Page() {
         />
       )}
 
-      {screen === "form" && step === 4 && requestFlow === "business" && (
+      {screen === "business" && step === 4 && (
         <BusinessStep4Applicant
           form={form}
           setForm={setForm}
@@ -332,7 +396,7 @@ export default function Page() {
         />
       )}
 
-      {screen === "form" && step === 5 && requestFlow === "household" && (
+      {screen === "household" && step === 5 && (
         <>
           {error && (
             <div
@@ -387,7 +451,7 @@ export default function Page() {
         </>
       )}
 
-      {screen === "form" && step === 5 && requestFlow === "business" && (
+      {screen === "business" && step === 5 && (
         <>
           {error && (
             <div

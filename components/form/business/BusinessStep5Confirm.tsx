@@ -4,17 +4,22 @@ import React from "react";
 import StepIndicator from "@/components/form/common/StepIndicator";
 import type { FormData } from "@/types/form";
 
-type Step5ConfirmProps = {
+type BusinessStep5ConfirmProps = {
   form: FormData;
   onSubmit: () => void;
   onPrev: () => void;
 };
 
-export default function Step5Confirm({
+export default function BusinessStep5Confirm({
   form,
   onSubmit,
   onPrev,
-}: Step5ConfirmProps) {
+}: BusinessStep5ConfirmProps) {
+  const contactName = `${form.contactLastName} ${form.contactFirstName}`.trim();
+  const contactKana = `${form.contactLastNameKana} ${form.contactFirstNameKana}`.trim();
+  const representativeName = `${form.representativeLastName} ${form.representativeFirstName}`.trim();
+  const representativeKana = `${form.representativeLastNameKana} ${form.representativeFirstNameKana}`.trim();
+
   return (
     <main
       style={{
@@ -44,7 +49,7 @@ export default function Step5Confirm({
               color: "var(--text-main)",
             }}
           >
-            粗大ゴミ回収 | すっきりん
+            事業ゴミ回収 | すっきりん
           </h1>
         </div>
 
@@ -92,7 +97,7 @@ export default function Step5Confirm({
             <ConfirmRow label="備考" value={form.notes} multiline />
             <ConfirmRow
               label="添付画像"
-              value={form.images.length > 0 ? `${form.images.length}件` : ""}
+              value={form.images.length > 0 ? `${form.images.length}件` : "なし"}
             />
           </Section>
 
@@ -112,10 +117,23 @@ export default function Step5Confirm({
           </Section>
 
           <Section title="申込者情報">
-            <ConfirmRow label="お名前" value={form.name} />
-            <ConfirmRow label="ふりがな" value={form.furigana} />
-            <ConfirmRow label="電話番号" value={form.phone} />
+            <ConfirmRow label="事業形態" value={form.businessFormType} />
+            <ConfirmRow label="屋号 / 法人名" value={form.businessName} />
+            <ConfirmRow label="担当者名" value={contactName} />
+            <ConfirmRow label="担当者名（かな）" value={contactKana} />
+            <ConfirmRow label="担当者電話番号" value={form.contactPhone} />
+            <ConfirmRow label="担当者メールアドレス" value={form.contactEmail} />
           </Section>
+
+          {form.receiptDifferent && (
+            <Section title="領収書情報">
+              <ConfirmRow label="領収書の宛名" value={form.receiptName} />
+              <ConfirmRow label="代表者名" value={representativeName} />
+              <ConfirmRow label="代表者名（かな）" value={representativeKana} />
+              <ConfirmRow label="代表者電話番号" value={form.representativePhone} />
+              <ConfirmRow label="代表者メールアドレス" value={form.representativeEmail} />
+            </Section>
+          )}
 
           <div
             style={{

@@ -139,13 +139,13 @@ export default function Step2Request({
 
           <Field label="依頼内容" required>
             <RadioCardGroup
-              name="service"
-              value={form.service}
-              onChange={handleRadioChange}
-              options={[
-                { value: "不用品回収", label: "不用品回収" },
-                { value: "部屋を丸ごと片付け", label: "部屋を丸ごと片付け" },
-              ]}
+                name="service"
+                value={form.service}
+                onChange={handleRadioChange}
+                options={[
+                { value: "事業ゴミスポット回収", label: "事業ゴミスポット回収" },
+                { value: "事業ゴミ定期回収", label: "事業ゴミ定期回収" },
+            ]}
             />
           </Field>
 

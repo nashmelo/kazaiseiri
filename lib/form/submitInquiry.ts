@@ -1,212 +1,253 @@
-import { NextRequest, NextResponse } from "next/server";
+import type { FormData, RequestFlow } from "@/types/form";
+import type { TenantKey } from "@/lib/tenant/tenantConfig";
+import { prepareUploadImages } from "@/lib/images/prepareUploadImages";
+import { uploadImagesDirect } from "@/lib/images/uploadImagesDirect";
 
-type ItemLike = {
-  name?: string;
-  quantity?: string | number;
+type ActiveRequestFlow = Exclude<RequestFlow, "">;
+
+type SubmitInquiryArgs = {
+  form: FormData;
+  requestFlow: ActiveRequestFlow;
+  enableImageUpload: boolean;
+  tenant: TenantKey;
 };
 
-function stringifyItems(value: unknown): string {
+type SubmitInquiryResult = {
+  ok?: boolean;
+  data?: unknown;
+  requestId?: string;
+  summaryUrl?: string;
+};
+
+type UploadedFile = {
+  path: string;
+  fileName: string;
+  publicUrl: string;
+  contentType: string;
+  size: number;
+};
+
+const MAX_FILES = 10;
+
+function toKintoneDateTime(value: string) {
   if (!value) return "";
+  const d = new Date(value);
+  if (isNaN(d.getTime())) return "";
+  return d.toISOString();
+}
 
-  if (typeof value === "string") return value;
+function extractErrorMessage(data: any): string {
+  if (!data) return "不明なエラー";
+  if (typeof data === "string") return data;
 
-  if (Array.isArray(value)) {
-    return value
-      .map((item: ItemLike) => {
-        const name = item?.name ?? "";
-        const quantity = item?.quantity ?? "";
-        if (!name && !quantity) return "";
-        if (!name) return `${quantity}`;
-        if (!quantity) return `${name}`;
-        return `${name} × ${quantity}`;
-      })
-      .filter(Boolean)
-      .join("、");
+  if (data.detail) {
+    if (typeof data.detail === "string") return data.detail;
+    if (data.detail.message) return data.detail.message;
+    if (data.detail.messages) {
+      try {
+        return JSON.stringify(data.detail.messages, null, 2);
+      } catch {
+        return String(data.detail.messages);
+      }
+    }
+    try {
+      return JSON.stringify(data.detail, null, 2);
+    } catch {
+      return String(data.detail);
+    }
   }
 
+  if (data.message) return data.message;
+  if (data.error) return data.error;
+
   try {
-    return JSON.stringify(value);
+    return JSON.stringify(data, null, 2);
   } catch {
-    return String(value);
+    return String(data);
   }
 }
 
-function normalizeDomain(domain: string): string {
-  if (domain.startsWith("http://") || domain.startsWith("https://")) {
-    return domain;
-  }
-  return `https://${domain}`;
-}
+export async function submitInquiry({
+  form,
+  requestFlow,
+  enableImageUpload,
+  tenant,
+}: SubmitInquiryArgs): Promise<SubmitInquiryResult> {
+  const requestId = `REQ-${Date.now()}`;
 
-function normalizeAppBaseUrl(url?: string): string {
-  if (!url) return "";
-  if (url.startsWith("http://") || url.startsWith("https://")) {
-    return url.replace(/\/$/, "");
-  }
-  return `https://${url.replace(/\/$/, "")}`;
-}
+  let storageFolderPath = "";
+  let thumbnailUrl = "";
+  let imageCount = 0;
+  let imagePathsJson = "[]";
+  let allImageUrls = "";
 
-export async function POST(req: NextRequest) {
-  try {
-    const body = await req.json();
-
-    const domain = process.env.KINTONE_DOMAIN;
-    const app = process.env.KINTONE_APP_ID;
-    const token = process.env.KINTONE_API_TOKEN;
-    const appBaseUrl = normalizeAppBaseUrl(process.env.NEXT_PUBLIC_APP_URL);
-
-    if (!domain || !app || !token) {
-      return NextResponse.json(
-        { error: "kintone環境変数が未設定です" },
-        { status: 500 }
+  if (enableImageUpload && form.images && form.images.length > 0) {
+    if (form.images.length > MAX_FILES) {
+      throw new Error(
+        `画像は${MAX_FILES}枚まで添付できます。枚数を減らして再度お試しください。`
       );
     }
 
-    const baseUrl = normalizeDomain(domain);
+    let preparedFiles: File[];
 
-    const itemsText = stringifyItems(body.items);
-    const movingItemsText = stringifyItems(body.movingItems);
-    const disposalItemsText = stringifyItems(body.disposalItems);
+    try {
+      preparedFiles = await prepareUploadImages(form.images);
 
-    const tenant = body.tenant || "default";
-    const requestId = body.requestId || "";
+      console.log(
+        "prepared images",
+        preparedFiles.map((file) => ({
+          name: file.name,
+          type: file.type,
+          size: file.size,
+        }))
+      );
+    } catch (error) {
+      console.error("prepareUploadImages error:", error);
+      throw new Error(
+        "画像の変換に失敗しました。別の画像を選ぶか、もう一度お試しください。"
+      );
+    }
 
-    const summaryUrl =
-      appBaseUrl && requestId
-        ? `${appBaseUrl}/summary/${requestId}?tenant=${encodeURIComponent(
-            tenant
-          )}`
+    if (preparedFiles.length > MAX_FILES) {
+      throw new Error(
+        `画像は${MAX_FILES}枚まで添付できます。枚数を減らして再度お試しください。`
+      );
+    }
+
+    let uploadedFiles: UploadedFile[];
+
+    try {
+      uploadedFiles = await uploadImagesDirect(requestId, preparedFiles);
+    } catch (error) {
+      console.error("uploadImagesDirect error:", error);
+
+      const message =
+        error instanceof Error
+          ? error.message
+          : "画像アップロードに失敗しました。枚数を減らして再度お試しください。";
+
+      throw new Error(message);
+    }
+
+    if (preparedFiles.length > 0 && uploadedFiles.length === 0) {
+      throw new Error(
+        "画像のアップロードに失敗しました。枚数を減らして再度お試しください。"
+      );
+    }
+
+    storageFolderPath =
+      uploadedFiles.length > 0
+        ? uploadedFiles[0].path.split("/").slice(0, 3).join("/")
         : "";
 
-    console.log("appBaseUrl:", appBaseUrl);
-    console.log("tenant:", tenant);
-    console.log("requestId:", requestId);
-    console.log("summaryUrl:", summaryUrl);
-
-    const record = {
-      name: { value: body.name || "" },
-      phone: { value: body.phone || "" },
-      contactMethod: { value: body.contactMethod || "" },
-      service: { value: body.service || "" },
-
-      postalCode: { value: body.postalCode || "" },
-      prefecture: { value: body.prefecture || "" },
-      city: { value: body.city || "" },
-      address: { value: body.address1 || "" },
-
-      house: { value: body.buildingType || "" },
-      park: { value: body.parking || "" },
-      elevator: { value: body.elevator || "" },
-
-      detail: { value: itemsText },
-      room_size: { value: body.roomSize || "" },
-      airConditioner: { value: body.airconRemoval || "" },
-
-      pickupDate1: { value: body.pickupDate1 || "" },
-      pickupDate2: { value: body.pickupDate2 || "" },
-      pickupDate3: { value: body.pickupDate3 || "" },
-
-      pickupDate1Slot: { value: body.pickupDate1Slot || "" },
-      pickupDate2Slot: { value: body.pickupDate2Slot || "" },
-      pickupDate3Slot: { value: body.pickupDate3Slot || "" },
-
-      inquiry_type: { value: body.inquiryType || "" },
-      disposal_method: { value: body.disposalMethod || "" },
-      notes: { value: body.notes || "" },
-
-      business_type: { value: body.businessType || "" },
-      business_name: { value: body.businessName || "" },
-
-      contact_last_name: { value: body.contactLastName || "" },
-      contact_first_name: { value: body.contactFirstName || "" },
-      contact_last_name_kana: { value: body.contactLastNameKana || "" },
-      contact_first_name_kana: { value: body.contactFirstNameKana || "" },
-      contact_phone: { value: body.contactPhone || "" },
-      contact_email: { value: body.contactEmail || "" },
-
-      receipt_different: {
-        value: body.receiptDifferent ? ["あり"] : [],
-      },
-
-      receipt_name: { value: body.receiptName || "" },
-
-      representative_last_name: {
-        value: body.representativeLastName || "",
-      },
-      representative_first_name: {
-        value: body.representativeFirstName || "",
-      },
-      representative_last_name_kana: {
-        value: body.representativeLastNameKana || "",
-      },
-      representative_first_name_kana: {
-        value: body.representativeFirstNameKana || "",
-      },
-      representative_phone: { value: body.representativePhone || "" },
-      representative_email: { value: body.representativeEmail || "" },
-
-      moving_postal_code: { value: body.movingPostalCode || "" },
-      moving_prefecture: { value: body.movingPrefecture || "" },
-      moving_city: { value: body.movingCity || "" },
-      moving_address: { value: body.movingAddress || "" },
-
-      moving_building_type: { value: body.movingBuildingType || "" },
-      moving_floor: { value: body.movingFloor || "" },
-      moving_parking: { value: body.movingParking || "" },
-      moving_elevator: { value: body.movingElevator || "" },
-
-      moving_items: { value: movingItemsText },
-      moving_notes: { value: body.movingNotes || "" },
-
-      disposal_items: { value: disposalItemsText },
-      disposal_notes: { value: body.disposalNotes || "" },
-
-      request_id: { value: requestId },
-      storage_folder_path: { value: body.storageFolderPath || "" },
-      thumbnail_url: { value: body.thumbnailUrl || "" },
-      image_count: { value: Number(body.imageCount || 0) },
-      image_paths_json: { value: body.imagePathsJson || "" },
-      all_image_urls: { value: body.allImageUrls || "" },
-
-      summary_url: { value: summaryUrl },
-    };
-
-    console.log("kintone request body:", body);
-    console.log("kintone record:", record);
-
-    const res = await fetch(`${baseUrl}/k/v1/record.json`, {
-      method: "POST",
-      headers: {
-        "X-Cybozu-API-Token": token,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        app: Number(app),
-        record,
-      }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      console.error("kintone error response:", data);
-      return NextResponse.json(
-        { error: "kintone登録失敗", detail: data },
-        { status: res.status }
-      );
-    }
-
-    return NextResponse.json({
-      ok: true,
-      data,
-      requestId,
-      summaryUrl,
-    });
-  } catch (err) {
-    console.error("server error:", err);
-    return NextResponse.json(
-      { error: "server error", detail: String(err) },
-      { status: 500 }
-    );
+    thumbnailUrl = uploadedFiles.length > 0 ? uploadedFiles[0].publicUrl : "";
+    imageCount = uploadedFiles.length;
+    imagePathsJson = JSON.stringify(uploadedFiles);
+    allImageUrls = uploadedFiles.map((file) => file.publicUrl).join("\n");
   }
+
+  const isBusiness = requestFlow === "business";
+  const isMoving = requestFlow === "moving";
+
+  const payload = {
+    tenant,
+    name: isBusiness
+      ? `${form.contactLastName} ${form.contactFirstName}`.trim()
+      : form.name,
+    phone: isBusiness ? form.contactPhone : form.phone,
+    contactMethod: "LINE",
+    inquiryType: isBusiness ? "事業ゴミ" : isMoving ? "引越し" : "家庭ゴミ",
+    service: isBusiness
+      ? form.service || "事業ゴミ回収"
+      : isMoving
+      ? form.service || "引越し"
+      : form.service,
+    roomSize: form.roomSize,
+
+    postalCode: form.postalCode,
+    prefecture: form.prefecture,
+    city: form.city,
+    address1: form.address,
+
+    movingPostalCode: form.movingPostalCode,
+    movingPrefecture: form.movingPrefecture,
+    movingCity: form.movingCity,
+    movingAddress: form.movingAddress,
+
+    buildingType: form.buildingType,
+    floor: form.floor,
+    parking: form.parking,
+    elevator: form.elevator,
+    disposalMethod: isMoving ? "" : form.disposalMethod,
+
+    movingBuildingType: form.movingBuildingType,
+    movingFloor: form.movingFloor,
+    movingParking: form.movingParking,
+    movingElevator: form.movingElevator,
+
+    items: form.items,
+    movingItems: form.movingItems,
+    disposalItems: form.disposalItems,
+    notes: form.notes,
+    movingNotes: form.movingNotes,
+    disposalNotes: form.disposalNotes,
+
+    airconRemoval: "ない",
+
+    pickupDate1: toKintoneDateTime(form.pickupDate1),
+    pickupDate2: toKintoneDateTime(form.pickupDate2),
+    pickupDate3: toKintoneDateTime(form.pickupDate3),
+
+    pickupDate1Slot: form.pickupDate1Slot,
+    pickupDate2Slot: form.pickupDate2Slot,
+    pickupDate3Slot: form.pickupDate3Slot,
+
+    businessType: form.businessFormType,
+    businessName: form.businessName,
+
+    contactLastName: form.contactLastName,
+    contactFirstName: form.contactFirstName,
+    contactLastNameKana: form.contactLastNameKana,
+    contactFirstNameKana: form.contactFirstNameKana,
+    contactPhone: form.contactPhone,
+    contactEmail: form.contactEmail,
+
+    receiptDifferent: form.receiptDifferent,
+    receiptName: form.receiptName,
+
+    representativeLastName: form.representativeLastName,
+    representativeFirstName: form.representativeFirstName,
+    representativeLastNameKana: form.representativeLastNameKana,
+    representativeFirstNameKana: form.representativeFirstNameKana,
+    representativePhone: form.representativePhone,
+    representativeEmail: form.representativeEmail,
+
+    requestId,
+    storageFolderPath,
+    thumbnailUrl,
+    imageCount,
+    imagePathsJson,
+    allImageUrls,
+  };
+
+  const response = await fetch("/api/kintone", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(extractErrorMessage(data));
+  }
+
+  return {
+    ok: true,
+    data,
+    requestId,
+    summaryUrl: data?.summaryUrl || data?.summary_url || undefined,
+  };
 }

@@ -37,6 +37,14 @@ export type RoomSize =
   | "その他"
   | "";
 
+export type TimeSlot =
+  | "9〜12時"
+  | "12〜15時"
+  | "15〜18時"
+  | "9〜18時"
+  | "希望なし"
+  | "";
+
 export type FormData = {
   requestFlow: RequestFlow;
 
@@ -76,8 +84,11 @@ export type FormData = {
 
   // Step3
   pickupDate1: string;
+  pickupDate1Slot: TimeSlot;
   pickupDate2: string;
+  pickupDate2Slot: TimeSlot;
   pickupDate3: string;
+  pickupDate3Slot: TimeSlot;
 
   // household / moving Step4
   name: string;
@@ -145,8 +156,11 @@ export const initialFormData: FormData = {
 
   // Step3
   pickupDate1: "",
+  pickupDate1Slot: "",
   pickupDate2: "",
+  pickupDate2Slot: "",
   pickupDate3: "",
+  pickupDate3Slot: "",
 
   // household / moving Step4
   name: "",

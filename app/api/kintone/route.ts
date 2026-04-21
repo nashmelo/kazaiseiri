@@ -95,6 +95,7 @@ export async function POST(req: NextRequest) {
       address: { value: body.address1 || "" },
 
       house: { value: body.buildingType || "" },
+      floor: { value: body.floor || "" },
       park: { value: body.parking || "" },
       elevator: { value: body.elevator || "" },
 
@@ -106,9 +107,14 @@ export async function POST(req: NextRequest) {
       pickupDate2: { value: body.pickupDate2 || "" },
       pickupDate3: { value: body.pickupDate3 || "" },
 
+      pickupDate1Slot: { value: body.pickupDate1Slot || "" },
+      pickupDate2Slot: { value: body.pickupDate2Slot || "" },
+      pickupDate3Slot: { value: body.pickupDate3Slot || "" },
+
       inquiry_type: { value: body.inquiryType || "" },
       disposal_method: { value: body.disposalMethod || "" },
       notes: { value: body.notes || "" },
+      furigana: { value: body.furigana || "" },
 
       business_type: { value: body.businessType || "" },
       business_name: { value: body.businessName || "" },

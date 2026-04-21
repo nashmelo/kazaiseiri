@@ -13,7 +13,7 @@ import {
   type Step,
 } from "@/types/form";
 
-const LIFF_ID = "2009412342-JGZ5KiR6";
+const LIFF_ID = process.env.NEXT_PUBLIC_LIFF_ID || "";
 
 type ActiveRequestFlow = "household" | "business" | "moving";
 type AppMode = "upload" | "chat";
@@ -57,10 +57,18 @@ export default function Page() {
   useEffect(() => {
     const init = async () => {
       try {
+        if (!LIFF_ID) {
+          throw new Error("NEXT_PUBLIC_LIFF_ID が未設定です。");
+        }
+
         await liff.init({ liffId: LIFF_ID });
       } catch (err) {
         console.error("LIFF init error:", err);
-        setError("LINE初期化に失敗しました。");
+        setError(
+          err instanceof Error
+            ? err.message
+            : "LINE初期化に失敗しました。"
+        );
       }
     };
 

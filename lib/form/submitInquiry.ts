@@ -194,9 +194,9 @@ export async function submitInquiry({
 
     airconRemoval: "ない",
 
-    pickupDate1: toKintoneDateTime(form.pickupDate1),
-    pickupDate2: toKintoneDateTime(form.pickupDate2),
-    pickupDate3: toKintoneDateTime(form.pickupDate3),
+    pickupDate1: form.pickupDate1,
+    pickupDate2: form.pickupDate2,
+    pickupDate3: form.pickupDate3,
 
     pickupDate1Slot: form.pickupDate1Slot,
     pickupDate2Slot: form.pickupDate2Slot,

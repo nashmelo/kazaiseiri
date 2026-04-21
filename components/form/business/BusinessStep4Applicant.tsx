@@ -1,10 +1,27 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import StepIndicator from "@/components/form/common/StepIndicator";
+import Field from "@/components/form/common/Field";
+import StepSectionHeader from "@/components/form/common/StepSectionHeader";
 import type { FormData } from "@/types/form";
+import { inputStyle } from "@/styles/formStyles";
+import {
+  mainStyle,
+  wrapStyle,
+  pageTitleWrapStyle,
+  pageTitleStyle,
+  panelStyle,
+  errorStyle,
+  buttonGroupStyle,
+  primaryButtonStyle,
+  secondaryButtonStyle,
+} from "@/styles/formStepStyles";
+
+type TenantKey = "default" | "ezurin" | "client-a";
 
 type BusinessStep4ApplicantProps = {
+  tenantKey?: TenantKey;
   form: FormData;
   setForm: React.Dispatch<React.SetStateAction<FormData>>;
   onNext: () => void;
@@ -12,11 +29,30 @@ type BusinessStep4ApplicantProps = {
 };
 
 export default function BusinessStep4Applicant({
+  tenantKey = "default",
   form,
   setForm,
   onNext,
   onPrev,
 }: BusinessStep4ApplicantProps) {
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setForm((prev) => ({
+      ...prev,
+      businessFormType: prev.businessFormType || "法人",
+    }));
+  }, [setForm]);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const setErrorAndScroll = (message: string) => {
+    setError(message);
+    scrollToTop();
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
 
@@ -26,89 +62,79 @@ export default function BusinessStep4Applicant({
     }));
   };
 
-  const handleSelectBusinessType = (
-  value: FormData["businessFormType"]
-) => {
-  setForm((prev) => ({
-    ...prev,
-    businessFormType: value,
-  }));
-};
+  const handleSelectBusinessType = (value: FormData["businessFormType"]) => {
+    setForm((prev) => ({
+      ...prev,
+      businessFormType: value,
+    }));
+  };
 
   const handleNext = () => {
+    setError(null);
+
     if (!form.businessFormType) {
-      alert("事業形態を選択してください。");
+      setErrorAndScroll("事業形態を選択してください。");
       return;
     }
 
     if (!form.businessName.trim()) {
-      alert("屋号または法人名を入力してください。");
+      setErrorAndScroll("屋号または法人名を入力してください。");
       return;
     }
 
     if (!form.contactLastName.trim()) {
-      alert("担当者の姓を入力してください。");
+      setErrorAndScroll("担当者の姓を入力してください。");
       return;
     }
 
     if (!form.contactFirstName.trim()) {
-      alert("担当者の名を入力してください。");
+      setErrorAndScroll("担当者の名を入力してください。");
       return;
     }
 
     if (!form.contactLastNameKana.trim()) {
-      alert("担当者の姓（かな）を入力してください。");
+      setErrorAndScroll("担当者の姓（かな）を入力してください。");
       return;
     }
 
     if (!form.contactFirstNameKana.trim()) {
-      alert("担当者の名（かな）を入力してください。");
+      setErrorAndScroll("担当者の名（かな）を入力してください。");
       return;
     }
 
     if (!form.contactPhone.trim()) {
-      alert("担当者の電話番号を入力してください。");
-      return;
-    }
-
-    if (!form.contactEmail.trim()) {
-      alert("担当者のメールアドレスを入力してください。");
+      setErrorAndScroll("担当者の電話番号を入力してください。");
       return;
     }
 
     if (form.receiptDifferent) {
       if (!form.receiptName.trim()) {
-        alert("領収書の宛名を入力してください。");
+        setErrorAndScroll("領収書の宛名を入力してください。");
         return;
       }
 
       if (!form.representativeLastName.trim()) {
-        alert("代表の姓を入力してください。");
+        setErrorAndScroll("代表の姓を入力してください。");
         return;
       }
 
       if (!form.representativeFirstName.trim()) {
-        alert("代表の名を入力してください。");
+        setErrorAndScroll("代表の名を入力してください。");
         return;
       }
 
       if (!form.representativeLastNameKana.trim()) {
-        alert("代表の姓（かな）を入力してください。");
+        setErrorAndScroll("代表の姓（かな）を入力してください。");
         return;
       }
 
       if (!form.representativeFirstNameKana.trim()) {
-        alert("代表の名（かな）を入力してください。");
+        setErrorAndScroll("代表の名（かな）を入力してください。");
         return;
       }
 
       if (!form.representativePhone.trim()) {
-        alert("代表の電話番号を入力してください。");
-        return;
-      }
-
-      if (!form.representativeEmail.trim()) {
-        alert("代表のメールアドレスを入力してください。");
+        setErrorAndScroll("代表の電話番号を入力してください。");
         return;
       }
     }
@@ -117,64 +143,21 @@ export default function BusinessStep4Applicant({
   };
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background: "var(--bg-main)",
-        padding: "24px 16px 40px",
-        boxSizing: "border-box",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 480,
-          margin: "0 auto",
-        }}
-      >
-        <div
-          style={{
-            textAlign: "center",
-            marginBottom: 16,
-          }}
-        >
-          <h1
-            style={{
-              margin: 0,
-              fontSize: 18,
-              fontWeight: 900,
-              color: "var(--text-main)",
-            }}
-          >
-            事業ゴミ回収 | すっきりん
+    <main style={mainStyle}>
+      <div style={wrapStyle}>
+        <div style={pageTitleWrapStyle}>
+          <h1 style={pageTitleStyle}>
+            片付け・不用品回収 |{" "}
+            {tenantKey === "ezurin" ? "エヅリン" : "すっきりん"}
           </h1>
         </div>
 
         <StepIndicator step={4} />
 
-        <div
-          style={{
-            background: "#fffafb",
-            borderRadius: 28,
-            padding: "22px 18px 24px",
-            boxSizing: "border-box",
-            boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
-          }}
-        >
-          <div
-            style={{
-              background: "var(--pink-soft)",
-              color: "var(--pink-strong)",
-              textAlign: "center",
-              fontSize: 18,
-              fontWeight: 900,
-              padding: "18px 12px",
-              borderRadius: 12,
-              marginBottom: 24,
-              border: "2px solid var(--pink-main)",
-            }}
-          >
-            Step 4 申込者情報をご入力ください
-          </div>
+        <div style={panelStyle}>
+          <StepSectionHeader step={4} title="申込者情報をご入力ください" />
+
+          {error && <div style={errorStyle}>{error}</div>}
 
           <Field label="事業形態" required>
             <SegmentButtonRow>
@@ -272,7 +255,7 @@ export default function BusinessStep4Applicant({
             <HintText>半角数字のみ、ハイフンなし</HintText>
           </Field>
 
-          <Field label="担当者のメールアドレス" required>
+          <Field label="担当者のメールアドレス">
             <input
               type="email"
               name="contactEmail"
@@ -284,7 +267,7 @@ export default function BusinessStep4Applicant({
             <HintText>契約書や領収書の送付に利用されます</HintText>
           </Field>
 
-          <div style={{ marginTop: 18, marginBottom: 20 }}>
+          <div style={receiptToggleWrapStyle}>
             <label style={checkCardStyle}>
               <input
                 type="checkbox"
@@ -299,15 +282,7 @@ export default function BusinessStep4Applicant({
 
           {form.receiptDifferent && (
             <>
-              <div
-                style={{
-                  marginBottom: 14,
-                  color: "var(--pink-strong)",
-                  fontSize: 14,
-                  fontWeight: 800,
-                  lineHeight: 1.6,
-                }}
-              >
+              <div style={receiptNoticeStyle}>
                 以下の情報は、領収書の宛名記載時にのみ利用されます。
                 <br />
                 送付や連絡には、上記の担当者情報が利用されます。
@@ -387,7 +362,7 @@ export default function BusinessStep4Applicant({
                 <HintText>半角数字のみ、ハイフンなし</HintText>
               </Field>
 
-              <Field label="代表のメールアドレス" required>
+              <Field label="代表のメールアドレス">
                 <input
                   type="email"
                   name="representativeEmail"
@@ -400,14 +375,7 @@ export default function BusinessStep4Applicant({
             </>
           )}
 
-          <div
-            style={{
-              display: "flex",
-              gap: 12,
-              flexDirection: "column",
-              marginTop: 20,
-            }}
-          >
+          <div style={buttonGroupStyle}>
             <button
               type="button"
               onClick={handleNext}
@@ -430,76 +398,16 @@ export default function BusinessStep4Applicant({
   );
 }
 
-type FieldProps = {
-  label: string;
-  required?: boolean;
-  children: React.ReactNode;
-};
-
-function Field({ label, required, children }: FieldProps) {
-  return (
-    <div style={{ marginBottom: 16, flex: 1 }}>
-      <label
-        style={{
-          display: "block",
-          fontSize: 13,
-          fontWeight: 800,
-          color: "var(--text-main)",
-          marginBottom: 8,
-        }}
-      >
-        {label}
-        {required && (
-          <span style={{ color: "var(--pink-strong)", marginLeft: 4 }}>＊</span>
-        )}
-      </label>
-      {children}
-    </div>
-  );
-}
-
 function HintText({ children }: { children: React.ReactNode }) {
-  return (
-    <div
-      style={{
-        marginTop: 6,
-        fontSize: 12,
-        fontWeight: 700,
-        color: "var(--pink-strong)",
-        lineHeight: 1.4,
-      }}
-    >
-      {children}
-    </div>
-  );
+  return <div style={hintTextStyle}>{children}</div>;
 }
 
 function HalfFieldRow({ children }: { children: React.ReactNode }) {
-  return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr",
-        gap: 12,
-      }}
-    >
-      {children}
-    </div>
-  );
+  return <div style={halfFieldRowStyle}>{children}</div>;
 }
 
 function SegmentButtonRow({ children }: { children: React.ReactNode }) {
-  return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 1fr",
-        gap: 12,
-      }}
-    >
-      {children}
-    </div>
-  );
+  return <div style={segmentButtonRowStyle}>{children}</div>;
 }
 
 function SelectCard({
@@ -512,37 +420,54 @@ function SelectCard({
   onClick: () => void;
 }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      style={{
-        minHeight: 56,
-        borderRadius: 16,
-        border: checked
-          ? "2px solid var(--pink-strong)"
-          : "2px solid #e6d7de",
-        background: checked ? "#fff1f6" : "#ffffff",
-        color: checked ? "var(--pink-strong)" : "var(--text-main)",
-        fontSize: 16,
-        fontWeight: 900,
-        cursor: "pointer",
-      }}
-    >
+    <button type="button" onClick={onClick} style={getSelectCardStyle(checked)}>
       {label}
     </button>
   );
 }
 
-const inputStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "12px 12px",
-  borderRadius: 10,
-  border: "1px solid #e6d7de",
+const hintTextStyle: React.CSSProperties = {
+  marginTop: 6,
+  fontSize: 12,
+  fontWeight: 700,
+  color: "var(--pink-strong)",
+  lineHeight: 1.4,
+};
+
+const halfFieldRowStyle: React.CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "1fr 1fr",
+  gap: 12,
+};
+
+const segmentButtonRowStyle: React.CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "1fr 1fr",
+  gap: 12,
+};
+
+const getSelectCardStyle = (checked: boolean): React.CSSProperties => ({
+  minHeight: 56,
+  borderRadius: 16,
+  border: checked ? "2px solid var(--pink-logo)" : "2px solid #e6d7de",
+  background: checked ? "rgba(251,155,204,0.16)" : "#ffffff",
+  color: checked ? "var(--pink-strong)" : "var(--text-main)",
+  fontSize: 16,
+  fontWeight: 900,
+  cursor: "pointer",
+});
+
+const receiptToggleWrapStyle: React.CSSProperties = {
+  marginTop: 18,
+  marginBottom: 20,
+};
+
+const receiptNoticeStyle: React.CSSProperties = {
+  marginBottom: 14,
+  color: "var(--pink-strong)",
   fontSize: 14,
-  boxSizing: "border-box",
-  background: "#ffffff",
-  color: "var(--text-main)",
-  outline: "none",
+  fontWeight: 800,
+  lineHeight: 1.6,
 };
 
 const checkCardStyle: React.CSSProperties = {
@@ -566,28 +491,4 @@ const checkboxStyle: React.CSSProperties = {
   height: 20,
   accentColor: "var(--pink-strong)",
   flexShrink: 0,
-};
-
-const primaryButtonStyle: React.CSSProperties = {
-  width: "100%",
-  border: "none",
-  borderRadius: 999,
-  background: "var(--pink-strong)",
-  color: "#ffffff",
-  fontSize: 18,
-  fontWeight: 900,
-  padding: "18px 16px",
-  cursor: "pointer",
-};
-
-const secondaryButtonStyle: React.CSSProperties = {
-  width: "100%",
-  borderRadius: 999,
-  background: "#ffffff",
-  color: "var(--pink-strong)",
-  fontSize: 18,
-  fontWeight: 900,
-  padding: "18px 16px",
-  cursor: "pointer",
-  border: "3px solid var(--pink-strong)",
 };

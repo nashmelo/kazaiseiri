@@ -1,9 +1,51 @@
 :root{
   --bg-main: #f9e5ec;
   --pink-main: #f7d6e2;
-  --pink-strong: #e91e63;
+  --pink-strong: #e55a8b;
   --pink-soft: #fde7ef;
   --text-main: #1c2b4a;
   --text-sub: #6b7280;
-  --pink-logo:#fb9bcc;
+  --pink-logo: #fb9bcc;
+  --font-jp: "Noto Sans JP","Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
+}
+
+html,
+body{
+  max-width: 100%;
+  overflow-x: hidden;
+  font-family: var(--font-jp);
+}
+
+*{
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+input[type="number"],
+input[type="password"],
+input[type="search"],
+input[type="url"],
+input[type="datetime-local"],
+textarea,
+select,
+button{
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+}
+
+input[type="checkbox"],
+input[type="radio"]{
+  -webkit-appearance: auto;
+  appearance: auto;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+  outline: none;
+  box-shadow: none;
 }

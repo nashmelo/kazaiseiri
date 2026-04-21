@@ -1,79 +1,67 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import StepIndicator from "@/components/form/common/StepIndicator";
+import StepSectionHeader from "@/components/form/common/StepSectionHeader";
 import type { FormData } from "@/types/form";
+import {
+  mainStyle,
+  wrapStyle,
+  pageTitleWrapStyle,
+  pageTitleStyle,
+  panelStyle,
+  buttonGroupStyle,
+  primaryButtonStyle,
+  secondaryButtonStyle,
+} from "@/styles/formStepStyles";
+
+type TenantKey = "default" | "ezurin" | "client-a";
 
 type Step5ConfirmProps = {
+  tenantKey?: TenantKey;
   form: FormData;
-  onSubmit: () => void;
+  onSubmit: () => Promise<void> | void;
   onPrev: () => void;
 };
 
 export default function Step5Confirm({
+  tenantKey = "default",
   form,
   onSubmit,
   onPrev,
 }: Step5ConfirmProps) {
+  const [submitting, setSubmitting] = useState(false);
+
+  const isWholeRoomService = form.service === "部屋を丸ごと片付け";
+  const itemsLabel = isWholeRoomService
+    ? "片付けする主な家財"
+    : "回収ゴミの品目・個数";
+
+  const handleSubmitClick = async () => {
+    if (submitting) return;
+
+    try {
+      setSubmitting(true);
+      await onSubmit();
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background: "var(--bg-main)",
-        padding: "24px 16px 40px",
-        boxSizing: "border-box",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 480,
-          margin: "0 auto",
-        }}
-      >
-        <div
-          style={{
-            textAlign: "center",
-            marginBottom: 16,
-          }}
-        >
-          <h1
-            style={{
-              margin: 0,
-              fontSize: 18,
-              fontWeight: 900,
-              color: "var(--text-main)",
-            }}
-          >
-            粗大ゴミ回収 | すっきりん
+    <main style={mainStyle}>
+      <div style={wrapStyle}>
+        <div style={pageTitleWrapStyle}>
+          <h1 style={pageTitleStyle}>
+            片付け・不用品回収 |{" "}
+            {tenantKey === "ezurin" ? "エヅリン" : "すっきりん"}
           </h1>
         </div>
 
         <StepIndicator step={5} />
 
-        <div
-          style={{
-            background: "#fffafb",
-            borderRadius: 28,
-            padding: "22px 18px 24px",
-            boxSizing: "border-box",
-            boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
-          }}
-        >
-          <div
-            style={{
-              background: "var(--pink-soft)",
-              color: "var(--pink-strong)",
-              textAlign: "center",
-              fontSize: 18,
-              fontWeight: 900,
-              padding: "18px 12px",
-              borderRadius: 12,
-              marginBottom: 24,
-              border: "2px solid var(--pink-main)",
-            }}
-          >
-            Step 5 内容をご確認ください
-          </div>
+        <div style={panelStyle}>
+          <StepSectionHeader step={5} title="内容をご確認ください" />
 
           <Section title="回収場所">
             <ConfirmRow label="郵便番号" value={form.postalCode} />
@@ -81,6 +69,7 @@ export default function Step5Confirm({
             <ConfirmRow label="市町村" value={form.city} />
             <ConfirmRow label="住所" value={form.address} />
             <ConfirmRow label="建物の種類" value={form.buildingType} />
+            <ConfirmRow label="回収場所の階数" value={form.floor} />
             <ConfirmRow label="駐車場の有無" value={form.parking} />
             <ConfirmRow label="エレベーターの有無" value={form.elevator} />
             <ConfirmRow label="ゴミの排出方法" value={form.disposalMethod} />
@@ -88,11 +77,18 @@ export default function Step5Confirm({
 
           <Section title="依頼内容">
             <ConfirmRow label="依頼内容" value={form.service} />
-            <ConfirmRow label="回収ゴミの品目・個数" value={form.items} multiline />
-            <ConfirmRow label="備考" value={form.notes} multiline />
+            {isWholeRoomService && (
+              <ConfirmRow label="部屋の大きさ" value={form.roomSize} />
+            )}
+            <ConfirmRow label={itemsLabel} value={form.items} multiline />
+            <ConfirmRow
+              label="その他の物・補足事項"
+              value={form.notes}
+              multiline
+            />
             <ConfirmRow
               label="添付画像"
-              value={form.images.length > 0 ? `${form.images.length}件` : ""}
+              value={form.images.length > 0 ? `${form.images.length}件` : "なし"}
             />
           </Section>
 
@@ -117,26 +113,29 @@ export default function Step5Confirm({
             <ConfirmRow label="電話番号" value={form.phone} />
           </Section>
 
-          <div
-            style={{
-              display: "flex",
-              gap: 12,
-              flexDirection: "column",
-              marginTop: 20,
-            }}
-          >
+          <div style={buttonGroupStyle}>
             <button
               type="button"
-              onClick={onSubmit}
-              style={primaryButtonStyle}
+              onClick={handleSubmitClick}
+              disabled={submitting}
+              style={{
+                ...primaryButtonStyle,
+                opacity: submitting ? 0.7 : 1,
+                cursor: submitting ? "not-allowed" : "pointer",
+              }}
             >
-              この内容で送信する
+              {submitting ? "送信中..." : "この内容で送信する"}
             </button>
 
             <button
               type="button"
               onClick={onPrev}
-              style={secondaryButtonStyle}
+              disabled={submitting}
+              style={{
+                ...secondaryButtonStyle,
+                opacity: submitting ? 0.7 : 1,
+                cursor: submitting ? "not-allowed" : "pointer",
+              }}
             >
               前に戻る
             </button>
@@ -155,28 +154,9 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div style={{ marginBottom: 22 }}>
-      <div
-        style={{
-          fontSize: 16,
-          fontWeight: 900,
-          color: "var(--pink-strong)",
-          marginBottom: 10,
-          paddingBottom: 6,
-          borderBottom: "2px solid var(--pink-main)",
-        }}
-      >
-        {title}
-      </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 10,
-        }}
-      >
-        {children}
-      </div>
+    <div style={sectionStyle}>
+      <div style={sectionTitleStyle}>{title}</div>
+      <div style={sectionBodyStyle}>{children}</div>
     </div>
   );
 }
@@ -193,32 +173,13 @@ function ConfirmRow({
   const displayValue = value && value.trim() ? value : "未入力";
 
   return (
-    <div
-      style={{
-        background: "#ffffff",
-        borderRadius: 12,
-        padding: "12px 14px",
-        border: "1px solid #ead8e0",
-      }}
-    >
+    <div style={confirmRowStyle}>
+      <div style={confirmLabelStyle}>{label}</div>
       <div
         style={{
-          fontSize: 12,
-          fontWeight: 800,
-          color: "var(--text-sub)",
-          marginBottom: 6,
-        }}
-      >
-        {label}
-      </div>
-      <div
-        style={{
-          fontSize: 14,
-          fontWeight: 700,
-          color: "var(--text-main)",
+          ...confirmValueStyle,
           lineHeight: multiline ? 1.7 : 1.5,
           whiteSpace: multiline ? "pre-wrap" : "normal",
-          wordBreak: "break-word",
         }}
       >
         {displayValue}
@@ -242,26 +203,42 @@ function formatDateTimeJP(value: string) {
   return `${y}年${m}月${day}日 ${h}時${min}分`;
 }
 
-const primaryButtonStyle: React.CSSProperties = {
-  width: "100%",
-  border: "none",
-  borderRadius: 999,
-  background: "var(--pink-strong)",
-  color: "#ffffff",
-  fontSize: 18,
-  fontWeight: 900,
-  padding: "18px 16px",
-  cursor: "pointer",
+const sectionStyle: React.CSSProperties = {
+  marginBottom: 22,
 };
 
-const secondaryButtonStyle: React.CSSProperties = {
-  width: "100%",
-  borderRadius: 999,
-  background: "#ffffff",
-  color: "var(--pink-strong)",
-  fontSize: 18,
+const sectionTitleStyle: React.CSSProperties = {
+  fontSize: 16,
   fontWeight: 900,
-  padding: "18px 16px",
-  cursor: "pointer",
-  border: "3px solid var(--pink-strong)",
+  color: "var(--pink-strong)",
+  marginBottom: 10,
+  paddingBottom: 6,
+  borderBottom: "2px solid var(--pink-main)",
+};
+
+const sectionBodyStyle: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 10,
+};
+
+const confirmRowStyle: React.CSSProperties = {
+  background: "#ffffff",
+  borderRadius: 12,
+  padding: "12px 14px",
+  border: "1px solid #ead8e0",
+};
+
+const confirmLabelStyle: React.CSSProperties = {
+  fontSize: 12,
+  fontWeight: 800,
+  color: "var(--text-sub)",
+  marginBottom: 6,
+};
+
+const confirmValueStyle: React.CSSProperties = {
+  fontSize: 14,
+  fontWeight: 700,
+  color: "var(--text-main)",
+  wordBreak: "break-word",
 };

@@ -18,23 +18,21 @@ import {
   secondaryButtonStyle,
 } from "@/styles/formStepStyles";
 
-type TenantKey = "default" | "ezurin" | "client-a";
-
-type Step3ScheduleProps = {
-  tenantKey?: TenantKey;
+type Step4ApplicantProps = {
   form: FormData;
   setForm: React.Dispatch<React.SetStateAction<FormData>>;
   onNext: () => void;
   onPrev: () => void;
+  pageTitle?: string;
 };
 
-export default function Step3Schedule({
-  tenantKey = "default",
+export default function Step4Applicant({
   form,
   setForm,
   onNext,
   onPrev,
-}: Step3ScheduleProps) {
+  pageTitle = "引越し | エヅリン",
+}: Step4ApplicantProps) {
   const [error, setError] = useState<string | null>(null);
 
   const scrollToTop = () => {
@@ -58,8 +56,18 @@ export default function Step3Schedule({
   const handleNext = () => {
     setError(null);
 
-    if (!form.pickupDate1) {
-      setErrorAndScroll("第一希望回収日を入力してください。");
+    if (!form.name.trim()) {
+      setErrorAndScroll("お名前を入力してください。");
+      return;
+    }
+
+    if (!form.furigana.trim()) {
+      setErrorAndScroll("ふりがなを入力してください。");
+      return;
+    }
+
+    if (!form.phone.trim()) {
+      setErrorAndScroll("電話番号を入力してください。");
       return;
     }
 
@@ -70,45 +78,46 @@ export default function Step3Schedule({
     <main style={mainStyle}>
       <div style={wrapStyle}>
         <div style={pageTitleWrapStyle}>
-          <h1 style={pageTitleStyle}>
-            片付け・不用品回収 |{" "}
-            {tenantKey === "ezurin" ? "エヅリン" : "すっきりん"}
-          </h1>
+          <h1 style={pageTitleStyle}>{pageTitle}</h1>
         </div>
 
-        <StepIndicator step={3} />
+        <StepIndicator step={4} />
 
         <div style={panelStyle}>
-          <StepSectionHeader step={3} title="希望日をご入力ください" />
+          <StepSectionHeader step={4} title="申込者情報をご入力ください" />
 
           {error && <div style={errorStyle}>{error}</div>}
 
-          <Field label="第一希望回収日" required>
+          <Field label="お名前" required>
             <input
-              type="datetime-local"
-              name="pickupDate1"
-              value={form.pickupDate1}
+              type="text"
+              name="name"
+              value={form.name}
               onChange={handleChange}
+              placeholder="例：山田 太郎"
               style={inputStyle}
             />
           </Field>
 
-          <Field label="第二希望回収日">
+          <Field label="ふりがな" required>
             <input
-              type="datetime-local"
-              name="pickupDate2"
-              value={form.pickupDate2}
+              type="text"
+              name="furigana"
+              value={form.furigana}
               onChange={handleChange}
+              placeholder="例：やまだ たろう"
               style={inputStyle}
             />
           </Field>
 
-          <Field label="第三希望回収日">
+          <Field label="電話番号" required>
             <input
-              type="datetime-local"
-              name="pickupDate3"
-              value={form.pickupDate3}
+              type="tel"
+              name="phone"
+              value={form.phone}
               onChange={handleChange}
+              placeholder="例：09012345678"
+              inputMode="numeric"
               style={inputStyle}
             />
           </Field>
@@ -119,7 +128,7 @@ export default function Step3Schedule({
               onClick={handleNext}
               style={primaryButtonStyle}
             >
-              申込者情報に進む
+              内容確認に進む
             </button>
 
             <button

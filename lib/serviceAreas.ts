@@ -1,13 +1,16 @@
 export const serviceAreas = [
   {
     prefecture: "栃木県",
+    note: "全域対応",
     cities: [
       "宇都宮市",
       "足利市",
       "栃木市",
       "佐野市",
+      "鹿沼市",
       "日光市",
       "小山市",
+      "真岡市",
       "大田原市",
       "矢板市",
       "那須塩原市",
@@ -15,6 +18,7 @@ export const serviceAreas = [
       "那須烏山市",
       "下野市",
       "上三川町",
+      "益子町",
       "茂木町",
       "市貝町",
       "芳賀町",
@@ -23,6 +27,32 @@ export const serviceAreas = [
       "塩谷町",
       "高根沢町",
       "那須町",
+      "那珂川町",
     ],
+  },
+  {
+    prefecture: "茨城県",
+    note: "許可業者と提携して廃棄物を処理します",
+    cities: [],
+  },
+  {
+    prefecture: "群馬県",
+    note: "許可業者と提携して廃棄物を処理します",
+    cities: [],
+  },
+  {
+    prefecture: "埼玉県",
+    note: "許可業者と提携して廃棄物を処理します",
+    cities: [],
+  },
+  {
+    prefecture: "福島県",
+    note: "許可業者と提携して廃棄物を処理します",
+    cities: [],
+  },
+  {
+    prefecture: "東京都",
+    note: "許可業者と提携して廃棄物を処理します",
+    cities: [],
   },
 ];

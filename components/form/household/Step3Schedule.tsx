@@ -1,10 +1,27 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import StepIndicator from "@/components/form/common/StepIndicator";
+import Field from "@/components/form/common/Field";
+import StepSectionHeader from "@/components/form/common/StepSectionHeader";
 import type { FormData } from "@/types/form";
+import { inputStyle } from "@/styles/formStyles";
+import {
+  mainStyle,
+  wrapStyle,
+  pageTitleWrapStyle,
+  pageTitleStyle,
+  panelStyle,
+  errorStyle,
+  buttonGroupStyle,
+  primaryButtonStyle,
+  secondaryButtonStyle,
+} from "@/styles/formStepStyles";
+
+type TenantKey = "default" | "ezurin" | "client-a";
 
 type Step3ScheduleProps = {
+  tenantKey?: TenantKey;
   form: FormData;
   setForm: React.Dispatch<React.SetStateAction<FormData>>;
   onNext: () => void;
@@ -12,11 +29,23 @@ type Step3ScheduleProps = {
 };
 
 export default function Step3Schedule({
+  tenantKey = "default",
   form,
   setForm,
   onNext,
   onPrev,
 }: Step3ScheduleProps) {
+  const [error, setError] = useState<string | null>(null);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const setErrorAndScroll = (message: string) => {
+    setError(message);
+    scrollToTop();
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -27,8 +56,10 @@ export default function Step3Schedule({
   };
 
   const handleNext = () => {
+    setError(null);
+
     if (!form.pickupDate1) {
-      alert("第一希望回収日を入力してください。");
+      setErrorAndScroll("第一希望回収日を入力してください。");
       return;
     }
 
@@ -36,64 +67,21 @@ export default function Step3Schedule({
   };
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background: "var(--bg-main)",
-        padding: "24px 16px 40px",
-        boxSizing: "border-box",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 480,
-          margin: "0 auto",
-        }}
-      >
-        <div
-          style={{
-            textAlign: "center",
-            marginBottom: 16,
-          }}
-        >
-          <h1
-            style={{
-              margin: 0,
-              fontSize: 18,
-              fontWeight: 900,
-              color: "var(--text-main)",
-            }}
-          >
-            粗大ゴミ回収 | すっきりん
+    <main style={mainStyle}>
+      <div style={wrapStyle}>
+        <div style={pageTitleWrapStyle}>
+          <h1 style={pageTitleStyle}>
+            片付け・不用品回収 |{" "}
+            {tenantKey === "ezurin" ? "エヅリン" : "すっきりん"}
           </h1>
         </div>
 
         <StepIndicator step={3} />
 
-        <div
-          style={{
-            background: "#fffafb",
-            borderRadius: 28,
-            padding: "22px 18px 24px",
-            boxSizing: "border-box",
-            boxShadow: "0 8px 20px rgba(0,0,0,0.08)",
-          }}
-        >
-          <div
-            style={{
-              background: "var(--pink-soft)",
-              color: "var(--pink-strong)",
-              textAlign: "center",
-              fontSize: 18,
-              fontWeight: 900,
-              padding: "18px 12px",
-              borderRadius: 12,
-              marginBottom: 24,
-              border: "2px solid var(--pink-main)",
-            }}
-          >
-            Step 3 希望日をご入力ください
-          </div>
+        <div style={panelStyle}>
+          <StepSectionHeader step={3} title="希望日をご入力ください" />
+
+          {error && <div style={errorStyle}>{error}</div>}
 
           <Field label="第一希望回収日" required>
             <input
@@ -125,14 +113,7 @@ export default function Step3Schedule({
             />
           </Field>
 
-          <div
-            style={{
-              display: "flex",
-              gap: 12,
-              flexDirection: "column",
-              marginTop: 20,
-            }}
-          >
+          <div style={buttonGroupStyle}>
             <button
               type="button"
               onClick={handleNext}
@@ -154,67 +135,3 @@ export default function Step3Schedule({
     </main>
   );
 }
-
-type FieldProps = {
-  label: string;
-  required?: boolean;
-  children: React.ReactNode;
-};
-
-function Field({ label, required, children }: FieldProps) {
-  return (
-    <div style={{ marginBottom: 14 }}>
-      <label
-        style={{
-          display: "block",
-          fontSize: 13,
-          fontWeight: 800,
-          color: "var(--text-main)",
-          marginBottom: 6,
-        }}
-      >
-        {label}
-        {required && (
-          <span style={{ color: "var(--pink-strong)", marginLeft: 4 }}>＊</span>
-        )}
-      </label>
-      {children}
-    </div>
-  );
-}
-
-const inputStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "12px 12px",
-  borderRadius: 10,
-  border: "1px solid #e6d7de",
-  fontSize: 14,
-  boxSizing: "border-box",
-  background: "#ffffff",
-  color: "var(--text-main)",
-  outline: "none",
-};
-
-const primaryButtonStyle: React.CSSProperties = {
-  width: "100%",
-  border: "none",
-  borderRadius: 999,
-  background: "var(--pink-strong)",
-  color: "#ffffff",
-  fontSize: 18,
-  fontWeight: 900,
-  padding: "18px 16px",
-  cursor: "pointer",
-};
-
-const secondaryButtonStyle: React.CSSProperties = {
-  width: "100%",
-  borderRadius: 999,
-  background: "#ffffff",
-  color: "var(--pink-strong)",
-  fontSize: 18,
-  fontWeight: 900,
-  padding: "18px 16px",
-  cursor: "pointer",
-  border: "3px solid var(--pink-strong)",
-};

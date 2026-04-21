@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import StepIndicator from "@/components/form/common/StepIndicator";
-import StepSectionHeader from "@/components/form/common/StepSectionHeader";
 import type { FormData } from "@/types/form";
 import {
   mainStyle,
@@ -15,31 +14,18 @@ import {
   secondaryButtonStyle,
 } from "@/styles/formStepStyles";
 
-type TenantKey = "default" | "ezurin" | "client-a";
-
-type BusinessStep5ConfirmProps = {
-  tenantKey?: TenantKey;
+type MovingStep5ConfirmProps = {
   form: FormData;
   onSubmit: () => Promise<void> | void;
   onPrev: () => void;
 };
 
-export default function BusinessStep5Confirm({
-  tenantKey = "default",
+export default function MovingStep5Confirm({
   form,
   onSubmit,
   onPrev,
-}: BusinessStep5ConfirmProps) {
+}: MovingStep5ConfirmProps) {
   const [submitting, setSubmitting] = useState(false);
-
-  const contactName =
-    `${form.contactLastName || ""} ${form.contactFirstName || ""}`.trim();
-  const contactKana =
-    `${form.contactLastNameKana || ""} ${form.contactFirstNameKana || ""}`.trim();
-  const representativeName =
-    `${form.representativeLastName || ""} ${form.representativeFirstName || ""}`.trim();
-  const representativeKana =
-    `${form.representativeLastNameKana || ""} ${form.representativeFirstNameKana || ""}`.trim();
 
   const handleSubmitClick = async () => {
     if (submitting) return;
@@ -56,37 +42,60 @@ export default function BusinessStep5Confirm({
     <main style={mainStyle}>
       <div style={wrapStyle}>
         <div style={pageTitleWrapStyle}>
-          <h1 style={pageTitleStyle}>
-            片付け・不用品回収 |{" "}
-            {tenantKey === "ezurin" ? "エヅリン" : "すっきりん"}
-          </h1>
+          <h1 style={pageTitleStyle}>引越し | エヅリン</h1>
         </div>
 
         <StepIndicator step={5} />
 
         <div style={panelStyle}>
-          <StepSectionHeader step={5} title="内容をご確認ください" />
+          <div style={headerWrapStyle}>
+            <div style={headerStepStyle}>STEP 5</div>
+            <h2 style={headerTitleStyle}>内容をご確認ください</h2>
+          </div>
 
-          <Section title="回収場所">
+          <Section title="搬出元">
             <ConfirmRow label="郵便番号" value={form.postalCode} />
             <ConfirmRow label="都道府県" value={form.prefecture} />
             <ConfirmRow label="市町村" value={form.city} />
             <ConfirmRow label="住所" value={form.address} />
             <ConfirmRow label="建物の種類" value={form.buildingType} />
-            <ConfirmRow label="回収場所の階数" value={form.floor} />
+            <ConfirmRow label="搬出元の階数" value={form.floor} />
             <ConfirmRow label="駐車場の有無" value={form.parking} />
             <ConfirmRow label="エレベーターの有無" value={form.elevator} />
-            <ConfirmRow label="ゴミの排出方法" value={form.disposalMethod} />
+          </Section>
+
+          <Section title="運び先">
+            <ConfirmRow label="郵便番号" value={form.movingPostalCode} />
+            <ConfirmRow label="都道府県" value={form.movingPrefecture} />
+            <ConfirmRow label="市町村" value={form.movingCity} />
+            <ConfirmRow label="住所" value={form.movingAddress} />
+            <ConfirmRow label="建物の種類" value={form.movingBuildingType} />
+            <ConfirmRow label="運び先の階数" value={form.movingFloor} />
+            <ConfirmRow label="駐車場の有無" value={form.movingParking} />
+            <ConfirmRow
+              label="エレベーターの有無"
+              value={form.movingElevator}
+            />
           </Section>
 
           <Section title="依頼内容">
             <ConfirmRow label="依頼内容" value={form.service} />
+            <ConfirmRow label="運ぶ物・個数" value={form.movingItems} multiline />
             <ConfirmRow
-              label="回収ゴミの品目・個数"
-              value={form.items}
+              label="運ぶ物の補足事項"
+              value={form.movingNotes}
               multiline
             />
-            <ConfirmRow label="備考" value={form.notes} multiline />
+            <ConfirmRow
+              label="処分する物・個数"
+              value={form.disposalItems}
+              multiline
+            />
+            <ConfirmRow
+              label="処分する物の補足事項"
+              value={form.disposalNotes}
+              multiline
+            />
             <ConfirmRow
               label="添付画像"
               value={form.images.length > 0 ? `${form.images.length}件` : "なし"}
@@ -95,46 +104,24 @@ export default function BusinessStep5Confirm({
 
           <Section title="希望日">
             <ConfirmRow
-              label="第一希望回収日"
+              label="第一希望日"
               value={formatDateTimeJP(form.pickupDate1)}
             />
             <ConfirmRow
-              label="第二希望回収日"
+              label="第二希望日"
               value={formatDateTimeJP(form.pickupDate2)}
             />
             <ConfirmRow
-              label="第三希望回収日"
+              label="第三希望日"
               value={formatDateTimeJP(form.pickupDate3)}
             />
           </Section>
 
           <Section title="申込者情報">
-            <ConfirmRow label="事業形態" value={form.businessFormType} />
-            <ConfirmRow label="屋号 / 法人名" value={form.businessName} />
-            <ConfirmRow label="担当者名" value={contactName} />
-            <ConfirmRow label="担当者名（かな）" value={contactKana} />
-            <ConfirmRow label="担当者電話番号" value={form.contactPhone} />
-            <ConfirmRow
-              label="担当者メールアドレス"
-              value={form.contactEmail}
-            />
+            <ConfirmRow label="お名前" value={form.name} />
+            <ConfirmRow label="ふりがな" value={form.furigana} />
+            <ConfirmRow label="電話番号" value={form.phone} />
           </Section>
-
-          {form.receiptDifferent && (
-            <Section title="領収書情報">
-              <ConfirmRow label="領収書の宛名" value={form.receiptName} />
-              <ConfirmRow label="代表者名" value={representativeName} />
-              <ConfirmRow label="代表者名（かな）" value={representativeKana} />
-              <ConfirmRow
-                label="代表者電話番号"
-                value={form.representativePhone}
-              />
-              <ConfirmRow
-                label="代表者メールアドレス"
-                value={form.representativeEmail}
-              />
-            </Section>
-          )}
 
           <div style={buttonGroupStyle}>
             <button
@@ -225,6 +212,28 @@ function formatDateTimeJP(value: string) {
 
   return `${y}年${m}月${day}日 ${h}時${min}分`;
 }
+
+const headerWrapStyle: React.CSSProperties = {
+  marginBottom: 14,
+  textAlign: "center",
+};
+
+const headerStepStyle: React.CSSProperties = {
+  fontSize: 12,
+  lineHeight: 1.2,
+  fontWeight: 800,
+  letterSpacing: "0.08em",
+  color: "var(--pink-strong)",
+  marginBottom: 8,
+};
+
+const headerTitleStyle: React.CSSProperties = {
+  margin: 0,
+  fontSize: 24,
+  lineHeight: 1.5,
+  fontWeight: 900,
+  color: "var(--text-main)",
+};
 
 const sectionStyle: React.CSSProperties = {
   marginBottom: 22,

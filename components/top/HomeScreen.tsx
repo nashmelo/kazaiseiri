@@ -2,21 +2,34 @@
 
 import React from "react";
 
+type TenantKey = "default" | "ezurin" | "client-a";
+
 type HomeScreenProps = {
+  tenantKey?: TenantKey;
   onOpenGarbageEntry: () => void;
   onOpenBusinessWaste: () => void;
   onOpenFaq: () => void;
   onOpenReason: () => void;
   onOpenRegion: () => void;
+  showMoving?: boolean;
+  onOpenMovingEntry?: () => void;
 };
 
 export default function HomeScreen({
+  tenantKey = "default",
   onOpenGarbageEntry,
   onOpenBusinessWaste,
   onOpenFaq,
   onOpenReason,
   onOpenRegion,
+  showMoving = false,
+  onOpenMovingEntry,
 }: HomeScreenProps) {
+  const logoSrc =
+    tenantKey === "ezurin" ? "/ezurin.svg" : "/sukkirinlogo.svg";
+
+  const reasonPrefix = tenantKey === "ezurin" ? "エヅリンが" : "すっきりんが";
+
   return (
     <main style={mainStyle}>
       <div style={wrapStyle}>
@@ -24,14 +37,10 @@ export default function HomeScreen({
 
         <div style={panelStyle}>
           <section style={heroSectionStyle}>
-            <img
-              src="/sukkirinlogo.svg"
-              alt="すっきりん"
-              style={heroLogoStyle}
-            />
+            <img src={logoSrc} alt="すっきりん" style={heroLogoStyle} />
 
             <div style={introStyle}>
-              <p style={introTitleStyle}>許可業者限定だから安心</p>
+              <p style={introTitleStyle}>県内16市町の許可業者だから安心</p>
             </div>
           </section>
 
@@ -44,9 +53,9 @@ export default function HomeScreen({
               >
                 <div style={primaryButtonTextWrapStyle}>
                   <div style={primaryButtonKickerStyle}>HOUSEHOLD</div>
-                  <div style={primaryButtonTitleStyle}>家庭ゴミ</div>
+                  <div style={primaryButtonTitleStyle}>家庭ごみ回収</div>
                   <div style={primaryButtonDescStyle}>
-                    お家の片付け・粗大ゴミなど
+                    お家の片付け・粗大ごみなど
                   </div>
                 </div>
                 <div style={primaryArrowStyle}>›</div>
@@ -59,7 +68,7 @@ export default function HomeScreen({
               >
                 <div style={primaryButtonTextWrapStyle}>
                   <div style={primaryButtonKickerStyle}>BUSINESS</div>
-                  <div style={primaryButtonTitleStyle}>事業ゴミ</div>
+                  <div style={primaryButtonTitleStyle}>事業ごみ回収</div>
                   <div style={primaryButtonDescStyle}>
                     店舗・事務所・法人回収
                   </div>
@@ -67,6 +76,25 @@ export default function HomeScreen({
                 <div style={primaryArrowStyle}>›</div>
               </button>
             </div>
+
+            {showMoving && onOpenMovingEntry && (
+              <div style={movingButtonWrapStyle}>
+                <button
+                  type="button"
+                  onClick={onOpenMovingEntry}
+                  style={movingButtonStyle}
+                >
+                  <div style={movingButtonInnerStyle}>
+                    <div style={movingButtonTitleStyle}>
+                      引越しのご相談はこちら
+                    </div>
+                    <div style={movingButtonNoteStyle}>
+                      同時に家財処分も可能です
+                    </div>
+                  </div>
+                </button>
+              </div>
+            )}
 
             <div style={subGridStyle}>
               <button type="button" onClick={onOpenFaq} style={subButtonStyle}>
@@ -78,7 +106,7 @@ export default function HomeScreen({
                 onClick={onOpenReason}
                 style={subButtonStyle}
               >
-                すっきりんが
+                {reasonPrefix}
                 <br />
                 選ばれる理由
               </button>
@@ -175,10 +203,10 @@ const primaryListStyle: React.CSSProperties = {
 const primaryButtonStyle: React.CSSProperties = {
   width: "100%",
   border: "3px solid var(--pink-logo)",
-  borderRadius: 26,
+  borderRadius: 24,
   background: "#fff9fb",
   color: "var(--text-main)",
-  padding: "14px 18px",
+  padding: "12px 16px",
   cursor: "pointer",
   display: "flex",
   alignItems: "center",
@@ -192,25 +220,25 @@ const primaryButtonStyle: React.CSSProperties = {
 const primaryButtonTextWrapStyle: React.CSSProperties = {
   minWidth: 0,
   flex: 1,
-  paddingRight: 12,
+  paddingRight: 10,
 };
 
 const primaryButtonKickerStyle: React.CSSProperties = {
-  fontSize: 11,
+  fontSize: 10,
   lineHeight: 1.2,
   fontWeight: 700,
   letterSpacing: "0.14em",
   color: "var(--pink-strong)",
-  marginBottom: 6,
+  marginBottom: 5,
   fontFamily,
 };
 
 const primaryButtonTitleStyle: React.CSSProperties = {
-  fontSize: 26,
-  lineHeight: 1.1,
+  fontSize: 22,
+  lineHeight: 1.15,
   fontWeight: 700,
   color: "var(--text-main)",
-  marginBottom: 6,
+  marginBottom: 5,
   letterSpacing: 0,
   wordBreak: "keep-all",
   overflowWrap: "normal",
@@ -218,8 +246,8 @@ const primaryButtonTitleStyle: React.CSSProperties = {
 };
 
 const primaryButtonDescStyle: React.CSSProperties = {
-  fontSize: 13,
-  lineHeight: 1.45,
+  fontSize: 12,
+  lineHeight: 1.4,
   fontWeight: 500,
   color: "var(--text-sub)",
   wordBreak: "keep-all",
@@ -228,17 +256,60 @@ const primaryButtonDescStyle: React.CSSProperties = {
 
 const primaryArrowStyle: React.CSSProperties = {
   flexShrink: 0,
-  width: 42,
-  height: 42,
+  width: 38,
+  height: 38,
   borderRadius: "50%",
   background: "var(--pink-logo)",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  fontSize: 30,
+  fontSize: 28,
   lineHeight: 1,
   fontWeight: 400,
   color: "#fff",
+};
+
+const movingButtonWrapStyle: React.CSSProperties = {
+  marginBottom: 12,
+};
+
+const movingButtonStyle: React.CSSProperties = {
+  width: "100%",
+  border: "2px solid var(--pink-logo)",
+  borderRadius: 22,
+  background: "var(--pink-logo)",
+  color: "#ffffff",
+  padding: "12px 16px",
+  cursor: "pointer",
+  appearance: "none",
+  WebkitAppearance: "none",
+  fontFamily,
+  textAlign: "center",
+  boxShadow: "0 6px 14px rgba(251,155,204,0.18)",
+};
+
+const movingButtonInnerStyle: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 3,
+};
+
+const movingButtonTitleStyle: React.CSSProperties = {
+  fontSize: 16,
+  lineHeight: 1.35,
+  fontWeight: 800,
+  color: "#ffffff",
+  fontFamily,
+};
+
+const movingButtonNoteStyle: React.CSSProperties = {
+  fontSize: 11,
+  lineHeight: 1.4,
+  fontWeight: 600,
+  color: "rgba(255,255,255,0.92)",
+  fontFamily,
 };
 
 const subGridStyle: React.CSSProperties = {

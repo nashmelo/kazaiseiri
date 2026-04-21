@@ -1,3 +1,7 @@
+// 旧比較モーダル。
+// 現在は本番で未使用。構成見直し用に保管。
+
+
 "use client";
 
 import React from "react";

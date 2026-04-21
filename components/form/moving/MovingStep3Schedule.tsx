@@ -18,22 +18,20 @@ import {
   secondaryButtonStyle,
 } from "@/styles/formStepStyles";
 
-type TenantKey = "default" | "ezurin" | "client-a";
-
 type Step3ScheduleProps = {
-  tenantKey?: TenantKey;
   form: FormData;
   setForm: React.Dispatch<React.SetStateAction<FormData>>;
   onNext: () => void;
   onPrev: () => void;
+  pageTitle?: string;
 };
 
 export default function Step3Schedule({
-  tenantKey = "default",
   form,
   setForm,
   onNext,
   onPrev,
+  pageTitle = "引越し | エヅリン",
 }: Step3ScheduleProps) {
   const [error, setError] = useState<string | null>(null);
 
@@ -59,7 +57,7 @@ export default function Step3Schedule({
     setError(null);
 
     if (!form.pickupDate1) {
-      setErrorAndScroll("第一希望回収日を入力してください。");
+      setErrorAndScroll("第一希望日を入力してください。");
       return;
     }
 
@@ -70,10 +68,7 @@ export default function Step3Schedule({
     <main style={mainStyle}>
       <div style={wrapStyle}>
         <div style={pageTitleWrapStyle}>
-          <h1 style={pageTitleStyle}>
-            片付け・不用品回収 |{" "}
-            {tenantKey === "ezurin" ? "エヅリン" : "すっきりん"}
-          </h1>
+          <h1 style={pageTitleStyle}>{pageTitle}</h1>
         </div>
 
         <StepIndicator step={3} />
@@ -83,7 +78,7 @@ export default function Step3Schedule({
 
           {error && <div style={errorStyle}>{error}</div>}
 
-          <Field label="第一希望回収日" required>
+          <Field label="第一希望日" required>
             <input
               type="datetime-local"
               name="pickupDate1"
@@ -93,7 +88,7 @@ export default function Step3Schedule({
             />
           </Field>
 
-          <Field label="第二希望回収日">
+          <Field label="第二希望日">
             <input
               type="datetime-local"
               name="pickupDate2"
@@ -103,7 +98,7 @@ export default function Step3Schedule({
             />
           </Field>
 
-          <Field label="第三希望回収日">
+          <Field label="第三希望日">
             <input
               type="datetime-local"
               name="pickupDate3"

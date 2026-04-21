@@ -3,8 +3,7 @@
 import React, { useEffect, useState } from "react";
 import StepIndicator from "@/components/form/common/StepIndicator";
 import Field from "@/components/form/common/Field";
-import RadioCardGroup from "@/components/form/common/RadioCardGroup";
-import StepSectionHeader from "@/components/form/common/StepSectionHeader";
+import ItemSelector from "@/components/form/household/ItemSelector";
 import type { FormData } from "@/types/form";
 import { textareaStyle } from "@/styles/formStyles";
 import {
@@ -19,10 +18,7 @@ import {
   secondaryButtonStyle,
 } from "@/styles/formStepStyles";
 
-type TenantKey = "default" | "ezurin" | "client-a";
-
-type Step2RequestProps = {
-  tenantKey?: TenantKey;
+type MovingStep2RequestProps = {
   form: FormData;
   setForm: React.Dispatch<React.SetStateAction<FormData>>;
   onNext: () => void;
@@ -55,20 +51,27 @@ function isAllowedImage(file: File) {
   );
 }
 
-export default function Step2Request({
-  tenantKey = "default",
+export default function MovingStep2Request({
   form,
   setForm,
   onNext,
   onPrev,
   enableImageUpload,
-}: Step2RequestProps) {
+}: MovingStep2RequestProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setForm((prev) => ({
       ...prev,
-      service: prev.service || "事業ゴミスポット回収",
+      service: "引越し",
+      movingItems:
+        typeof prev.movingItems === "string" ? prev.movingItems : "",
+      disposalItems:
+        typeof prev.disposalItems === "string" ? prev.disposalItems : "",
+      movingNotes:
+        typeof prev.movingNotes === "string" ? prev.movingNotes : "",
+      disposalNotes:
+        typeof prev.disposalNotes === "string" ? prev.disposalNotes : "",
       images: Array.isArray(prev.images) ? prev.images : [],
     }));
   }, [setForm]);
@@ -93,10 +96,17 @@ export default function Step2Request({
     }));
   };
 
-  const handleRadioChange = (name: keyof FormData, value: string) => {
+  const handleMovingItemsChange = (value: string) => {
     setForm((prev) => ({
       ...prev,
-      [name]: value,
+      movingItems: value,
+    }));
+  };
+
+  const handleDisposalItemsChange = (value: string) => {
+    setForm((prev) => ({
+      ...prev,
+      disposalItems: value,
     }));
   };
 
@@ -147,13 +157,8 @@ export default function Step2Request({
   const handleNext = () => {
     setError(null);
 
-    if (!form.service) {
-      setErrorAndScroll("依頼内容を選択してください。");
-      return;
-    }
-
-    if (!form.items.trim()) {
-      setErrorAndScroll("回収ゴミの品目・個数を入力してください。");
+    if (!form.movingItems.trim()) {
+      setErrorAndScroll("運ぶ物・個数を入力してください。");
       return;
     }
 
@@ -166,58 +171,103 @@ export default function Step2Request({
     <main style={mainStyle}>
       <div style={wrapStyle}>
         <div style={pageTitleWrapStyle}>
-          <h1 style={pageTitleStyle}>
-            片付け・不用品回収 |{" "}
-            {tenantKey === "ezurin" ? "エヅリン" : "すっきりん"}
-          </h1>
+          <h1 style={pageTitleStyle}>引越し | エヅリン</h1>
         </div>
 
         <StepIndicator step={2} />
 
         <div style={panelStyle}>
-          <StepSectionHeader step={2} title="依頼内容をご入力ください" />
+          <div style={headerWrapStyle}>
+            <div style={headerStepStyle}>STEP 2</div>
+            <h2 style={headerTitleStyle}>依頼内容をご入力ください</h2>
+          </div>
 
           {error && <div style={errorStyle}>{error}</div>}
 
           <Field label="依頼内容" required>
-            <RadioCardGroup
-              name="service"
-              value={form.service}
-              onChange={handleRadioChange}
-              options={[
-                { value: "事業ゴミスポット回収", label: "事業ゴミスポット回収" },
-                { value: "事業ゴミ定期回収", label: "事業ゴミ定期回収" },
-              ]}
-              columns={1}
-            />
+            <div style={fixedServiceBoxStyle}>引越し</div>
           </Field>
 
-          <Field label="回収ゴミの品目・個数" required>
-            <textarea
-              name="items"
-              value={form.items}
-              onChange={handleChange}
-              rows={5}
-              placeholder="例：可燃ごみ4袋、金属ラック1台、机2台"
-              style={textareaStyle}
-            />
-          </Field>
+          <div style={groupCardStyle}>
+            <div style={groupHeaderStyle}>
+              <span style={groupBadgeStyle}>MOVE</span>
+              <span style={groupTitleStyle}>運ぶ物・個数</span>
+            </div>
 
-          <Field label="備考">
-            <textarea
-              name="notes"
-              value={form.notes}
-              onChange={handleChange}
-              rows={4}
-              placeholder="補足事項があればご入力ください"
-              style={textareaStyle}
-            />
-          </Field>
+            <Field label="運ぶ物・個数" required>
+              <ItemSelector
+                value={form.movingItems}
+                onChange={handleMovingItemsChange}
+              />
+            </Field>
+
+            <Field label="運搬内容（自動入力）">
+              <textarea
+                name="movingItems"
+                value={form.movingItems}
+                onChange={handleChange}
+                rows={5}
+                placeholder="選択した品目が自動で表示されます"
+                style={textareaStyle}
+              />
+            </Field>
+
+            <Field label="運ぶ物の補足事項">
+              <textarea
+                name="movingNotes"
+                value={form.movingNotes}
+                onChange={handleChange}
+                rows={4}
+                placeholder="大型家具、搬出入条件、運搬に関する補足事項があればご入力ください"
+                style={textareaStyle}
+              />
+            </Field>
+          </div>
+
+          <div style={groupCardStyle}>
+            <div style={groupHeaderStyle}>
+              <span style={groupBadgeSubStyle}>DISPOSAL</span>
+              <span style={groupTitleStyle}>処分する物・個数</span>
+            </div>
+
+            <div style={subGuideStyle}>
+              処分する物がある場合は、タップして数量を選択してください
+            </div>
+
+            <Field label="処分する物・個数">
+              <ItemSelector
+                value={form.disposalItems}
+                onChange={handleDisposalItemsChange}
+              />
+            </Field>
+
+            <Field label="処分内容（自動入力）">
+              <textarea
+                name="disposalItems"
+                value={form.disposalItems}
+                onChange={handleChange}
+                rows={5}
+                placeholder="処分する物がある場合は自動で表示されます"
+                style={textareaStyle}
+              />
+            </Field>
+
+            <Field label="処分する物の補足事項">
+              <textarea
+                name="disposalNotes"
+                value={form.disposalNotes}
+                onChange={handleChange}
+                rows={4}
+                placeholder="処分品に関する補足事項があればご入力ください"
+                style={textareaStyle}
+              />
+            </Field>
+          </div>
 
           {enableImageUpload && (
-            <Field label="添付画像" required>
+            <Field label="添付画像">
               <input
-                id="business-image-upload"
+                id="image-upload"
                 type="file"
                 multiple
                 accept="image/*,.heic,.heif"
@@ -225,11 +275,11 @@ export default function Step2Request({
                 style={hiddenFileInputStyle}
               />
 
-              <label htmlFor="business-image-upload" style={uploadBoxStyle}>
+              <label htmlFor="image-upload" style={uploadBoxStyle}>
                 <div style={uploadInnerStyle}>
                   {imageCount > 0 && (
                     <div style={uploadStatusBadgeStyle}>
-                      {imageCount}枚の画像を追加しました
+                      {imageCount}件の画像を選択中
                     </div>
                   )}
 
@@ -239,13 +289,11 @@ export default function Step2Request({
                     aria-hidden="true"
                     style={uploadIconStyle}
                   />
-
                   <div style={uploadTitleStyle}>
                     タップして写真をアップロード
                   </div>
-
                   <div style={uploadSubTextStyle}>
-                    対象となる事業ゴミや回収物の画像を
+                    対象となるお部屋やモノの画像を
                     <br />
                     お選びください（複数可）
                   </div>
@@ -286,6 +334,103 @@ export default function Step2Request({
     </main>
   );
 }
+
+const headerWrapStyle: React.CSSProperties = {
+  marginBottom: 14,
+  textAlign: "center",
+};
+
+const headerStepStyle: React.CSSProperties = {
+  fontSize: 12,
+  lineHeight: 1.2,
+  fontWeight: 800,
+  letterSpacing: "0.08em",
+  color: "var(--pink-strong)",
+  marginBottom: 8,
+};
+
+const headerTitleStyle: React.CSSProperties = {
+  margin: 0,
+  fontSize: 24,
+  lineHeight: 1.5,
+  fontWeight: 900,
+  color: "var(--text-main)",
+};
+
+const fixedServiceBoxStyle: React.CSSProperties = {
+  width: "100%",
+  padding: "16px 18px",
+  borderRadius: 18,
+  background: "#fff7fb",
+  border: "2px solid rgba(251,155,204,0.55)",
+  color: "var(--text-main)",
+  fontSize: 16,
+  lineHeight: 1.4,
+  fontWeight: 800,
+  boxSizing: "border-box",
+};
+
+const groupCardStyle: React.CSSProperties = {
+  marginTop: 14,
+  padding: "16px 14px 14px",
+  borderRadius: 20,
+  background: "#fff7fb",
+  border: "2px solid rgba(251,155,204,0.35)",
+};
+
+const groupHeaderStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
+  marginBottom: 12,
+};
+
+const groupBadgeStyle: React.CSSProperties = {
+  minWidth: 48,
+  height: 24,
+  padding: "0 8px",
+  borderRadius: 999,
+  background: "var(--pink-logo)",
+  color: "#fff",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontSize: 11,
+  lineHeight: 1,
+  fontWeight: 800,
+  letterSpacing: "0.08em",
+};
+
+const groupBadgeSubStyle: React.CSSProperties = {
+  minWidth: 68,
+  height: 24,
+  padding: "0 8px",
+  borderRadius: 999,
+  background: "rgba(251,155,204,0.22)",
+  color: "var(--pink-strong)",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontSize: 11,
+  lineHeight: 1,
+  fontWeight: 800,
+  letterSpacing: "0.04em",
+};
+
+const groupTitleStyle: React.CSSProperties = {
+  fontSize: 18,
+  lineHeight: 1.4,
+  fontWeight: 800,
+  color: "var(--text-main)",
+};
+
+const subGuideStyle: React.CSSProperties = {
+  marginBottom: 10,
+  fontSize: 13,
+  lineHeight: 1.7,
+  fontWeight: 700,
+  color: "var(--text-sub)",
+};
 
 const hiddenFileInputStyle: React.CSSProperties = {
   position: "absolute",

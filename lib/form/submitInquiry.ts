@@ -192,8 +192,6 @@ export async function submitInquiry({
     movingNotes: form.movingNotes,
     disposalNotes: form.disposalNotes,
 
-    airconRemoval: "ない",
-
     pickupDate1: form.pickupDate1,
     pickupDate2: form.pickupDate2,
     pickupDate3: form.pickupDate3,

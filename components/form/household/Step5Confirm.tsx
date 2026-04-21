@@ -92,19 +92,19 @@ export default function Step5Confirm({
             />
           </Section>
 
-          <Section title="希望日">
-            <ConfirmRow
-              label="第一希望回収日"
-              value={formatDateTimeJP(form.pickupDate1)}
-            />
-            <ConfirmRow
-              label="第二希望回収日"
-              value={formatDateTimeJP(form.pickupDate2)}
-            />
-            <ConfirmRow
-              label="第三希望回収日"
-              value={formatDateTimeJP(form.pickupDate3)}
-            />
+         <Section title="希望日">
+          <ConfirmRow
+            label="第一希望回収日"
+            value={formatPickupDateAndSlot(form.pickupDate1, form.pickupDate1Slot)}
+          />
+          <ConfirmRow
+            label="第二希望回収日"
+            value={formatPickupDateAndSlot(form.pickupDate2, form.pickupDate2Slot)}
+          />
+          <ConfirmRow
+            label="第三希望回収日"
+            value={formatPickupDateAndSlot(form.pickupDate3, form.pickupDate3Slot)}
+          />
           </Section>
 
           <Section title="申込者情報">
@@ -188,19 +188,19 @@ function ConfirmRow({
   );
 }
 
-function formatDateTimeJP(value: string) {
-  if (!value) return "未入力";
+function formatPickupDateAndSlot(date: string, slot: string) {
+  if (!date && !slot) return "未入力";
+  if (!date) return slot || "未入力";
+  if (!slot) return date;
 
-  const d = new Date(value);
-  if (isNaN(d.getTime())) return value;
+const d = new Date(date);
+  if (isNaN(d.getTime())) return `${date} ${slot}`;
 
-  const y = d.getFullYear();
-  const m = d.getMonth() + 1;
-  const day = d.getDate();
-  const h = d.getHours();
-  const min = d.getMinutes().toString().padStart(2, "0");
+const y = d.getFullYear();
+const m = d.getMonth() + 1;
+const day = d.getDate();
 
-  return `${y}年${m}月${day}日 ${h}時${min}分`;
+  return `${y}年${m}月${day}日 ${slot}`;
 }
 
 const sectionStyle: React.CSSProperties = {

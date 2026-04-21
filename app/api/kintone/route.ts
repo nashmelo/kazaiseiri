@@ -107,9 +107,9 @@ export async function POST(req: NextRequest) {
       pickupDate2: { value: body.pickupDate2 || "" },
       pickupDate3: { value: body.pickupDate3 || "" },
 
-      pickupDate1Slot: { value: body.pickupDate1Slot || "" },
-      pickupDate2Slot: { value: body.pickupDate2Slot || "" },
-      pickupDate3Slot: { value: body.pickupDate3Slot || "" },
+      pickup_time_slot1: { value: body.pickupDate1Slot || "" },
+      pickup_time_slot2: { value: body.pickupDate2Slot || "" },
+      pickup_time_slot3: { value: body.pickupDate3Slot || "" },
 
       inquiry_type: { value: body.inquiryType || "" },
       disposal_method: { value: body.disposalMethod || "" },

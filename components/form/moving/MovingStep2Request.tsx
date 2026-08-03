@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import StepIndicator from "@/components/form/common/StepIndicator";
 import Field from "@/components/form/common/Field";
 import ItemSelector from "@/components/form/household/ItemSelector";
+import ImageThumbnailGrid from "@/components/form/common/ImageThumbnailGrid";
 import type { FormData } from "@/types/form";
 import { textareaStyle } from "@/styles/formStyles";
 import {
@@ -149,6 +150,24 @@ export default function MovingStep2Request({
     onNext();
   };
 
+  /**
+   * 選んだ写真を1枚だけ取り消す。
+   *
+   * 上限を超えたときに全部選び直させないための逃げ道であり、
+   * 撮り損ねた写真を外すためのものでもある。
+   */
+  const handleRemoveImage = (index: number) => {
+    setError(null);
+
+    setForm((prev) => {
+      const prevImages = Array.isArray(prev.images) ? prev.images : [];
+      return {
+        ...prev,
+        images: prevImages.filter((_, i) => i !== index),
+      };
+    });
+  };
+
   const imageCount = Array.isArray(form.images) ? form.images.length : 0;
 
   return (
@@ -290,8 +309,14 @@ export default function MovingStep2Request({
                 </div>
               </label>
 
+              <ImageThumbnailGrid
+                files={Array.isArray(form.images) ? form.images : []}
+                onRemove={handleRemoveImage}
+              />
+
               <div style={fileHelpTextStyle}>
                 {`画像は${MAX_FILES}枚まで、1枚10MB以下`}
+                {imageCount > 0 && "（×で1枚ずつ取り消せます）"}
               </div>
             </Field>
           )}

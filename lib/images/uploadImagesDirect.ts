@@ -1,4 +1,5 @@
 import { supabaseBrowser } from "@/lib/supabase/client";
+import { MAX_FILES } from "@/lib/images/imageRules";
 
 type UploadedFile = {
   path: string;
@@ -9,7 +10,6 @@ type UploadedFile = {
 };
 
 const BUCKET = process.env.NEXT_PUBLIC_SUPABASE_BUCKET || "estimate-images";
-const MAX_FILES = 10;
 
 function sanitizeFileName(fileName: string) {
   const dotIndex = fileName.lastIndexOf(".");

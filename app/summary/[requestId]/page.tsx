@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { isValidRequestId } from "@/lib/requestId";
 
 type PageProps = {
   params: {
@@ -14,6 +15,13 @@ function normalizeDomain(domain: string): string {
 }
 
 async function getImages(requestId: string): Promise<string[]> {
+  // **外部から渡された値を、検証せずにクエリへ埋め込んではいけない。**
+  // 引用符を含む値を渡されると kintone のクエリを改変され、
+  // 他人のレコード（＝他人の部屋の写真）を引ける。
+  if (!isValidRequestId(requestId)) {
+    return [];
+  }
+
   const domain = process.env.KINTONE_DOMAIN;
   const app = process.env.KINTONE_APP_ID;
   const token = process.env.KINTONE_API_TOKEN;

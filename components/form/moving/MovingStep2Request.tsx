@@ -7,6 +7,14 @@ import ItemSelector from "@/components/form/household/ItemSelector";
 import type { FormData } from "@/types/form";
 import { textareaStyle } from "@/styles/formStyles";
 import {
+  MAX_FILES,
+  isAllowedImage,
+  isWithinSizeLimit,
+  IMAGE_TYPE_ERROR,
+  IMAGE_SIZE_ERROR,
+  IMAGE_COUNT_ERROR,
+} from "@/lib/images/imageRules";
+import {
   mainStyle,
   wrapStyle,
   pageTitleWrapStyle,
@@ -26,30 +34,6 @@ type MovingStep2RequestProps = {
   enableImageUpload: boolean;
 };
 
-const MAX_FILES = 20;
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
-const ALLOWED_TYPES = [
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-  "image/heic",
-  "image/heif",
-];
-
-function isAllowedImage(file: File) {
-  const type = (file.type || "").toLowerCase();
-  const name = file.name.toLowerCase();
-
-  return (
-    ALLOWED_TYPES.includes(type) ||
-    name.endsWith(".jpg") ||
-    name.endsWith(".jpeg") ||
-    name.endsWith(".png") ||
-    name.endsWith(".webp") ||
-    name.endsWith(".heic") ||
-    name.endsWith(".heif")
-  );
-}
 
 export default function MovingStep2Request({
   form,
@@ -118,13 +102,13 @@ export default function MovingStep2Request({
 
     for (const file of files) {
       if (!isAllowedImage(file)) {
-        setErrorAndScroll("画像ファイルのみ添付できます。");
+        setErrorAndScroll(IMAGE_TYPE_ERROR);
         e.target.value = "";
         return;
       }
 
-      if (file.size > MAX_FILE_SIZE) {
-        setErrorAndScroll("1枚あたり10MB以下の画像を選択してください。");
+      if (!isWithinSizeLimit(file)) {
+        setErrorAndScroll(IMAGE_SIZE_ERROR);
         e.target.value = "";
         return;
       }
@@ -148,7 +132,7 @@ export default function MovingStep2Request({
     });
 
     if (limitError) {
-      setErrorAndScroll(`画像は最大${MAX_FILES}枚までです。`);
+      setErrorAndScroll(IMAGE_COUNT_ERROR);
     }
 
     e.target.value = "";
@@ -307,7 +291,7 @@ export default function MovingStep2Request({
               </label>
 
               <div style={fileHelpTextStyle}>
-                画像は10枚まで、1枚10MB以下
+                {`画像は${MAX_FILES}枚まで、1枚10MB以下`}
               </div>
             </Field>
           )}

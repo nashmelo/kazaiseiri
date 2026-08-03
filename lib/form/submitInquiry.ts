@@ -1,7 +1,12 @@
 import type { FormData, RequestFlow } from "@/types/form";
 import type { TenantKey } from "@/lib/tenant/tenantConfig";
-import { prepareUploadImages } from "@/lib/images/prepareUploadImages";
+import {
+  prepareUploadImages,
+  type PrepareProgress,
+} from "@/lib/images/prepareUploadImages";
 import { uploadImagesDirect } from "@/lib/images/uploadImagesDirect";
+import { MAX_FILES } from "@/lib/images/imageRules";
+import { createRequestId } from "@/lib/requestId";
 
 type ActiveRequestFlow = Exclude<RequestFlow, "">;
 
@@ -10,6 +15,12 @@ type SubmitInquiryArgs = {
   requestFlow: ActiveRequestFlow;
   enableImageUpload: boolean;
   tenant: TenantKey;
+  /**
+   * 画像の変換の進捗。
+   * HEIC変換は重く、10枚だと数十秒かかることがある。
+   * 何も出ないと固まったように見えるため、呼び出し側で表示すること。
+   */
+  onProgress?: (progress: PrepareProgress) => void;
 };
 
 type SubmitInquiryResult = {
@@ -27,7 +38,6 @@ type UploadedFile = {
   size: number;
 };
 
-const MAX_FILES = 10;
 
 function toKintoneDateTime(value: string) {
   if (!value) return "";
@@ -72,8 +82,9 @@ export async function submitInquiry({
   requestFlow,
   enableImageUpload,
   tenant,
+  onProgress,
 }: SubmitInquiryArgs): Promise<SubmitInquiryResult> {
-  const requestId = `REQ-${Date.now()}`;
+  const requestId = createRequestId();
 
   let storageFolderPath = "";
   let thumbnailUrl = "";
@@ -91,21 +102,28 @@ export async function submitInquiry({
     let preparedFiles: File[];
 
     try {
-      preparedFiles = await prepareUploadImages(form.images);
+      // 1枚失敗しても全体は止めない。画像は補助情報であり、
+      // 変換の失敗で申し込みごと諦めさせる方が損失が大きい
+      const result = await prepareUploadImages(form.images, onProgress);
+      preparedFiles = result.files;
 
-      console.log(
-        "prepared images",
-        preparedFiles.map((file) => ({
-          name: file.name,
-          type: file.type,
-          size: file.size,
-        }))
-      );
+      if (result.failed.length > 0) {
+        console.warn("画像の変換に失敗:", result.failed);
+      }
+
+      // 全滅した場合だけ、はっきり止める
+      if (preparedFiles.length === 0) {
+        throw new Error(
+          "画像の変換に失敗しました。別の画像を選ぶか、もう一度お試しください。"
+        );
+      }
     } catch (error) {
       console.error("prepareUploadImages error:", error);
-      throw new Error(
-        "画像の変換に失敗しました。別の画像を選ぶか、もう一度お試しください。"
-      );
+      throw error instanceof Error
+        ? error
+        : new Error(
+            "画像の変換に失敗しました。別の画像を選ぶか、もう一度お試しください。"
+          );
     }
 
     if (preparedFiles.length > MAX_FILES) {

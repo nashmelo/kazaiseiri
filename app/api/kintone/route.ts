@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { isValidRequestId } from "@/lib/requestId";
 
 type ItemLike = {
   name?: string;
@@ -69,7 +70,17 @@ export async function POST(req: NextRequest) {
     const disposalItemsText = stringifyItems(body.disposalItems);
 
     const tenant = body.tenant || "default";
-    const requestId = body.requestId || "";
+
+    // 依頼IDは summary ページのURLに入り、kintone のクエリにも使われる。
+    // 形式を満たさない値はここで弾く
+    const requestId = isValidRequestId(body.requestId) ? body.requestId : "";
+
+    if (!requestId) {
+      return NextResponse.json(
+        { error: "依頼IDが正しくありません" },
+        { status: 400 }
+      );
+    }
 
     const summaryUrl =
       appBaseUrl && requestId
@@ -78,10 +89,10 @@ export async function POST(req: NextRequest) {
           )}`
         : "";
 
-    console.log("appBaseUrl:", appBaseUrl);
-    console.log("tenant:", tenant);
-    console.log("requestId:", requestId);
-    console.log("summaryUrl:", summaryUrl);
+    // **氏名・電話番号・住所・メールをログへ出さないこと。**
+    // Vercel のログは保存され、閲覧できる人の範囲も広い。
+    // 追跡に要るのは依頼IDだけで足りる
+    console.log("kintone submit:", { tenant, requestId });
 
     const record = {
       name: { value: body.name || "" },
@@ -173,8 +184,7 @@ export async function POST(req: NextRequest) {
       summary_url: { value: summaryUrl },
     };
 
-    console.log("kintone request body:", body);
-    console.log("kintone record:", record);
+    // 本文には氏名・連絡先・住所が含まれるため、そのままは出さない
 
     const res = await fetch(`${baseUrl}/k/v1/record.json`, {
       method: "POST",

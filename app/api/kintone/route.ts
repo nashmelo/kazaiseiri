@@ -82,8 +82,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // **画像が一枚もないときは、確認用のURLを作らない。**
+    // 作ってしまうと「お写真の確認はこちら」というリンクが依頼者へ届き、
+    // 開いても何も無いため404になる。写真を添付しなかった人ほど
+    // 「壊れている」と感じることになり、体験として最悪だった。
+    const imageCount = Number(body.imageCount || 0);
+
     const summaryUrl =
-      appBaseUrl && requestId
+      appBaseUrl && requestId && imageCount > 0
         ? `${appBaseUrl}/summary/${requestId}?tenant=${encodeURIComponent(
             tenant
           )}`
@@ -177,7 +183,7 @@ export async function POST(req: NextRequest) {
       request_id: { value: requestId },
       storage_folder_path: { value: body.storageFolderPath || "" },
       thumbnail_url: { value: body.thumbnailUrl || "" },
-      image_count: { value: Number(body.imageCount || 0) },
+      image_count: { value: imageCount },
       image_paths_json: { value: body.imagePathsJson || "" },
       all_image_urls: { value: body.allImageUrls || "" },
 

@@ -14,12 +14,18 @@ function normalizeDomain(domain: string): string {
   return `https://${domain}`;
 }
 
-async function getImages(requestId: string): Promise<string[]> {
+type SummaryResult = {
+  /** 依頼そのものが見つかったか */
+  found: boolean;
+  images: string[];
+};
+
+async function getImages(requestId: string): Promise<SummaryResult> {
   // **外部から渡された値を、検証せずにクエリへ埋め込んではいけない。**
   // 引用符を含む値を渡されると kintone のクエリを改変され、
   // 他人のレコード（＝他人の部屋の写真）を引ける。
   if (!isValidRequestId(requestId)) {
-    return [];
+    return { found: false, images: [] };
   }
 
   const domain = process.env.KINTONE_DOMAIN;
@@ -27,7 +33,7 @@ async function getImages(requestId: string): Promise<string[]> {
   const token = process.env.KINTONE_API_TOKEN;
 
   if (!domain || !app || !token) {
-    return [];
+    return { found: false, images: [] };
   }
 
   const baseUrl = normalizeDomain(domain);
@@ -47,28 +53,34 @@ async function getImages(requestId: string): Promise<string[]> {
   );
 
   if (!res.ok) {
-    return [];
+    return { found: false, images: [] };
   }
 
   const data = await res.json();
   const record = data.records?.[0];
 
   if (!record) {
-    return [];
+    return { found: false, images: [] };
   }
 
   const allImageUrls = record.all_image_urls?.value || "";
 
-  return allImageUrls
-    .split("\n")
-    .map((url: string) => url.trim())
-    .filter(Boolean);
+  return {
+    found: true,
+    images: allImageUrls
+      .split("\n")
+      .map((url: string) => url.trim())
+      .filter(Boolean),
+  };
 }
 
 export default async function SummaryPage({ params }: PageProps) {
-  const images = await getImages(params.requestId);
+  const { found, images } = await getImages(params.requestId);
 
-  if (images.length === 0) {
+  // **依頼そのものが見つからないときだけ 404 にする。**
+  // 依頼はあるが写真が無い、という状態で 404 を返すと、
+  // 依頼者には「壊れている」ようにしか見えない。
+  if (!found) {
     notFound();
   }
 
@@ -109,6 +121,25 @@ export default async function SummaryPage({ params }: PageProps) {
         >
           受付番号: {params.requestId}
         </p>
+
+        {images.length === 0 ? (
+          <p
+            style={{
+              margin: 0,
+              padding: "32px 16px",
+              textAlign: "center",
+              fontSize: 14,
+              lineHeight: 1.9,
+              color: "#666",
+              background: "#f7f7f7",
+              borderRadius: 12,
+            }}
+          >
+            この受付番号には、お写真の登録がありません。
+            <br />
+            お心当たりのない場合は、お手数ですがご連絡ください。
+          </p>
+        ) : null}
 
         <div
           style={{

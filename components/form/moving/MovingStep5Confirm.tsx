@@ -18,12 +18,15 @@ type MovingStep5ConfirmProps = {
   form: FormData;
   onSubmit: () => Promise<void> | void;
   onPrev: () => void;
+  /** まとまりごとの「修正する」：そのステップへ移る */
+  onEdit?: (step: 1 | 2 | 3 | 4) => void;
 };
 
 export default function MovingStep5Confirm({
   form,
   onSubmit,
   onPrev,
+  onEdit,
 }: MovingStep5ConfirmProps) {
   const [submitting, setSubmitting] = useState(false);
 
@@ -53,7 +56,7 @@ export default function MovingStep5Confirm({
             <h2 style={headerTitleStyle}>内容をご確認ください</h2>
           </div>
 
-          <Section title="搬出元">
+          <Section onEdit={onEdit} title="搬出元">
             <ConfirmRow label="郵便番号" value={form.postalCode} />
             <ConfirmRow label="都道府県" value={form.prefecture} />
             <ConfirmRow label="市町村" value={form.city} />
@@ -64,7 +67,7 @@ export default function MovingStep5Confirm({
             <ConfirmRow label="エレベーターの有無" value={form.elevator} />
           </Section>
 
-          <Section title="運び先">
+          <Section onEdit={onEdit} title="運び先">
             <ConfirmRow label="郵便番号" value={form.movingPostalCode} />
             <ConfirmRow label="都道府県" value={form.movingPrefecture} />
             <ConfirmRow label="市町村" value={form.movingCity} />
@@ -78,7 +81,7 @@ export default function MovingStep5Confirm({
             />
           </Section>
 
-          <Section title="依頼内容">
+          <Section onEdit={onEdit} title="依頼内容">
             <ConfirmRow label="依頼内容" value={form.service} />
             <ConfirmRow label="運ぶ物・個数" value={form.movingItems} multiline />
             <ConfirmRow
@@ -102,7 +105,7 @@ export default function MovingStep5Confirm({
             />
           </Section>
 
-          <Section title="希望日">
+          <Section onEdit={onEdit} title="希望日">
             <ConfirmRow
               label="第一希望回収日"
               value={formatPickupDateAndSlot(form.pickupDate1, form.pickupDate1Slot)}
@@ -117,7 +120,7 @@ export default function MovingStep5Confirm({
             />
           </Section>
           
-          <Section title="申込者情報">
+          <Section onEdit={onEdit} title="申込者情報">
             <ConfirmRow label="お名前" value={form.name} />
             <ConfirmRow label="ふりがな" value={form.furigana} />
             <ConfirmRow label="電話番号" value={form.phone} />
@@ -156,16 +159,41 @@ export default function MovingStep5Confirm({
   );
 }
 
+const SECTION_STEP: Record<string, 1 | 2 | 3 | 4> = {"回収場所":1,"搬出元":1,"運び先":1,"依頼内容":2,"希望日":3,"申込者情報":4,"領収書情報":4};
+
 function Section({
   title,
   children,
+  onEdit,
 }: {
   title: string;
   children: React.ReactNode;
+  onEdit?: (step: 1 | 2 | 3 | 4) => void;
 }) {
+  const step = SECTION_STEP[title];
   return (
     <div style={sectionStyle}>
-      <div style={sectionTitleStyle}>{title}</div>
+      <div
+        style={{
+          ...sectionTitleStyle,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 8,
+        }}
+      >
+        <span>{title}</span>
+        {onEdit && step && (
+          <button
+            type="button"
+            onClick={() => onEdit(step)}
+            aria-label={`${title}を修正する`}
+            style={editButtonStyle}
+          >
+            修正する
+          </button>
+        )}
+      </div>
       <div style={sectionBodyStyle}>{children}</div>
     </div>
   );
@@ -271,4 +299,16 @@ const confirmValueStyle: React.CSSProperties = {
   fontWeight: 700,
   color: "var(--text-main)",
   wordBreak: "break-word",
+};
+const editButtonStyle: React.CSSProperties = {
+  flexShrink: 0,
+  border: "1.5px solid var(--pink-strong)",
+  borderRadius: 999,
+  background: "#ffffff",
+  color: "var(--pink-strong)",
+  fontSize: 13,
+  fontWeight: 800,
+  lineHeight: 1,
+  padding: "8px 14px",
+  cursor: "pointer",
 };

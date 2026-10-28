@@ -26,6 +26,8 @@ type Step3ScheduleProps = {
   form: FormData;
   setForm: React.Dispatch<React.SetStateAction<FormData>>;
   onNext: () => void;
+  /** 確認画面から直しに来たときは「確認画面に戻る」 */
+  nextLabel?: string;
   onPrev: () => void;
 };
 
@@ -41,6 +43,7 @@ export default function Step3Schedule({
   form,
   setForm,
   onNext,
+  nextLabel,
   onPrev,
 }: Step3ScheduleProps) {
   const [error, setError] = useState<string | null>(null);
@@ -185,7 +188,7 @@ export default function Step3Schedule({
               onClick={handleNext}
               style={primaryButtonStyle}
             >
-              申込者情報に進む
+              {nextLabel ?? "申込者情報に進む"}
             </button>
 
             <button

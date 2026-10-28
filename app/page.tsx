@@ -36,6 +36,17 @@ export default function Page() {
   const [isBusinessWasteOpen, setIsBusinessWasteOpen] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
+  // 確認画面の「修正する」から来たか（そのステップの次へで確認画面に戻す）
+  const [editingFromConfirm, setEditingFromConfirm] = useState(false);
+
+  useEffect(() => {
+    if (step === 5 || screen === "home") setEditingFromConfirm(false);
+  }, [step, screen]);
+
+  const handleEditFromConfirm = (target: 1 | 2 | 3 | 4) => {
+    setEditingFromConfirm(true);
+    setStep(target);
+  };
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -218,6 +229,8 @@ ${result.summaryUrl}`
       onStartMovingFlow={handleStartMovingFlow}
       onBackHome={handleBackHome}
       onSetStep={setStep}
+      editingFromConfirm={editingFromConfirm}
+      onEditFromConfirm={handleEditFromConfirm}
       onSubmit={handleSubmit}
     />
   );

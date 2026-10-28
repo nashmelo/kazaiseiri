@@ -65,6 +65,9 @@ type FlowRendererProps = {
   onStartMovingFlow: () => void;
   onBackHome: () => void;
   onSetStep: React.Dispatch<React.SetStateAction<Step>>;
+  /** 確認画面の「修正する」から来ているとき true */
+  editingFromConfirm?: boolean;
+  onEditFromConfirm?: (step: 1 | 2 | 3 | 4) => void;
   onSubmit: () => Promise<void> | void;
 };
 
@@ -92,6 +95,8 @@ export default function FlowRenderer({
   onStartMovingFlow,
   onBackHome,
   onSetStep,
+  editingFromConfirm = false,
+  onEditFromConfirm,
   onSubmit,
 }: FlowRendererProps) {
   return (
@@ -145,7 +150,8 @@ export default function FlowRenderer({
           tenantKey={tenantKey}
           form={form}
           setForm={setForm}
-          onNext={() => onSetStep(2)}
+          onNext={() => onSetStep(editingFromConfirm ? 5 : 2)}
+          nextLabel={editingFromConfirm ? "確認画面に戻る" : undefined}
           onBackToTop={onBackHome}
         />
       )}
@@ -155,7 +161,8 @@ export default function FlowRenderer({
           tenantKey={tenantKey}
           form={form}
           setForm={setForm}
-          onNext={() => onSetStep(3)}
+          onNext={() => onSetStep(editingFromConfirm ? 5 : 3)}
+          nextLabel={editingFromConfirm ? "確認画面に戻る" : undefined}
           onPrev={() => onSetStep(1)}
           enableImageUpload={enableImageUpload}
         />
@@ -166,7 +173,8 @@ export default function FlowRenderer({
           tenantKey={tenantKey}
           form={form}
           setForm={setForm}
-          onNext={() => onSetStep(4)}
+          onNext={() => onSetStep(editingFromConfirm ? 5 : 4)}
+          nextLabel={editingFromConfirm ? "確認画面に戻る" : undefined}
           onPrev={() => onSetStep(2)}
         />
       )}
@@ -176,7 +184,8 @@ export default function FlowRenderer({
           tenantKey={tenantKey}
           form={form}
           setForm={setForm}
-          onNext={() => onSetStep(5)}
+          onNext={() => onSetStep(editingFromConfirm ? 5 : 5)}
+          nextLabel={editingFromConfirm ? "確認画面に戻る" : undefined}
           onPrev={() => onSetStep(3)}
         />
       )}
@@ -190,6 +199,7 @@ export default function FlowRenderer({
             form={form}
             onSubmit={onSubmit}
             onPrev={() => onSetStep(4)}
+            onEdit={onEditFromConfirm}
           />
 
           {submitting && <SubmittingOverlay />}
@@ -200,7 +210,8 @@ export default function FlowRenderer({
         <BusinessStep1Location
           form={form}
           setForm={setForm}
-          onNext={() => onSetStep(2)}
+          onNext={() => onSetStep(editingFromConfirm ? 5 : 2)}
+          nextLabel={editingFromConfirm ? "確認画面に戻る" : undefined}
           onBackToTop={onBackHome}
         />
       )}
@@ -209,7 +220,8 @@ export default function FlowRenderer({
         <BusinessStep2Request
           form={form}
           setForm={setForm}
-          onNext={() => onSetStep(3)}
+          onNext={() => onSetStep(editingFromConfirm ? 5 : 3)}
+          nextLabel={editingFromConfirm ? "確認画面に戻る" : undefined}
           onPrev={() => onSetStep(1)}
           enableImageUpload={enableImageUpload}
         />
@@ -219,7 +231,8 @@ export default function FlowRenderer({
         <BusinessStep3Schedule
           form={form}
           setForm={setForm}
-          onNext={() => onSetStep(4)}
+          onNext={() => onSetStep(editingFromConfirm ? 5 : 4)}
+          nextLabel={editingFromConfirm ? "確認画面に戻る" : undefined}
           onPrev={() => onSetStep(2)}
         />
       )}
@@ -229,7 +242,8 @@ export default function FlowRenderer({
           tenantKey={tenantKey}
           form={form}
           setForm={setForm}
-          onNext={() => onSetStep(5)}
+          onNext={() => onSetStep(editingFromConfirm ? 5 : 5)}
+          nextLabel={editingFromConfirm ? "確認画面に戻る" : undefined}
           onPrev={() => onSetStep(3)}
         />
       )}
@@ -243,6 +257,7 @@ export default function FlowRenderer({
             form={form}
             onSubmit={onSubmit}
             onPrev={() => onSetStep(4)}
+            onEdit={onEditFromConfirm}
           />
 
           {submitting && <SubmittingOverlay />}
@@ -253,7 +268,8 @@ export default function FlowRenderer({
         <MovingStep1Location
           form={form}
           setForm={setForm}
-          onNext={() => onSetStep(2)}
+          onNext={() => onSetStep(editingFromConfirm ? 5 : 2)}
+          nextLabel={editingFromConfirm ? "確認画面に戻る" : undefined}
           onBackToTop={onBackHome}
         />
       )}
@@ -262,7 +278,8 @@ export default function FlowRenderer({
         <MovingStep2Request
           form={form}
           setForm={setForm}
-          onNext={() => onSetStep(3)}
+          onNext={() => onSetStep(editingFromConfirm ? 5 : 3)}
+          nextLabel={editingFromConfirm ? "確認画面に戻る" : undefined}
           onPrev={() => onSetStep(1)}
           enableImageUpload={enableImageUpload}
         />
@@ -272,7 +289,8 @@ export default function FlowRenderer({
         <MovingStep3Schedule
           form={form}
           setForm={setForm}
-          onNext={() => onSetStep(4)}
+          onNext={() => onSetStep(editingFromConfirm ? 5 : 4)}
+          nextLabel={editingFromConfirm ? "確認画面に戻る" : undefined}
           onPrev={() => onSetStep(2)}
         />
       )}
@@ -281,7 +299,8 @@ export default function FlowRenderer({
         <MovingStep4Applicant
           form={form}
           setForm={setForm}
-          onNext={() => onSetStep(5)}
+          onNext={() => onSetStep(editingFromConfirm ? 5 : 5)}
+          nextLabel={editingFromConfirm ? "確認画面に戻る" : undefined}
           onPrev={() => onSetStep(3)}
         />
       )}
@@ -294,6 +313,7 @@ export default function FlowRenderer({
             form={form}
             onSubmit={onSubmit}
             onPrev={() => onSetStep(4)}
+            onEdit={onEditFromConfirm}
           />
 
           {submitting && <SubmittingOverlay />}

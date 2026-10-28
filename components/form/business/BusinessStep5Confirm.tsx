@@ -23,6 +23,8 @@ type BusinessStep5ConfirmProps = {
   form: FormData;
   onSubmit: () => Promise<void> | void;
   onPrev: () => void;
+  /** まとまりごとの「修正する」：そのステップへ移る */
+  onEdit?: (step: 1 | 2 | 3 | 4) => void;
 };
 
 export default function BusinessStep5Confirm({
@@ -30,6 +32,7 @@ export default function BusinessStep5Confirm({
   form,
   onSubmit,
   onPrev,
+  onEdit,
 }: BusinessStep5ConfirmProps) {
   const [submitting, setSubmitting] = useState(false);
 
@@ -68,7 +71,7 @@ export default function BusinessStep5Confirm({
         <div style={panelStyle}>
           <StepSectionHeader step={5} title="内容をご確認ください" />
 
-          <Section title="回収場所">
+          <Section onEdit={onEdit} title="回収場所">
             <ConfirmRow label="郵便番号" value={form.postalCode} />
             <ConfirmRow label="都道府県" value={form.prefecture} />
             <ConfirmRow label="市町村" value={form.city} />
@@ -80,7 +83,7 @@ export default function BusinessStep5Confirm({
             <ConfirmRow label="ゴミの排出方法" value={disposalMethodLabel(form.disposalMethod)} />
           </Section>
 
-          <Section title="依頼内容">
+          <Section onEdit={onEdit} title="依頼内容">
             <ConfirmRow label="依頼内容" value={form.service} />
             <ConfirmRow
               label="回収ゴミの品目・個数"
@@ -94,7 +97,7 @@ export default function BusinessStep5Confirm({
             />
           </Section>
 
-          <Section title="希望日">
+          <Section onEdit={onEdit} title="希望日">
           <ConfirmRow
             label="第一希望回収日"
             value={formatPickupDateAndSlot(form.pickupDate1, form.pickupDate1Slot)}
@@ -109,7 +112,7 @@ export default function BusinessStep5Confirm({
           />
           </Section>
 
-          <Section title="申込者情報">
+          <Section onEdit={onEdit} title="申込者情報">
             <ConfirmRow label="事業形態" value={form.businessFormType} />
             <ConfirmRow label="屋号 / 法人名" value={form.businessName} />
             <ConfirmRow label="担当者名" value={contactName} />
@@ -122,7 +125,7 @@ export default function BusinessStep5Confirm({
           </Section>
 
           {form.receiptDifferent && (
-            <Section title="領収書情報">
+            <Section onEdit={onEdit} title="領収書情報">
               <ConfirmRow label="領収書の宛名" value={form.receiptName} />
               <ConfirmRow label="代表者名" value={representativeName} />
               <ConfirmRow label="代表者名（かな）" value={representativeKana} />
@@ -170,16 +173,41 @@ export default function BusinessStep5Confirm({
   );
 }
 
+const SECTION_STEP: Record<string, 1 | 2 | 3 | 4> = {"回収場所":1,"搬出元":1,"運び先":1,"依頼内容":2,"希望日":3,"申込者情報":4,"領収書情報":4};
+
 function Section({
   title,
   children,
+  onEdit,
 }: {
   title: string;
   children: React.ReactNode;
+  onEdit?: (step: 1 | 2 | 3 | 4) => void;
 }) {
+  const step = SECTION_STEP[title];
   return (
     <div style={sectionStyle}>
-      <div style={sectionTitleStyle}>{title}</div>
+      <div
+        style={{
+          ...sectionTitleStyle,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 8,
+        }}
+      >
+        <span>{title}</span>
+        {onEdit && step && (
+          <button
+            type="button"
+            onClick={() => onEdit(step)}
+            aria-label={`${title}を修正する`}
+            style={editButtonStyle}
+          >
+            修正する
+          </button>
+        )}
+      </div>
       <div style={sectionBodyStyle}>{children}</div>
     </div>
   );
@@ -263,4 +291,16 @@ const confirmValueStyle: React.CSSProperties = {
   fontWeight: 700,
   color: "var(--text-main)",
   wordBreak: "break-word",
+};
+const editButtonStyle: React.CSSProperties = {
+  flexShrink: 0,
+  border: "1.5px solid var(--pink-strong)",
+  borderRadius: 999,
+  background: "#ffffff",
+  color: "var(--pink-strong)",
+  fontSize: 13,
+  fontWeight: 800,
+  lineHeight: 1,
+  padding: "8px 14px",
+  cursor: "pointer",
 };

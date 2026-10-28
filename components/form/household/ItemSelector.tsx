@@ -4,7 +4,10 @@ import React, { useEffect, useMemo, useState } from "react";
 import AccordionSection from "@/components/form/common/AccordionSection";
 import ItemCounterRow from "@/components/form/common/ItemCounterRow";
 import { householdItemCategories } from "@/lib/itemSelector/householdItems";
-import { buildItemsText } from "@/lib/itemSelector/buildItemsText";
+import {
+  buildItemsText,
+  parseItemsText,
+} from "@/lib/itemSelector/buildItemsText";
 import type { ItemCountMap } from "@/types/itemSelector";
 
 type ItemSelectorProps = {
@@ -16,7 +19,10 @@ export default function ItemSelector({
   value,
   onChange,
 }: ItemSelectorProps) {
-  const [counts, setCounts] = useState<ItemCountMap>({});
+  // 前のステップや確認画面から戻ってきたときも、選んだ数を引き継ぐ
+  const [counts, setCounts] = useState<ItemCountMap>(() =>
+    parseItemsText(householdItemCategories, value)
+  );
   const [openSections, setOpenSections] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(
       householdItemCategories.map((category) => [category.id, false])

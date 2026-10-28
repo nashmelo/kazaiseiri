@@ -26,6 +26,8 @@ type MovingStep1LocationProps = {
   form: FormData;
   setForm: React.Dispatch<React.SetStateAction<FormData>>;
   onNext: () => void;
+  /** 確認画面から直しに来たときは「確認画面に戻る」 */
+  nextLabel?: string;
   onBackToTop: () => void;
 };
 
@@ -33,6 +35,7 @@ export default function MovingStep1Location({
   form,
   setForm,
   onNext,
+  nextLabel,
   onBackToTop,
 }: MovingStep1LocationProps) {
   const [postalStatus, setPostalStatus] = useState<string | null>(null);
@@ -525,7 +528,7 @@ export default function MovingStep1Location({
               onClick={handleNext}
               style={primaryButtonStyle}
             >
-              依頼内容に進む
+              {nextLabel ?? "依頼内容に進む"}
             </button>
 
             <button

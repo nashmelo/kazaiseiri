@@ -25,6 +25,8 @@ type BusinessStep4ApplicantProps = {
   form: FormData;
   setForm: React.Dispatch<React.SetStateAction<FormData>>;
   onNext: () => void;
+  /** 確認画面から直しに来たときは「確認画面に戻る」 */
+  nextLabel?: string;
   onPrev: () => void;
 };
 
@@ -33,6 +35,7 @@ export default function BusinessStep4Applicant({
   form,
   setForm,
   onNext,
+  nextLabel,
   onPrev,
 }: BusinessStep4ApplicantProps) {
   const [error, setError] = useState<string | null>(null);
@@ -381,7 +384,7 @@ export default function BusinessStep4Applicant({
               onClick={handleNext}
               style={primaryButtonStyle}
             >
-              内容確認に進む
+              {nextLabel ?? "内容確認に進む"}
             </button>
 
             <button

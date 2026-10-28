@@ -36,6 +36,8 @@ type Step2RequestProps = {
   form: FormData;
   setForm: React.Dispatch<React.SetStateAction<FormData>>;
   onNext: () => void;
+  /** 確認画面から直しに来たときは「確認画面に戻る」 */
+  nextLabel?: string;
   onPrev: () => void;
   enableImageUpload: boolean;
 };
@@ -46,6 +48,7 @@ export default function Step2Request({
   form,
   setForm,
   onNext,
+  nextLabel,
   onPrev,
   enableImageUpload,
 }: Step2RequestProps) {
@@ -348,7 +351,7 @@ export default function Step2Request({
               onClick={handleNext}
               style={primaryButtonStyle}
             >
-              希望日に進む
+              {nextLabel ?? "希望日に進む"}
             </button>
 
             <button

@@ -108,12 +108,12 @@ export const primaryButtonStyle: React.CSSProperties = {
 export const secondaryButtonStyle: React.CSSProperties = {
   width: "100%",
   borderRadius: 999,
-  background: "#ffffff",
-  color: "var(--pink-strong)",
-  fontSize: 17,
+  background: "transparent",
+  color: "var(--text-sub)",
+  fontSize: 15,
   lineHeight: 1.2,
-  fontWeight: 900,
-  padding: "17px 16px",
+  fontWeight: 700,
+  padding: "13px 16px",
   cursor: "pointer",
-  border: "2px solid var(--pink-logo)",
+  border: "1.5px solid #e2cbd5",
 };

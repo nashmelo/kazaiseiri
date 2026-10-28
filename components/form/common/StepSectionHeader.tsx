@@ -8,32 +8,27 @@ type StepSectionHeaderProps = {
 };
 
 const stepHeaderStyle: React.CSSProperties = {
-  background: "var(--pink-soft)",
-  border: "2px solid rgba(251,155,204,0.55)",
-  borderRadius: 18,
-  padding: "16px 14px 15px",
-  marginBottom: 22,
-  textAlign: "center",
+  paddingBottom: 12,
+  marginBottom: 20,
+  borderBottom: "2px solid var(--pink-main)",
 };
 
 const stepBadgeStyle: React.CSSProperties = {
-  display: "inline-block",
-  padding: "5px 10px",
-  borderRadius: 999,
-  background: "var(--pink-logo)",
-  color: "#ffffff",
+  display: "block",
+  color: "var(--pink-strong)",
   fontSize: 11,
-  lineHeight: 1,
+  lineHeight: 1.4,
   fontWeight: 800,
   letterSpacing: "0.08em",
-  marginBottom: 8,
+  marginBottom: 2,
 };
 
 const stepTitleStyle: React.CSSProperties = {
+  margin: 0,
   fontSize: 20,
   lineHeight: 1.45,
   fontWeight: 800,
-  color: "var(--pink-strong)",
+  color: "var(--text-main)",
 };
 
 export default function StepSectionHeader({
@@ -42,8 +37,10 @@ export default function StepSectionHeader({
 }: StepSectionHeaderProps) {
   return (
     <div style={stepHeaderStyle}>
-      <div style={stepBadgeStyle}>STEP {step}</div>
-      <div style={stepTitleStyle}>{title}</div>
+      <h2 style={stepTitleStyle}>
+        <span style={stepBadgeStyle}>STEP {step}/5</span>
+        {title}
+      </h2>
     </div>
   );
 }

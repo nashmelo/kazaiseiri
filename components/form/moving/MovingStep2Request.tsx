@@ -204,11 +204,11 @@ export default function MovingStep2Request({
               />
             </Field>
 
-            <Field label="運搬内容（自動入力）">
+            <Field label="選んだ運ぶ物（自動で入ります）">
               <textarea
                 name="movingItems"
                 value={form.movingItems}
-                onChange={handleChange}
+                readOnly
                 rows={5}
                 placeholder="選択した品目が自動で表示されます"
                 style={textareaStyle}
@@ -244,11 +244,11 @@ export default function MovingStep2Request({
               />
             </Field>
 
-            <Field label="処分内容（自動入力）">
+            <Field label="選んだ処分する物（自動で入ります）">
               <textarea
                 name="disposalItems"
                 value={form.disposalItems}
-                onChange={handleChange}
+                readOnly
                 rows={5}
                 placeholder="処分する物がある場合は自動で表示されます"
                 style={textareaStyle}

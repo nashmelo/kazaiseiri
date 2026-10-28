@@ -81,7 +81,7 @@ export default function Step4Applicant({
       <div style={wrapStyle}>
         <div style={pageTitleWrapStyle}>
           <h1 style={pageTitleStyle}>
-            片付け・不用品回収 |{" "}
+            家庭ごみ回収 |{" "}
             {tenantKey === "ezurin" ? "エヅリン" : "すっきりん"}
           </h1>
         </div>

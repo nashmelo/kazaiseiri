@@ -18,7 +18,6 @@ import {
   postalRowStyle,
   statusTextStyle,
   subNoticeStyle,
-  helpBoxStyle,
   buttonGroupStyle,
   primaryButtonStyle,
   secondaryButtonStyle,
@@ -180,7 +179,7 @@ export default function Step1Location({
       <div style={wrapStyle}>
         <div style={pageTitleWrapStyle}>
           <h1 style={pageTitleStyle}>
-            片付け・不用品回収 |{" "}
+            家庭ごみ回収 |{" "}
             {tenantKey === "ezurin" ? "エヅリン" : "すっきりん"}
           </h1>
         </div>
@@ -308,17 +307,14 @@ export default function Step1Location({
           </Field>
 
           <Field label="ゴミの排出方法" required>
-            <div style={helpBoxStyle}>
-              ご自身で家の外に出す場合は「自分で排出」を、排出から依頼する場合は「排出を希望する」を選択してください。
-            </div>
 
             <RadioCardGroup
               name="disposalMethod"
               value={form.disposalMethod}
               onChange={handleRadioChange}
               options={[
-                { value: "自分で排出", label: "自分で排出" },
-                { value: "排出を希望する", label: "排出を希望する" },
+                { value: "自分で排出", label: "自分で家の外に出す" },
+                { value: "排出を希望する", label: "家の中から運び出してほしい" },
               ]}
               columns={2}
             />

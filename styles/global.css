@@ -1,10 +1,10 @@
 :root{
   --bg-main: #f9e5ec;
   --pink-main: #f7d6e2;
-  --pink-strong: #e55a8b;
+  --pink-strong: #cc3b78; /* 白地・薄ピンク地で文字のコントラスト4.5:1以上 */
   --pink-soft: #fde7ef;
   --text-main: #1c2b4a;
-  --text-sub: #6b7280;
+  --text-sub: #5b6170;
   --pink-logo: #fb9bcc;
   --font-jp: "Noto Sans JP","Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
 }
@@ -48,4 +48,20 @@ textarea:focus,
 select:focus{
   outline: none;
   box-shadow: none;
+}
+
+/* キーボード操作・読み上げ利用者のため、フォーカス位置は必ず見せる */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+label:focus-within{
+  outline: 3px solid var(--pink-strong);
+  outline-offset: 2px;
+}
+
+textarea[readonly]{
+  background: #f7f1f4 !important;
+  color: var(--text-main);
 }

@@ -2,6 +2,15 @@
 
 import React from "react";
 import HomeScreen from "@/components/top/HomeScreen";
+import liff from "@line/liff";
+import {
+  mainStyle,
+  wrapStyle,
+  panelStyle,
+  buttonGroupStyle,
+  primaryButtonStyle,
+  secondaryButtonStyle,
+} from "@/styles/formStepStyles";
 import ServiceAreaModal from "@/components/top/ServiceAreaModal";
 import ReasonModal from "@/components/top/ReasonModal";
 import FaqModal from "@/components/top/FaqModal";
@@ -128,6 +137,8 @@ export default function FlowRenderer({
           <FaqModal open={isFaqOpen} onClose={() => setIsFaqOpen(false)} />
         </>
       )}
+
+      {screen === "complete" && <CompleteScreen onBackHome={onBackHome} />}
 
       {screen === "household" && step === 1 && (
         <Step1Location
@@ -292,6 +303,75 @@ export default function FlowRenderer({
   );
 }
 
+function CompleteScreen({ onBackHome }: { onBackHome: () => void }) {
+  const inLine = typeof window !== "undefined" && liff.isInClient?.();
+  return (
+    <main style={mainStyle}>
+      <div style={wrapStyle}>
+        <div style={{ ...panelStyle, textAlign: "center" }}>
+          <div
+            aria-hidden
+            style={{
+              width: 64,
+              height: 64,
+              margin: "8px auto 14px",
+              borderRadius: "50%",
+              background: "var(--pink-strong)",
+              color: "#fff",
+              fontSize: 34,
+              lineHeight: "64px",
+              fontWeight: 900,
+            }}
+          >
+            ✓
+          </div>
+          <h2
+            style={{
+              margin: "0 0 12px",
+              fontSize: 22,
+              fontWeight: 800,
+              color: "var(--text-main)",
+            }}
+          >
+            ご依頼を受け付けました
+          </h2>
+          <p
+            style={{
+              margin: "0 0 22px",
+              fontSize: 14,
+              lineHeight: 1.8,
+              color: "var(--text-main)",
+              textAlign: "left",
+            }}
+          >
+            送っていただいた内容は、LINEのトークにも残っています。
+            <br />
+            内容を確認して、担当者からLINEでお見積もりをご連絡します。
+          </p>
+          <div style={buttonGroupStyle}>
+            {inLine && (
+              <button
+                type="button"
+                onClick={() => liff.closeWindow()}
+                style={primaryButtonStyle}
+              >
+                LINEのトークに戻る
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={onBackHome}
+              style={inLine ? secondaryButtonStyle : primaryButtonStyle}
+            >
+              トップに戻る
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
+
 function ErrorBanner({ error }: { error: string }) {
   return (
     <div
@@ -332,7 +412,9 @@ function SubmittingOverlay() {
           padding: "18px 22px",
           fontSize: 15,
           fontWeight: 800,
-          color: "#095db6",
+          color: "var(--text-main)",
+          textAlign: "center",
+          lineHeight: 1.6,
         }}
       >
         送信中です...

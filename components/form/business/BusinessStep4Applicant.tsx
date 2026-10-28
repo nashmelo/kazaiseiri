@@ -147,7 +147,7 @@ export default function BusinessStep4Applicant({
       <div style={wrapStyle}>
         <div style={pageTitleWrapStyle}>
           <h1 style={pageTitleStyle}>
-            片付け・不用品回収 |{" "}
+            事業ごみ回収 |{" "}
             {tenantKey === "ezurin" ? "エヅリン" : "すっきりん"}
           </h1>
         </div>
@@ -430,7 +430,7 @@ const hintTextStyle: React.CSSProperties = {
   marginTop: 6,
   fontSize: 12,
   fontWeight: 700,
-  color: "var(--pink-strong)",
+  color: "var(--text-sub)",
   lineHeight: 1.4,
 };
 

@@ -117,6 +117,30 @@ export default function Page() {
   };
 
   const handleBackHome = () => {
+    // 入力の途中でトップに戻ると全部消えるので、確かめてから戻る
+    // 初期値が自動で入る項目（依頼内容・排出方法など）は除き、利用者が書いた・選んだ物があるかで判断する
+    const typedKeys: (keyof FormData)[] = [
+      "postalCode",
+      "city",
+      "address",
+      "movingPostalCode",
+      "movingCity",
+      "movingAddress",
+      "items",
+      "movingItems",
+      "disposalItems",
+      "notes",
+    ];
+    const isDirty =
+      screen !== "complete" &&
+      (typedKeys.some((k) => String(form[k] ?? "").trim() !== "") ||
+        (form.images?.length ?? 0) > 0);
+    if (
+      isDirty &&
+      !window.confirm("入力した内容は消えます。トップに戻りますか？")
+    ) {
+      return;
+    }
     setError(null);
     setScreen("home");
     setStep(1);
@@ -155,12 +179,10 @@ ${result.summaryUrl}`
         console.log("LINE外のため sendMessages はスキップしました");
       }
 
-      alert("送信が完了しました。");
-
+      // 送ったあとは「受け付けた・次に何が起きるか」の画面を出す
       setForm(initialFormData);
-      setScreen("home");
+      setScreen("complete");
       setStep(1);
-      setRequestFlow("household");
     } catch (err) {
       console.error("submit error:", err);
       setError(

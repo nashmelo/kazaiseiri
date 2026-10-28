@@ -61,8 +61,8 @@ export default function Step2Request({
       : "回収ゴミの品目・個数";
 
   const itemsAutoLabel = isMovingService
-    ? "運搬内容（自動入力）"
-    : "回収内容（自動入力）";
+    ? "選んだ運ぶ物（自動で入ります）"
+    : "選んだ品目（自動で入ります）";
 
   const itemsPlaceholder = "選択した品目が自動で表示されます";
 
@@ -212,7 +212,7 @@ export default function Step2Request({
       <div style={wrapStyle}>
         <div style={pageTitleWrapStyle}>
           <h1 style={pageTitleStyle}>
-            片付け・不用品回収 |{" "}
+            家庭ごみ回収 |{" "}
             {tenantKey === "ezurin" ? "エヅリン" : "すっきりん"}
           </h1>
         </div>
@@ -270,7 +270,7 @@ export default function Step2Request({
             <textarea
               name="items"
               value={form.items}
-              onChange={handleChange}
+              readOnly
               rows={5}
               placeholder={itemsPlaceholder}
               style={textareaStyle}

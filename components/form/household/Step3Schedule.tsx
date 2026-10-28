@@ -1,5 +1,6 @@
 "use client";
 
+import { todayISO } from "@/lib/formText";
 import React, { useState } from "react";
 import StepIndicator from "@/components/form/common/StepIndicator";
 import Field from "@/components/form/common/Field";
@@ -85,7 +86,7 @@ export default function Step3Schedule({
       <div style={wrapStyle}>
         <div style={pageTitleWrapStyle}>
           <h1 style={pageTitleStyle}>
-            片付け・不用品回収 |{" "}
+            家庭ごみ回収 |{" "}
             {tenantKey === "ezurin" ? "エヅリン" : "すっきりん"}
           </h1>
         </div>
@@ -100,6 +101,7 @@ export default function Step3Schedule({
           <Field label="第一希望回収日" required>
             <input
               type="date"
+              min={todayISO()}
               name="pickupDate1"
               value={form.pickupDate1}
               onChange={handleChange}
@@ -126,6 +128,7 @@ export default function Step3Schedule({
           <Field label="第二希望回収日">
             <input
               type="date"
+              min={todayISO()}
               name="pickupDate2"
               value={form.pickupDate2}
               onChange={handleChange}
@@ -152,6 +155,7 @@ export default function Step3Schedule({
           <Field label="第三希望回収日">
             <input
               type="date"
+              min={todayISO()}
               name="pickupDate3"
               value={form.pickupDate3}
               onChange={handleChange}

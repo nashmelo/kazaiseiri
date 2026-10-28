@@ -251,14 +251,12 @@ const sectionTitleStyle: React.CSSProperties = {
 const sectionBodyStyle: React.CSSProperties = {
   display: "flex",
   flexDirection: "column",
-  gap: 10,
+  gap: 0,
 };
 
 const confirmRowStyle: React.CSSProperties = {
-  background: "#ffffff",
-  borderRadius: 12,
-  padding: "12px 14px",
-  border: "1px solid #ead8e0",
+  padding: "10px 2px",
+  borderBottom: "1px solid #f0dfe6",
 };
 
 const confirmLabelStyle: React.CSSProperties = {

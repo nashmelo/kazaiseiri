@@ -1,5 +1,6 @@
 "use client";
 
+import { disposalMethodLabel } from "@/lib/formText";
 import React, { useState } from "react";
 import StepIndicator from "@/components/form/common/StepIndicator";
 import StepSectionHeader from "@/components/form/common/StepSectionHeader";
@@ -57,7 +58,7 @@ export default function BusinessStep5Confirm({
       <div style={wrapStyle}>
         <div style={pageTitleWrapStyle}>
           <h1 style={pageTitleStyle}>
-            片付け・不用品回収 |{" "}
+            事業ごみ回収 |{" "}
             {tenantKey === "ezurin" ? "エヅリン" : "すっきりん"}
           </h1>
         </div>
@@ -76,7 +77,7 @@ export default function BusinessStep5Confirm({
             <ConfirmRow label="回収場所の階数" value={form.floor} />
             <ConfirmRow label="駐車場の有無" value={form.parking} />
             <ConfirmRow label="エレベーターの有無" value={form.elevator} />
-            <ConfirmRow label="ゴミの排出方法" value={form.disposalMethod} />
+            <ConfirmRow label="ゴミの排出方法" value={disposalMethodLabel(form.disposalMethod)} />
           </Section>
 
           <Section title="依頼内容">
@@ -242,14 +243,12 @@ const sectionTitleStyle: React.CSSProperties = {
 const sectionBodyStyle: React.CSSProperties = {
   display: "flex",
   flexDirection: "column",
-  gap: 10,
+  gap: 0,
 };
 
 const confirmRowStyle: React.CSSProperties = {
-  background: "#ffffff",
-  borderRadius: 12,
-  padding: "12px 14px",
-  border: "1px solid #ead8e0",
+  padding: "10px 2px",
+  borderBottom: "1px solid #f0dfe6",
 };
 
 const confirmLabelStyle: React.CSSProperties = {

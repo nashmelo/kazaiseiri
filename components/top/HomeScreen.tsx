@@ -37,7 +37,7 @@ export default function HomeScreen({
 
         <div style={panelStyle}>
           <section style={heroSectionStyle}>
-            <img src={logoSrc} alt="すっきりん" style={heroLogoStyle} />
+            <img src={logoSrc} alt={tenantKey === "ezurin" ? "エヅリン" : "すっきりん"} style={heroLogoStyle} />
 
             <div style={introStyle}>
               <p style={introTitleStyle}>県内16市町の許可業者だから安心</p>
@@ -277,8 +277,8 @@ const movingButtonStyle: React.CSSProperties = {
   width: "100%",
   border: "2px solid var(--pink-logo)",
   borderRadius: 22,
-  background: "var(--pink-logo)",
-  color: "#ffffff",
+  background: "#ffffff",
+  color: "var(--text-main)",
   padding: "12px 16px",
   cursor: "pointer",
   appearance: "none",
@@ -300,7 +300,7 @@ const movingButtonTitleStyle: React.CSSProperties = {
   fontSize: 16,
   lineHeight: 1.35,
   fontWeight: 800,
-  color: "#ffffff",
+  color: "var(--text-main)",
   fontFamily,
 };
 
@@ -308,7 +308,7 @@ const movingButtonNoteStyle: React.CSSProperties = {
   fontSize: 11,
   lineHeight: 1.4,
   fontWeight: 600,
-  color: "rgba(255,255,255,0.92)",
+  color: "var(--text-sub)",
   fontFamily,
 };
 

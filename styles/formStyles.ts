@@ -17,7 +17,7 @@ export const inputStyle: React.CSSProperties = {
 export const smallButtonStyle: React.CSSProperties = {
   border: "none",
   borderRadius: 12,
-  background: "var(--pink-logo)",
+  background: "var(--pink-strong)",
   color: "#ffffff",
   fontSize: 14,
   fontWeight: 800,

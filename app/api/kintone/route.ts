@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isValidRequestId } from "@/lib/requestId";
+import { createInquiry } from "@/lib/crm";
 
 type ItemLike = {
   name?: string;
@@ -32,13 +33,6 @@ function stringifyItems(value: unknown): string {
   }
 }
 
-function normalizeDomain(domain: string): string {
-  if (domain.startsWith("http://") || domain.startsWith("https://")) {
-    return domain;
-  }
-  return `https://${domain}`;
-}
-
 function normalizeAppBaseUrl(url?: string): string {
   if (!url) return "";
   if (url.startsWith("http://") || url.startsWith("https://")) {
@@ -47,184 +41,110 @@ function normalizeAppBaseUrl(url?: string): string {
   return `https://${url.replace(/\/$/, "")}`;
 }
 
+const s = (v: unknown) => (v == null ? "" : String(v)).trim();
+const line = (label: string, v: unknown) => (s(v) ? `${label}：${s(v)}` : "");
+
+/**
+ * LINEの見積もり受付。
+ * 2026-11-02 から、kintone の「取引先（アプリ4）」と「商談管理（アプリ10）」に直接入れる（以前はアプリ64）。
+ * 中身は lib/crm.ts。ホームページの相談フォームも同じ流れ。
+ */
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-
-    const domain = process.env.KINTONE_DOMAIN;
-    const app = process.env.KINTONE_APP_ID;
-    const token = process.env.KINTONE_API_TOKEN;
     const appBaseUrl = normalizeAppBaseUrl(process.env.NEXT_PUBLIC_APP_URL);
 
-    if (!domain || !app || !token) {
-      return NextResponse.json(
-        { error: "kintone環境変数が未設定です" },
-        { status: 500 }
-      );
+    if (!process.env.KINTONE_CRM_TOKENS) {
+      return NextResponse.json({ error: "kintoneの設定（KINTONE_CRM_TOKENS）が未設定です" }, { status: 500 });
     }
-
-    const baseUrl = normalizeDomain(domain);
-
-    const itemsText = stringifyItems(body.items);
-    const movingItemsText = stringifyItems(body.movingItems);
-    const disposalItemsText = stringifyItems(body.disposalItems);
 
     const tenant = body.tenant || "default";
 
-    // 依頼IDは summary ページのURLに入り、kintone のクエリにも使われる。
-    // 形式を満たさない値はここで弾く
+    // 依頼IDは summary ページのURLに入る。形式を満たさない値はここで弾く
     const requestId = isValidRequestId(body.requestId) ? body.requestId : "";
-
     if (!requestId) {
-      return NextResponse.json(
-        { error: "依頼IDが正しくありません" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "依頼IDが正しくありません" }, { status: 400 });
     }
 
     // **画像が一枚もないときは、確認用のURLを作らない。**
-    // 作ってしまうと「お写真の確認はこちら」というリンクが依頼者へ届き、
-    // 開いても何も無いため404になる。写真を添付しなかった人ほど
-    // 「壊れている」と感じることになり、体験として最悪だった。
+    // 作ると「お写真の確認はこちら」というリンクが届き、開いても何も無い。
     const imageCount = Number(body.imageCount || 0);
-
     const summaryUrl =
-      appBaseUrl && requestId && imageCount > 0
-        ? `${appBaseUrl}/summary/${requestId}?tenant=${encodeURIComponent(
-            tenant
-          )}`
+      appBaseUrl && imageCount > 0
+        ? `${appBaseUrl}/summary/${requestId}?tenant=${encodeURIComponent(tenant)}`
         : "";
 
-    // **氏名・電話番号・住所・メールをログへ出さないこと。**
-    // Vercel のログは保存され、閲覧できる人の範囲も広い。
-    // 追跡に要るのは依頼IDだけで足りる
-    console.log("kintone submit:", { tenant, requestId });
+    // **氏名・電話番号・住所・メールをログへ出さないこと。** 追跡に要るのは依頼IDだけ
+    console.log("crm submit:", { tenant, requestId, inquiryType: body.inquiryType });
 
-    const record = {
-      name: { value: body.name || "" },
-      phone: { value: body.phone || "" },
-      contactMethod: { value: body.contactMethod || "" },
-      service: { value: body.service || "" },
+    const isBusiness = body.inquiryType === "事業ゴミ";
+    const isMoving = body.inquiryType === "引越し";
+    const dates = [1, 2, 3]
+      .map((n) => ({ d: s(body[`pickupDate${n}`]), t: s(body[`pickupDate${n}Slot`]) }))
+      .filter((x) => x.d);
 
-      postalCode: { value: body.postalCode || "" },
-      prefecture: { value: body.prefecture || "" },
-      city: { value: body.city || "" },
-      address: { value: body.address1 || "" },
+    const detail = [
+      `LINEの見積もりから（依頼ID：${requestId}）`,
+      line("区分", body.inquiryType),
+      line("サービス", body.service),
+      line("事業者の種類", body.businessType),
+      line("会社名・屋号", body.businessName),
+      line("ご担当者のメール", body.contactEmail),
+      line("ご連絡の方法", body.contactMethod),
+      line("お部屋の広さ", body.roomSize),
+      line("建物", body.buildingType),
+      line("階", body.floor),
+      line("エレベーター", body.elevator),
+      line("駐車場", body.parking),
+      line("搬出", body.disposalMethod),
+      line("エアコンの取り外し", body.airconRemoval),
+      line(isMoving ? "運ぶ物" : "回収する物", stringifyItems(body.items)),
+      isMoving
+        ? [
+            line("引越し先", [body.movingPostalCode && `〒${body.movingPostalCode}`, body.movingPrefecture, body.movingCity, body.movingAddress].filter(Boolean).join(" ")),
+            line("引越し先の建物", [body.movingBuildingType, body.movingFloor, body.movingElevator && `EV${body.movingElevator}`, body.movingParking && `駐車場${body.movingParking}`].filter(Boolean).join("／")),
+            line("運ぶ物", stringifyItems(body.movingItems)),
+            line("引越しの補足", body.movingNotes),
+            line("処分する物", stringifyItems(body.disposalItems)),
+            line("処分の補足", body.disposalNotes),
+          ].filter(Boolean).join("\n")
+        : "",
+      ...dates.map((x, i) => `第${i + 1}希望：${x.d} ${x.t}`.trim()),
+      body.receiptDifferent ? line("領収書の宛名", body.receiptName) : "",
+      line("代表者", [body.representativeLastName, body.representativeFirstName].filter(Boolean).join(" ")),
+      line("代表者の電話", body.representativePhone),
+      imageCount > 0 ? `写真：${imageCount}枚\n${summaryUrl}` : "写真：なし",
+      body.notes ? `\n【補足】\n${s(body.notes)}` : "",
+    ]
+      .filter(Boolean)
+      .join("\n");
 
-      house: { value: body.buildingType || "" },
-      floor: { value: body.floor || "" },
-      park: { value: body.parking || "" },
-      elevator: { value: body.elevator || "" },
+    const name = isBusiness
+      ? s(`${s(body.contactLastName)} ${s(body.contactFirstName)}`)
+      : s(body.name);
+    const kana = isBusiness
+      ? s(`${s(body.contactLastNameKana)} ${s(body.contactFirstNameKana)}`)
+      : s(body.furigana);
 
-      detail: { value: itemsText },
-      room_size: { value: body.roomSize || "" },
-      airConditioner: { value: body.airconRemoval || "" },
-
-      pickupDate1: { value: body.pickupDate1 || "" },
-      pickupDate2: { value: body.pickupDate2 || "" },
-      pickupDate3: { value: body.pickupDate3 || "" },
-
-      pickup_time_slot1: { value: body.pickupDate1Slot || "" },
-      pickup_time_slot2: { value: body.pickupDate2Slot || "" },
-      pickup_time_slot3: { value: body.pickupDate3Slot || "" },
-
-      inquiry_type: { value: body.inquiryType || "" },
-      disposal_method: { value: body.disposalMethod || "" },
-      notes: { value: body.notes || "" },
-      furigana: { value: body.furigana || "" },
-
-      business_type: { value: body.businessType || "" },
-      business_name: { value: body.businessName || "" },
-
-      contact_last_name: { value: body.contactLastName || "" },
-      contact_first_name: { value: body.contactFirstName || "" },
-      contact_last_name_kana: { value: body.contactLastNameKana || "" },
-      contact_first_name_kana: { value: body.contactFirstNameKana || "" },
-      contact_phone: { value: body.contactPhone || "" },
-      contact_email: { value: body.contactEmail || "" },
-
-      receipt_different: {
-        value: body.receiptDifferent ? ["あり"] : [],
-      },
-
-      receipt_name: { value: body.receiptName || "" },
-
-      representative_last_name: {
-        value: body.representativeLastName || "",
-      },
-      representative_first_name: {
-        value: body.representativeFirstName || "",
-      },
-      representative_last_name_kana: {
-        value: body.representativeLastNameKana || "",
-      },
-      representative_first_name_kana: {
-        value: body.representativeFirstNameKana || "",
-      },
-      representative_phone: { value: body.representativePhone || "" },
-      representative_email: { value: body.representativeEmail || "" },
-
-      moving_postal_code: { value: body.movingPostalCode || "" },
-      moving_prefecture: { value: body.movingPrefecture || "" },
-      moving_city: { value: body.movingCity || "" },
-      moving_address: { value: body.movingAddress || "" },
-
-      moving_building_type: { value: body.movingBuildingType || "" },
-      moving_floor: { value: body.movingFloor || "" },
-      moving_parking: { value: body.movingParking || "" },
-      moving_elevator: { value: body.movingElevator || "" },
-
-      moving_items: { value: movingItemsText },
-      moving_notes: { value: body.movingNotes || "" },
-
-      disposal_items: { value: disposalItemsText },
-      disposal_notes: { value: body.disposalNotes || "" },
-
-      request_id: { value: requestId },
-      storage_folder_path: { value: body.storageFolderPath || "" },
-      thumbnail_url: { value: body.thumbnailUrl || "" },
-      image_count: { value: imageCount },
-      image_paths_json: { value: body.imagePathsJson || "" },
-      all_image_urls: { value: body.allImageUrls || "" },
-
-      summary_url: { value: summaryUrl },
-    };
-
-    // 本文には氏名・連絡先・住所が含まれるため、そのままは出さない
-
-    const res = await fetch(`${baseUrl}/k/v1/record.json`, {
-      method: "POST",
-      headers: {
-        "X-Cybozu-API-Token": token,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        app: Number(app),
-        record,
-      }),
+    const result = await createInquiry({
+      source: "LINE",
+      name,
+      kana,
+      tel: s(isBusiness ? body.contactPhone || body.phone : body.phone),
+      email: s(body.contactEmail),
+      zip: s(body.postalCode),
+      pref: s(body.prefecture),
+      city: s(body.city),
+      addr: s(body.address1),
+      company: isBusiness ? s(body.businessName) : "",
+      kinds: [s(body.inquiryType), s(body.service)],
+      firstDate: dates[0]?.d || "",
+      detail,
     });
 
-    const data = await res.json();
-
-    if (!res.ok) {
-      console.error("kintone error response:", data);
-      return NextResponse.json(
-        { error: "kintone登録失敗", detail: data },
-        { status: res.status }
-      );
-    }
-
-    return NextResponse.json({
-      ok: true,
-      data,
-      requestId,
-      summaryUrl,
-    });
+    return NextResponse.json({ ok: true, data: result, requestId, summaryUrl });
   } catch (err) {
-    console.error("server error:", err);
-    return NextResponse.json(
-      { error: "server error", detail: String(err) },
-      { status: 500 }
-    );
+    console.error("server error:", String(err).slice(0, 500));
+    return NextResponse.json({ error: "kintone登録失敗", detail: String(err) }, { status: 500 });
   }
 }

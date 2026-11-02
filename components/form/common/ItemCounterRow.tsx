@@ -6,6 +6,8 @@ import React from "react";
 
 type ItemCounterRowProps = {
   label: string;
+  /** ラベルの下に小さく出す補足（検索結果のカテゴリ名など） */
+  sub?: string;
   count: number;
   onDecrease: () => void;
   onIncrease: () => void;
@@ -13,13 +15,17 @@ type ItemCounterRowProps = {
 
 export default function ItemCounterRow({
   label,
+  sub,
   count,
   onDecrease,
   onIncrease,
 }: ItemCounterRowProps) {
   return (
     <div style={rowStyle}>
-      <div style={labelStyle}>{label}</div>
+      <div style={labelStyle}>
+        {label}
+        {sub && <div style={subStyle}>{sub}</div>}
+      </div>
 
       <div style={controlStyle}>
         <button
@@ -89,4 +95,10 @@ const countStyle: React.CSSProperties = {
   fontSize: 15,
   fontWeight: 700,
   color: "var(--text-main)",
+};
+const subStyle: React.CSSProperties = {
+  marginTop: 2,
+  fontSize: 12,
+  fontWeight: 500,
+  color: "var(--text-sub)",
 };

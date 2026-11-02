@@ -53,10 +53,10 @@ async function api(method: "GET" | "POST", path: string, body: Record<string, un
     Object.entries(body).forEach(([k, v]) =>
       Array.isArray(v) ? v.forEach((x, i) => q.append(`${k}[${i}]`, String(x))) : q.append(k, String(v))
     );
-    res = await fetch(`${url}?${q}`, { method, headers, cache: "no-store" });
+    res = await fetch(`${url}?${q}`, { method, headers, cache: "no-store", signal: AbortSignal.timeout(10000) });
   } else {
     headers["Content-Type"] = "application/json";
-    res = await fetch(url, { method, headers, body: JSON.stringify(body) });
+    res = await fetch(url, { method, headers, body: JSON.stringify(body), signal: AbortSignal.timeout(10000) });
   }
   const j = await res.json();
   if (!res.ok) throw new Error(`kintone ${path} ${res.status} ${JSON.stringify(j).slice(0, 300)}`);
@@ -118,17 +118,36 @@ async function createClient(c: Inquiry): Promise<string> {
   return g.record.record_no.value;
 }
 
+/**
+ * **お客様の送信を、項目の不備で失敗させない。**
+ * 1回目：全部の項目で登録 → だめなら 2回目：選択肢・ルックアップ以外を落とした最小の形で登録
+ * → それもだめなら 3回目：取引先とのひも付けもやめて、名前と電話番号を本文に書いて登録。
+ * どこで落としたかは商談内容詳細の先頭に書く（担当があとで直せるように）。
+ */
 export async function createInquiry(c: Inquiry) {
   if (!process.env.KINTONE_CRM_TOKENS) return { skipped: true as const };
-  let recNo = await findClient(c.tel);
-  const isNew = !recNo;
-  if (!recNo) recNo = await createClient(c);
-  const sv = pickService(c.kinds);
-  const svName = sv.replace(/^\d+\s*　?/, "");
   const isHP = c.source !== "LINE";
-  const deal: Record<string, { value: string }> = {
-    商談名: { value: `【${isHP ? "HP" : "LINE"}】${c.company || c.name}様 ${svName}`.slice(0, 120) },
-    record_number１: { value: String(recNo) },
+  const notes: string[] = [];
+
+  let recNo: string | null = null;
+  let isNew = false;
+  try {
+    recNo = await findClient(c.tel);
+    if (!recNo) { recNo = await createClient(c); isNew = true; }
+  } catch (e) {
+    console.error("crm client failed:", String(e).slice(0, 300));
+    notes.push("取引先の自動登録に失敗（手で取引先をひも付けてください）");
+    recNo = null;
+  }
+
+  const sv = pickService(c.kinds);
+  const svName = sv.replace(/^\d+\s*\u3000?/, "");
+  const title = `【${isHP ? "HP" : "LINE"}】${c.company || c.name || "（お名前なし）"}様 ${svName}`.slice(0, 120);
+  const who = `お名前：${c.company ? c.company + " " : ""}${c.name}${c.kana ? "（" + c.kana + "）" : ""}\n電話：${c.tel}${c.email ? "\nメール：" + c.email : ""}`;
+  const base = (extra: string[]) => (extra.length ? `※${extra.join("／")}\n\n` : "") + (c.detail || "");
+
+  const full: Record<string, { value: string }> = {
+    商談名: { value: title },
     受付日: { value: jstDate() },
     完成予定日: { value: /^\d{4}-\d{2}-\d{2}$/.test(c.firstDate || "") ? c.firstDate! : jstDate(30) },
     売上部門: { value: "サービス課" },
@@ -139,9 +158,38 @@ export async function createInquiry(c: Inquiry) {
     受理方法: { value: isHP ? "HPから" : "ＬＩＮＥ＠" },
     ALLフェーズ: { value: "受付" },
     作業場所: { value: [c.pref, c.city, c.addr].filter(Boolean).join("").slice(0, 200) },
-    商談内容詳細: { value: c.detail || "" },
+    商談内容詳細: { value: base(notes) },
   };
-  if (isHP) deal["広告媒体"] = { value: "ホームページ・検索" };
-  const j = await api("POST", "record.json", { app: APP_DEAL, record: deal });
-  return { ok: true as const, dealId: j.id as string, clientNo: recNo, newClient: isNew };
+  if (recNo) full["record_number１"] = { value: String(recNo) };
+  else full["商談内容詳細"] = { value: base(notes) + "\n\n" + who };
+  if (isHP) full["広告媒体"] = { value: "ホームページ・検索" };
+
+  const attempts: Record<string, { value: string }>[] = [full];
+  // 2回目：選択肢の値を「必ずある値」に寄せ、任意の項目を落とす
+  const lite = { ...full };
+  delete lite["広告媒体"];
+  delete lite["作業場所"];
+  lite["area"] = { value: "その他" };
+  lite["ドロップダウン"] = { value: SV.other };
+  lite["完成予定日"] = { value: jstDate(30) };
+  lite["商談内容詳細"] = { value: base([...notes, "一部の項目を自動登録できなかったため本文にまとめました"]) + "\n\n" + who };
+  attempts.push(lite);
+  // 3回目：取引先のひも付けもやめる
+  const bare = { ...lite };
+  delete bare["record_number１"];
+  bare["商談内容詳細"] = { value: base([...notes, "取引先のひも付けと一部の項目を自動登録できませんでした"]) + "\n\n" + who };
+  attempts.push(bare);
+
+  let lastErr: unknown = null;
+  for (let i = 0; i < attempts.length; i++) {
+    try {
+      const j = await api("POST", "record.json", { app: APP_DEAL, record: attempts[i] });
+      if (i > 0) console.error("crm deal saved with fallback level", i);
+      return { ok: true as const, dealId: j.id as string, clientNo: recNo, newClient: isNew, level: i };
+    } catch (e) {
+      lastErr = e;
+      console.error(`crm deal attempt ${i} failed:`, String(e).slice(0, 300));
+    }
+  }
+  throw lastErr;
 }

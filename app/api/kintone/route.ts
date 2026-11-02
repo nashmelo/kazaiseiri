@@ -44,6 +44,33 @@ function normalizeAppBaseUrl(url?: string): string {
 const s = (v: unknown) => (v == null ? "" : String(v)).trim();
 const line = (label: string, v: unknown) => (s(v) ? `${label}：${s(v)}` : "");
 
+
+/** 最後の受け皿：以前の受付アプリ（KINTONE_APP_ID＝64）へ、最低限の項目だけで入れる */
+async function saveToLegacyApp(x: { name: string; phone: string; requestId: string; detail: string }) {
+  const domain = process.env.KINTONE_DOMAIN;
+  const app = process.env.KINTONE_APP_ID;
+  const token = process.env.KINTONE_API_TOKEN;
+  if (!domain || !app || !token) throw new Error("退避先（アプリ64）の設定がありません");
+  const base = domain.startsWith("http") ? domain : `https://${domain}`;
+  const res = await fetch(`${base}/k/v1/record.json`, {
+    method: "POST",
+    headers: { "X-Cybozu-API-Token": token, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      app: Number(app),
+      record: {
+        name: { value: x.name },
+        phone: { value: x.phone },
+        request_id: { value: x.requestId },
+        notes: { value: `※商談管理への自動登録に失敗したため、こちらに退避しました。商談管理へ手で登録してください。\n\n${x.detail}` },
+      },
+    }),
+    signal: AbortSignal.timeout(10000),
+  });
+  const j = await res.json();
+  if (!res.ok) throw new Error(`app64 ${res.status} ${JSON.stringify(j).slice(0, 300)}`);
+  return { ok: true, fallback: "app64", id: j.id };
+}
+
 /**
  * LINEの見積もり受付。
  * 2026-11-02 から、kintone の「取引先（アプリ4）」と「商談管理（アプリ10）」に直接入れる（以前はアプリ64）。
@@ -53,10 +80,6 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const appBaseUrl = normalizeAppBaseUrl(process.env.NEXT_PUBLIC_APP_URL);
-
-    if (!process.env.KINTONE_CRM_TOKENS) {
-      return NextResponse.json({ error: "kintoneの設定（KINTONE_CRM_TOKENS）が未設定です" }, { status: 500 });
-    }
 
     const tenant = body.tenant || "default";
 
@@ -126,7 +149,9 @@ export async function POST(req: NextRequest) {
       ? s(`${s(body.contactLastNameKana)} ${s(body.contactFirstNameKana)}`)
       : s(body.furigana);
 
-    const result = await createInquiry({
+    let result: unknown;
+    try {
+      result = await createInquiry({
       source: "LINE",
       name,
       kana,
@@ -141,6 +166,12 @@ export async function POST(req: NextRequest) {
       firstDate: dates[0]?.d || "",
       detail,
     });
+      if ((result as { skipped?: boolean })?.skipped) throw new Error("KINTONE_CRM_TOKENS 未設定");
+    } catch (e) {
+      // **商談管理に入らなくても、お客様には失敗を見せない。** 以前の受付アプリ（64）に退避する
+      console.error("crm failed, fallback to app64:", String(e).slice(0, 300));
+      result = await saveToLegacyApp({ name, phone: s(isBusiness ? body.contactPhone || body.phone : body.phone), requestId, detail });
+    }
 
     return NextResponse.json({ ok: true, data: result, requestId, summaryUrl });
   } catch (err) {

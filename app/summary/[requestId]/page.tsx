@@ -3,9 +3,9 @@ import { isValidRequestId } from "@/lib/requestId";
 import { supabaseAdmin } from "@/lib/supabase/server";
 
 type PageProps = {
-  params: {
+  params: Promise<{
     requestId: string;
-  };
+  }>;
 };
 
 type SummaryResult = {
@@ -49,7 +49,8 @@ async function getImages(requestId: string): Promise<SummaryResult> {
   return { found: images.length > 0, images };
 }
 
-export default async function SummaryPage({ params }: PageProps) {
+export default async function SummaryPage({ params: paramsPromise }: PageProps) {
+  const params = await paramsPromise;
   const { found, images } = await getImages(params.requestId);
 
   // **依頼そのものが見つからないときだけ 404 にする。**

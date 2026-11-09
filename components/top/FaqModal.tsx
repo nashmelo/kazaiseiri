@@ -103,7 +103,7 @@ const badgeStyle: React.CSSProperties = {
   borderRadius: 999,
   background: "var(--pink-logo)",
   color: "#ffffff",
-  fontSize: 11,
+  fontSize: 12,
   lineHeight: 1,
   fontWeight: 800,
   letterSpacing: "0.12em",

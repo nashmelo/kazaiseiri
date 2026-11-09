@@ -16,7 +16,7 @@ const stepHeaderStyle: React.CSSProperties = {
 const stepBadgeStyle: React.CSSProperties = {
   display: "block",
   color: "var(--pink-strong)",
-  fontSize: 11,
+  fontSize: 12,
   lineHeight: 1.4,
   fontWeight: 800,
   letterSpacing: "0.08em",

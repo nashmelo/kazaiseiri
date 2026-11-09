@@ -224,7 +224,7 @@ const primaryButtonTextWrapStyle: React.CSSProperties = {
 };
 
 const primaryButtonKickerStyle: React.CSSProperties = {
-  fontSize: 10,
+  fontSize: 12,
   lineHeight: 1.2,
   fontWeight: 700,
   letterSpacing: "0.14em",
@@ -305,7 +305,7 @@ const movingButtonTitleStyle: React.CSSProperties = {
 };
 
 const movingButtonNoteStyle: React.CSSProperties = {
-  fontSize: 11,
+  fontSize: 12,
   lineHeight: 1.4,
   fontWeight: 600,
   color: "var(--text-sub)",

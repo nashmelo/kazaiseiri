@@ -592,7 +592,7 @@ const groupBadgeStyle: React.CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
-  fontSize: 11,
+  fontSize: 12,
   lineHeight: 1,
   fontWeight: 800,
   letterSpacing: "0.08em",

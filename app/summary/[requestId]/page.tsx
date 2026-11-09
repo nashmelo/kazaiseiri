@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { isValidRequestId } from "@/lib/requestId";
+import { isUnguessableRequestId } from "@/lib/requestId";
 import { supabaseAdmin } from "@/lib/supabase/server";
 
 type PageProps = {
@@ -15,8 +15,9 @@ type SummaryResult = {
 };
 
 async function getImages(requestId: string): Promise<SummaryResult> {
-  // 依頼IDの形を必ず確かめる（保管先のフォルダ名に使うため）
-  if (!isValidRequestId(requestId)) {
+  // 依頼IDの形を必ず確かめる（保管先のフォルダ名に使うため）。
+  // 推測できる旧形式（時刻だけ）の依頼は開かない（2026-11-09 技術点検）
+  if (!isUnguessableRequestId(requestId)) {
     return { found: false, images: [] };
   }
 

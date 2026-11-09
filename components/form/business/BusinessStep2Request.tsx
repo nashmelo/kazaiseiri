@@ -373,7 +373,7 @@ const uploadAddedHelpStyle: React.CSSProperties = {
 
 const fileHelpTextStyle: React.CSSProperties = {
   marginTop: 6,
-  fontSize: 11,
+  fontSize: 12,
   color: "var(--text-sub)",
   lineHeight: 1.5,
 };

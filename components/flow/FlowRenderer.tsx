@@ -393,8 +393,11 @@ function CompleteScreen({ onBackHome }: { onBackHome: () => void }) {
 }
 
 function ErrorBanner({ error }: { error: string }) {
+  // role="alert"：出た瞬間に読み上げられる（2026-11-09 技術点検）
   return (
     <div
+      role="alert"
+      aria-live="assertive"
       style={{
         position: "sticky",
         top: 0,

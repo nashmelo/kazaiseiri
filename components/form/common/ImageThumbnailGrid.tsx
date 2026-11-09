@@ -178,6 +178,6 @@ const indexBadgeStyle: React.CSSProperties = {
   borderRadius: 9,
   background: "rgba(0, 0, 0, 0.55)",
   color: "#fff",
-  fontSize: 11,
+  fontSize: 12,
   fontWeight: 600,
 };

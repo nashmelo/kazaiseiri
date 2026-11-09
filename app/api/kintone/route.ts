@@ -76,8 +76,43 @@ async function saveToLegacyApp(x: { name: string; phone: string; requestId: stri
  * 2026-11-02 から、kintone の「取引先（アプリ4）」と「商談管理（アプリ10）」に直接入れる（以前はアプリ64）。
  * 中身は lib/crm.ts。ホームページの相談フォームも同じ流れ。
  */
+/**
+ * 送ってきたのが「このLINEの見積もり（LIFF）でログインした人」かを LINE に照会する（2026-11-09 技術点検）。
+ * 以前は誰でもこの窓口に送れて、商談管理・取引先に偽の依頼を入れられた。
+ * - 鍵（LIFFのアクセストークン）が無い・偽物・別のアプリのもの → 断る
+ * - LINE側が落ちているときだけは、お客様を止めないよう通す（ログに残す）
+ */
+async function verifyLineCaller(req: NextRequest): Promise<{ ok: true } | { ok: false; status: number; message: string }> {
+  const auth = req.headers.get("authorization") || "";
+  const token = auth.startsWith("Bearer ") ? auth.slice(7).trim() : "";
+  if (!token) return { ok: false, status: 401, message: "LINEでログインしてからお送りください" };
+  const channelId = process.env.LINE_LOGIN_CHANNEL_ID || (process.env.NEXT_PUBLIC_LIFF_ID || "").split("-")[0];
+  try {
+    const res = await fetch(`https://api.line.me/oauth2/v2.1/verify?access_token=${encodeURIComponent(token)}`, {
+      signal: AbortSignal.timeout(5000),
+    });
+    if (res.status >= 500) {
+      console.warn("line verify unavailable:", res.status);
+      return { ok: true };
+    }
+    const j = (await res.json().catch(() => ({}))) as { client_id?: string; expires_in?: number };
+    if (!res.ok || !j.client_id || (channelId && j.client_id !== channelId) || !(Number(j.expires_in) > 0)) {
+      console.warn("line verify rejected:", res.status, j.client_id ? "client mismatch or expired" : "invalid");
+      return { ok: false, status: 401, message: "LINEのログインが確認できませんでした。LINEから開き直してお送りください" };
+    }
+    return { ok: true };
+  } catch (e) {
+    console.warn("line verify error:", e instanceof Error ? e.message : e);
+    return { ok: true };
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
+    const caller = await verifyLineCaller(req);
+    if (!caller.ok) {
+      return NextResponse.json({ error: caller.message }, { status: caller.status });
+    }
     const body = await req.json();
     const appBaseUrl = normalizeAppBaseUrl(process.env.NEXT_PUBLIC_APP_URL);
 

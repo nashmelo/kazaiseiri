@@ -57,7 +57,7 @@ export default function StepIndicator({ step }: StepIndicatorProps) {
                   ? "#ffffff"
                   : isActive
                   ? "var(--pink-strong)"
-                  : "#b97a93",
+                  : "#8f5a70" /* まだのステップの番号。薄ピンク地で4.8:1（旧 #b97a93 は3.0:1） */,
                 border: isActive
                   ? "3px solid var(--pink-strong)"
                   : isDone
@@ -72,7 +72,7 @@ export default function StepIndicator({ step }: StepIndicatorProps) {
 
             <div
               style={{
-                fontSize: 11,
+                fontSize: 12,
                 fontWeight: 800,
                 color: isActive || isDone ? "var(--pink-strong)" : "var(--text-sub)",
                 lineHeight: 1.35,

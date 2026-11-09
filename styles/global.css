@@ -1,7 +1,7 @@
 :root{
   --bg-main: #f9e5ec;
   --pink-main: #f7d6e2;
-  --pink-strong: #cc3b78; /* 白地・薄ピンク地で文字のコントラスト4.5:1以上 */
+  --pink-strong: #b02f66; /* 文字に使う濃いピンク。白地6.1:1・背景の薄ピンク(#f9e5ec)地5.1:1（2026-11-09 技術点検で #cc3b78 から変更。旧色は薄ピンク地で3.9:1だった） */
   --pink-soft: #fde7ef;
   --text-main: #1c2b4a;
   --text-sub: #5b6170;

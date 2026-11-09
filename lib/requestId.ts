@@ -44,3 +44,13 @@ export function createRequestId(): string {
 export function isValidRequestId(value: unknown): value is string {
   return typeof value === "string" && REQUEST_ID_PATTERN.test(value);
 }
+
+/**
+ * 写真の確認ページで開いてよい依頼IDか（2026-11-09 技術点検）。
+ * 旧形式（REQ-<時刻> だけ）は時刻から推測できるため、写真ページでは開かない。
+ * 新形式（末尾にランダム12桁）だけを通す。
+ */
+const NEW_REQUEST_ID_PATTERN = /^REQ-\d{10,16}-[0-9a-f]{12}$/;
+export function isUnguessableRequestId(value: unknown): value is string {
+  return typeof value === "string" && NEW_REQUEST_ID_PATTERN.test(value);
+}

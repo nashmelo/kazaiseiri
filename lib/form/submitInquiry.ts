@@ -7,6 +7,7 @@ import {
 import { uploadImagesDirect } from "@/lib/images/uploadImagesDirect";
 import { MAX_FILES } from "@/lib/images/imageRules";
 import { createRequestId } from "@/lib/requestId";
+import liff from "@line/liff";
 
 type ActiveRequestFlow = Exclude<RequestFlow, "">;
 
@@ -246,10 +247,15 @@ export async function submitInquiry({
     allImageUrls,
   };
 
+  // 受付の窓口が「LINEで確認できた人か」を照会するための鍵（LIFFのアクセストークン）
+  let lineToken = "";
+  try { lineToken = liff.getAccessToken() || ""; } catch { lineToken = ""; }
+
   const response = await fetch("/api/kintone", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...(lineToken ? { Authorization: `Bearer ${lineToken}` } : {}),
     },
     body: JSON.stringify(payload),
   });

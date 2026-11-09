@@ -73,6 +73,13 @@ export default function Page() {
         }
 
         await liff.init({ liffId: LIFF_ID });
+        // 受付の窓口は「LINEで確認できた人」からの送信しか受けない（app/api/kintone/route.ts）。
+        // LINEアプリの外（PCやSafari）で開いた人は、入力を始める前にLINEでログインしてもらう。
+        // 送信の直前だとログインの往復で入力が消えるため、最初にやる。
+        if (!liff.isInClient() && !liff.isLoggedIn()) {
+          liff.login({ redirectUri: window.location.href });
+          return;
+        }
       } catch (err) {
         console.error("LIFF init error:", err);
         setError(

@@ -314,9 +314,9 @@ const hiddenFileInputStyle: React.CSSProperties = {
 const uploadBoxStyle: React.CSSProperties = {
   display: "block",
   width: "100%",
-  border: "2px dashed #e78ab6",
+  border: "2px dashed var(--pink-accent-soft)",
   borderRadius: 28,
-  background: "#fff7fb",
+  background: "var(--surface-pink)",
   padding: "28px 20px",
   boxSizing: "border-box",
   cursor: "pointer",
@@ -336,8 +336,8 @@ const uploadStatusBadgeStyle: React.CSSProperties = {
   display: "inline-block",
   padding: "8px 14px",
   borderRadius: 999,
-  background: "#e85d98",
-  color: "#fff",
+  background: "var(--pink-accent)",
+  color: "var(--surface)",
   fontSize: 14,
   fontWeight: 800,
   lineHeight: 1.4,
@@ -354,7 +354,7 @@ const uploadIconStyle: React.CSSProperties = {
 const uploadTitleStyle: React.CSSProperties = {
   fontSize: 18,
   fontWeight: 800,
-  color: "#e85d98",
+  color: "var(--pink-accent)",
   lineHeight: 1.4,
 };
 
@@ -366,7 +366,7 @@ const uploadSubTextStyle: React.CSSProperties = {
 
 const uploadAddedHelpStyle: React.CSSProperties = {
   fontSize: 12,
-  color: "#b84d7a",
+  color: "var(--pink-deep)",
   lineHeight: 1.5,
   marginTop: 2,
 };

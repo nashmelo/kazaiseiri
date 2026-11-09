@@ -55,7 +55,7 @@ export default function RadioCardGroup({
               border: checked
                 ? "2px solid var(--pink-logo)"
                 : "2px solid rgba(251,155,204,0.28)",
-              background: checked ? "rgba(251,155,204,0.16)" : "#ffffff",
+              background: checked ? "rgba(251,155,204,0.16)" : "var(--surface)",
               color: checked ? "var(--pink-strong)" : "var(--text-main)",
               fontWeight: checked ? 800 : 700,
               fontSize: 14,
@@ -83,12 +83,12 @@ export default function RadioCardGroup({
                 borderRadius: "50%",
                 border: checked
                   ? "2px solid var(--pink-logo)"
-                  : "2px solid #d8c7cf",
+                  : "2px solid var(--line-control)",
                 display: "inline-flex",
                 alignItems: "center",
                 justifyContent: "center",
                 flexShrink: 0,
-                background: "#fff",
+                background: "var(--surface)",
               }}
             >
               <span

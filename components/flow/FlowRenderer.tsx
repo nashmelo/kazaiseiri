@@ -337,7 +337,7 @@ function CompleteScreen({ onBackHome }: { onBackHome: () => void }) {
               margin: "8px auto 14px",
               borderRadius: "50%",
               background: "var(--pink-strong)",
-              color: "#fff",
+              color: "var(--surface)",
               fontSize: 34,
               lineHeight: "64px",
               fontWeight: 900,
@@ -402,8 +402,8 @@ function ErrorBanner({ error }: { error: string }) {
         position: "sticky",
         top: 0,
         zIndex: 1000,
-        background: "#ffe5e5",
-        color: "#b00020",
+        background: "var(--error-bg)",
+        color: "var(--error)",
         padding: "12px 16px",
         fontSize: 13,
         fontWeight: 700,
@@ -430,7 +430,7 @@ function SubmittingOverlay() {
     >
       <div
         style={{
-          background: "#fff",
+          background: "var(--surface)",
           borderRadius: 16,
           padding: "18px 22px",
           fontSize: 15,

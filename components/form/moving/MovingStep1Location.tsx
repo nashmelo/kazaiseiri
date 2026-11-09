@@ -571,7 +571,7 @@ const groupCardStyle: React.CSSProperties = {
   marginTop: 14,
   padding: "16px 14px 14px",
   borderRadius: 20,
-  background: "#fff7fb",
+  background: "var(--surface-pink)",
   border: "2px solid rgba(251,155,204,0.35)",
 };
 
@@ -588,7 +588,7 @@ const groupBadgeStyle: React.CSSProperties = {
   padding: "0 8px",
   borderRadius: 999,
   background: "var(--pink-logo)",
-  color: "#fff",
+  color: "var(--surface)",
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",

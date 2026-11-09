@@ -65,7 +65,7 @@ export default async function SummaryPage({ params: paramsPromise }: PageProps) 
     <main
       style={{
         minHeight: "100vh",
-        background: "#fff",
+        background: "var(--surface)",
         padding: "24px 16px 40px",
         boxSizing: "border-box",
       }}
@@ -108,7 +108,7 @@ export default async function SummaryPage({ params: paramsPromise }: PageProps) 
               fontSize: 14,
               lineHeight: 1.9,
               color: "#666",
-              background: "#f7f7f7",
+              background: "var(--gray-bg)",
               borderRadius: 12,
             }}
           >

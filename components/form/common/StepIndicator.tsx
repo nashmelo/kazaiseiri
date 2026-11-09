@@ -51,13 +51,13 @@ export default function StepIndicator({ step }: StepIndicatorProps) {
                 background: isDone
                   ? "var(--pink-strong)"
                   : isActive
-                  ? "#ffffff"
+                  ? "var(--surface)"
                   : "var(--pink-soft)",
                 color: isDone
-                  ? "#ffffff"
+                  ? "var(--surface)"
                   : isActive
                   ? "var(--pink-strong)"
-                  : "#8f5a70" /* まだのステップの番号。薄ピンク地で4.8:1（旧 #b97a93 は3.0:1） */,
+                  : "var(--text-step)" /* まだのステップの番号。薄ピンク地で4.8:1（旧 #b97a93 は3.0:1） */,
                 border: isActive
                   ? "3px solid var(--pink-strong)"
                   : isDone

@@ -78,7 +78,7 @@ const modalStyle: React.CSSProperties = {
   width: "100%",
   maxWidth: 520,
   maxHeight: "88vh",
-  background: "#ffffff",
+  background: "var(--surface)",
   borderRadius: 24,
   overflow: "hidden",
   boxShadow: "0 16px 36px rgba(0,0,0,0.18)",
@@ -102,7 +102,7 @@ const badgeStyle: React.CSSProperties = {
   padding: "6px 12px",
   borderRadius: 999,
   background: "var(--pink-logo)",
-  color: "#ffffff",
+  color: "var(--surface)",
   fontSize: 12,
   lineHeight: 1,
   fontWeight: 800,
@@ -132,11 +132,11 @@ const bodyStyle: React.CSSProperties = {
   WebkitOverflowScrolling: "touch",
   overscrollBehavior: "contain",
   padding: "18px 18px 14px",
-  background: "#fffdfd",
+  background: "var(--surface)",
 };
 
 const cardStyle: React.CSSProperties = {
-  background: "#ffffff",
+  background: "var(--surface)",
   border: "2px solid rgba(251,155,204,0.45)",
   borderRadius: 18,
   padding: "14px 14px 12px",
@@ -190,13 +190,13 @@ const footerStyle: React.CSSProperties = {
   display: "flex",
   flexDirection: "column",
   gap: 10,
-  background: "#ffffff",
+  background: "var(--surface)",
 };
 
 const secondaryButtonStyle: React.CSSProperties = {
   width: "100%",
   borderRadius: 999,
-  background: "#ffffff",
+  background: "var(--surface)",
   color: "var(--pink-strong)",
   fontSize: 16,
   lineHeight: 1.2,

@@ -103,8 +103,8 @@ const tileStyle: React.CSSProperties = {
   paddingTop: "100%",
   borderRadius: 8,
   overflow: "hidden",
-  background: "#f2f2f2",
-  border: "1px solid #e0e0e0",
+  background: "var(--gray-bg)",
+  border: "1px solid var(--gray-line)",
 };
 
 const thumbStyle: React.CSSProperties = {
@@ -158,7 +158,7 @@ const removeButtonStyle: React.CSSProperties = {
   border: "none",
   borderRadius: "0 8px 0 8px",
   background: "rgba(0, 0, 0, 0.55)",
-  color: "#fff",
+  color: "var(--surface)",
   fontSize: 18,
   lineHeight: 1,
   cursor: "pointer",
@@ -177,7 +177,7 @@ const indexBadgeStyle: React.CSSProperties = {
   justifyContent: "center",
   borderRadius: 9,
   background: "rgba(0, 0, 0, 0.55)",
-  color: "#fff",
+  color: "var(--surface)",
   fontSize: 12,
   fontWeight: 600,
 };

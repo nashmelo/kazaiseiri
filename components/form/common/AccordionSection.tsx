@@ -43,16 +43,16 @@ export default function AccordionSection({
 }
 
 const sectionStyle: React.CSSProperties = {
-  border: "1px solid #f0d4e2",
+  border: "1px solid var(--line)",
   borderRadius: 20,
-  background: "#fff",
+  background: "var(--surface)",
   overflow: "hidden",
 };
 
 const headerButtonStyle: React.CSSProperties = {
   width: "100%",
   border: "none",
-  background: "#fff7fb",
+  background: "var(--surface-pink)",
   padding: "16px 18px",
   display: "flex",
   alignItems: "center",
@@ -79,7 +79,7 @@ const countBadgeStyle: React.CSSProperties = {
   display: "inline-block",
   fontSize: 12,
   fontWeight: 700,
-  color: "#e85d98",
+  color: "var(--pink-accent)",
 };
 
 const iconStyle: React.CSSProperties = {
@@ -87,14 +87,14 @@ const iconStyle: React.CSSProperties = {
   width: 28,
   height: 28,
   borderRadius: 9999,
-  border: "1px solid #e7b7cf",
+  border: "1px solid var(--line-strong)",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  color: "#e85d98",
+  color: "var(--pink-accent)",
   fontSize: 18,
   fontWeight: 700,
-  background: "#fff",
+  background: "var(--surface)",
 };
 
 const contentStyle: React.CSSProperties = {

@@ -37,7 +37,14 @@ export default function HomeScreen({
 
         <div style={panelStyle}>
           <section style={heroSectionStyle}>
-            <img src={logoSrc} alt={tenantKey === "ezurin" ? "エヅリン" : "すっきりん"} style={heroLogoStyle} />
+            {/* ページの見出し（h1）はロゴ。読み上げでは「エヅリン 不用品回収の無料見積もり」 */}
+            <h1 style={heroTitleStyle}>
+              <img
+                src={logoSrc}
+                alt={`${tenantKey === "ezurin" ? "エヅリン" : "すっきりん"} 不用品回収の無料見積もり`}
+                style={heroLogoStyle}
+              />
+            </h1>
 
             <div style={introStyle}>
               <p style={introTitleStyle}>県内16市町の許可業者だから安心</p>
@@ -58,7 +65,7 @@ export default function HomeScreen({
                     お家の片付け・粗大ごみなど
                   </div>
                 </div>
-                <div style={primaryArrowStyle}>›</div>
+                <div style={primaryArrowStyle} aria-hidden="true">›</div>
               </button>
 
               <button
@@ -73,7 +80,7 @@ export default function HomeScreen({
                     店舗・事務所・法人回収
                   </div>
                 </div>
-                <div style={primaryArrowStyle}>›</div>
+                <div style={primaryArrowStyle} aria-hidden="true">›</div>
               </button>
             </div>
 
@@ -126,13 +133,18 @@ export default function HomeScreen({
   );
 }
 
-const fontFamily =
-  '"Noto Sans JP","Hiragino Sans","Yu Gothic","Meiryo",sans-serif';
+const fontFamily = "var(--font-jp)";
+
+/*
+ * 余白の段（2026-11-09 技術点検）。以前はほぼ全部 10〜12px で、まとまりの切れ目が見えなかった。
+ * 中のまとまりは詰め（4〜8）、まとまり同士は空ける（20〜24）。
+ */
+const space = { xs: 4, sm: 8, md: 12, lg: 16, xl: 20 } as const;
 
 const mainStyle: React.CSSProperties = {
   minHeight: "100vh",
   background: "var(--bg-main)",
-  padding: "10px 16px",
+  padding: `${space.sm}px 16px`,
   boxSizing: "border-box",
   fontFamily,
   display: "flex",
@@ -151,28 +163,32 @@ const outerCatchStyle: React.CSSProperties = {
   lineHeight: 1.4,
   fontWeight: 700,
   color: "var(--pink-strong)",
-  marginBottom: 10,
+  marginBottom: space.sm,
   letterSpacing: "0.02em",
   fontFamily,
 };
 
 const panelStyle: React.CSSProperties = {
-  background: "#fbf1f4",
+  background: "var(--panel)",
   borderRadius: 32,
-  padding: "12px 16px 14px",
+  padding: `${space.lg}px 16px ${space.lg}px`,
   boxSizing: "border-box",
   border: "2px solid rgba(251,155,204,0.22)",
 };
 
 const heroSectionStyle: React.CSSProperties = {
-  marginBottom: 12,
+  marginBottom: space.lg,
+};
+
+const heroTitleStyle: React.CSSProperties = {
+  margin: `0 0 ${space.xs}px`,
+  lineHeight: 0,
 };
 
 const heroLogoStyle: React.CSSProperties = {
   width: "100%",
   height: "auto",
   display: "block",
-  marginBottom: 10,
 };
 
 const introStyle: React.CSSProperties = {
@@ -190,23 +206,21 @@ const introTitleStyle: React.CSSProperties = {
   fontFamily,
 };
 
-const menuSectionStyle: React.CSSProperties = {
-  marginTop: 4,
-};
+const menuSectionStyle: React.CSSProperties = {};
 
 const primaryListStyle: React.CSSProperties = {
   display: "grid",
-  gap: 10,
-  marginBottom: 12,
+  gap: space.md,
+  marginBottom: space.xl,
 };
 
 const primaryButtonStyle: React.CSSProperties = {
   width: "100%",
   border: "3px solid var(--pink-logo)",
   borderRadius: 24,
-  background: "#fff9fb",
+  background: "var(--surface-pink)",
   color: "var(--text-main)",
-  padding: "12px 16px",
+  padding: `${space.md}px 18px`,
   cursor: "pointer",
   display: "flex",
   alignItems: "center",
@@ -220,7 +234,7 @@ const primaryButtonStyle: React.CSSProperties = {
 const primaryButtonTextWrapStyle: React.CSSProperties = {
   minWidth: 0,
   flex: 1,
-  paddingRight: 10,
+  paddingRight: space.md,
 };
 
 const primaryButtonKickerStyle: React.CSSProperties = {
@@ -229,7 +243,7 @@ const primaryButtonKickerStyle: React.CSSProperties = {
   fontWeight: 700,
   letterSpacing: "0.14em",
   color: "var(--pink-strong)",
-  marginBottom: 5,
+  marginBottom: space.sm,
   fontFamily,
 };
 
@@ -238,7 +252,7 @@ const primaryButtonTitleStyle: React.CSSProperties = {
   lineHeight: 1.15,
   fontWeight: 700,
   color: "var(--text-main)",
-  marginBottom: 5,
+  marginBottom: space.xs,
   letterSpacing: 0,
   wordBreak: "keep-all",
   overflowWrap: "normal",
@@ -266,20 +280,20 @@ const primaryArrowStyle: React.CSSProperties = {
   fontSize: 28,
   lineHeight: 1,
   fontWeight: 400,
-  color: "#fff",
+  color: "var(--surface)",
 };
 
 const movingButtonWrapStyle: React.CSSProperties = {
-  marginBottom: 12,
+  marginBottom: space.xl,
 };
 
 const movingButtonStyle: React.CSSProperties = {
   width: "100%",
   border: "2px solid var(--pink-logo)",
   borderRadius: 22,
-  background: "#ffffff",
+  background: "var(--surface)",
   color: "var(--text-main)",
-  padding: "12px 16px",
+  padding: `${space.md}px 16px`,
   cursor: "pointer",
   appearance: "none",
   WebkitAppearance: "none",
@@ -293,7 +307,7 @@ const movingButtonInnerStyle: React.CSSProperties = {
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  gap: 3,
+  gap: space.xs,
 };
 
 const movingButtonTitleStyle: React.CSSProperties = {
@@ -315,13 +329,13 @@ const movingButtonNoteStyle: React.CSSProperties = {
 const subGridStyle: React.CSSProperties = {
   display: "grid",
   gridTemplateColumns: "1fr 1fr",
-  gap: 10,
+  gap: space.sm,
 };
 
 const subButtonStyle: React.CSSProperties = {
   border: "2px solid rgba(251,155,204,0.55)",
   borderRadius: 999,
-  background: "#fdf4f7",
+  background: "var(--surface-pink-2)",
   color: "var(--text-main)",
   fontSize: 14,
   lineHeight: 1.35,
@@ -339,7 +353,7 @@ const subButtonWideStyle: React.CSSProperties = {
   gridColumn: "1 / -1",
   border: "2px solid rgba(251,155,204,0.55)",
   borderRadius: 999,
-  background: "#fdf4f7",
+  background: "var(--surface-pink-2)",
   color: "var(--text-main)",
   fontSize: 14,
   lineHeight: 1.35,

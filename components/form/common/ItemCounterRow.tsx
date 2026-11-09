@@ -58,7 +58,7 @@ const rowStyle: React.CSSProperties = {
   justifyContent: "space-between",
   gap: 12,
   padding: "12px 0",
-  borderBottom: "1px solid #f3d9e6",
+  borderBottom: "1px solid var(--line)",
 };
 
 const labelStyle: React.CSSProperties = {
@@ -79,10 +79,10 @@ const controlStyle: React.CSSProperties = {
 const buttonStyle: React.CSSProperties = {
   width: 32,
   height: 32,
-  border: "1px solid #e7b7cf",
+  border: "1px solid var(--line-strong)",
   borderRadius: 9999,
-  background: "#fff",
-  color: "#e85d98",
+  background: "var(--surface)",
+  color: "var(--pink-accent)",
   fontSize: 18,
   fontWeight: 700,
   lineHeight: 1,

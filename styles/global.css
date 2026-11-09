@@ -6,11 +6,32 @@
   --text-main: #1c2b4a;
   --text-sub: #5b6170;
   --pink-logo: #fb9bcc;
+  /* 面（2026-11-09 色の直書きを集約） */
+  --surface: #ffffff;
+  --surface-pink: #fff7fb;
+  --surface-pink-2: #fdf4f7;
+  --panel: #fbf1f4;
+  /* 線 */
+  --line: #f0d9e3;
+  --line-strong: #e7b7cf;
+  --line-control: #d8c7cf;
+  /* アクセント（背景・アイコン・大きい文字用。小さい本文には --pink-strong） */
+  --pink-accent: #e85d98;
+  --pink-accent-soft: #e78ab6;
+  --pink-deep: #b84d7a;
+  --text-step: #8f5a70;
+  /* エラー */
+  --error: #b00020;
+  --error-bg: #ffe5e5;
+  /* 写真まわりの灰色 */
+  --gray-line: #e0e0e0;
+  --gray-bg: #f2f2f2;
   --font-jp: "Noto Sans JP","Hiragino Sans","Yu Gothic","Meiryo",sans-serif;
 }
 
 html,
 body{
+  margin: 0;
   max-width: 100%;
   overflow-x: hidden;
   font-family: var(--font-jp);

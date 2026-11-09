@@ -207,7 +207,7 @@ const searchInputStyle: React.CSSProperties = {
   border: "1.5px solid rgba(251,155,204,0.55)",
   fontSize: 16,
   lineHeight: 1.4,
-  background: "#ffffff",
+  background: "var(--surface)",
   color: "var(--text-main)",
   boxSizing: "border-box",
 };
@@ -227,9 +227,9 @@ const clearButtonStyle: React.CSSProperties = {
 };
 
 const resultBoxStyle: React.CSSProperties = {
-  border: "1px solid #f0d4e2",
+  border: "1px solid var(--line)",
   borderRadius: 20,
-  background: "#fff",
+  background: "var(--surface)",
   padding: "4px 18px",
 };
 

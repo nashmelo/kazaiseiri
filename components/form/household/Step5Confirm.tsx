@@ -253,7 +253,7 @@ const sectionBodyStyle: React.CSSProperties = {
 
 const confirmRowStyle: React.CSSProperties = {
   padding: "10px 2px",
-  borderBottom: "1px solid #f0dfe6",
+  borderBottom: "1px solid var(--line)",
 };
 
 const confirmLabelStyle: React.CSSProperties = {
@@ -273,7 +273,7 @@ const editButtonStyle: React.CSSProperties = {
   flexShrink: 0,
   border: "1.5px solid var(--pink-strong)",
   borderRadius: 999,
-  background: "#ffffff",
+  background: "var(--surface)",
   color: "var(--pink-strong)",
   fontSize: 13,
   fontWeight: 800,
